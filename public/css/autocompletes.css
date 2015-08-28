@@ -1,0 +1,33 @@
+/*
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: none; }
+.ui-state-active .ui-icon {background-image: url(images/ui-icons_454545_256x240.png); }
+.ui-state-highlight .ui-icon {background-image: url(images/ui-icons_0073ea_256x240.png); }
+*/
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus
+{
+    background-color: #394b6f;
+    background-image: none;
+    color: #d9d9d9;
+    padding: 2px;
+    border: none;
+}
+.list_item_container{
+    min-width: 300px;
+    display: block;
+    padding: 2px;
+    border: none;
+}
+
+.list_item_container img{
+    width: 80px;
+    height: auto;
+}
+
+.list_item_container .image{
+    display: inline-block;
+}
+
+.list_item_container .item-info{
+    display: inline-block;
+    padding-left: 4px;
+}

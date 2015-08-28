@@ -1,0 +1,28 @@
+span.tag{
+    float: left;
+    padding: 1px 4px;
+    background-color: #ccc;
+    margin: 2px;
+    font-size: 11px;
+}
+
+.thumbnail{
+    cursor: pointer;
+    min-width: 60px;
+}
+
+.table-condensed th, .table-condensed td {
+    padding: 4px 8px;
+}
+
+.expander{
+    cursor: pointer;
+}
+
+.input-append .add-on, .input-prepend .add-on {
+    min-height: 28px;
+}
+
+td .del{
+    cursor: pointer;
+}

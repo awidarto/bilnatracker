@@ -1,0 +1,246 @@
+body {
+    font-size: 11px;
+}
+
+h1 {
+    font-size: 23px;
+}
+
+h2 {
+    font-size: 21px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    font-size: 13px;
+}
+
+
+h1, h2, h3 {
+    line-height: 22px;
+}
+
+h4, h5, h6 {
+    line-height: 18px;
+}
+
+#overview{
+    margin-top: 60px;
+}
+
+#overview h1{
+    font-size: 36px;
+}
+
+
+
+blockquote p {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.25em;
+}
+
+.navbar .brand {
+    display: block;
+    float: left;
+    padding: 10px 20px 10px;
+    margin-left: -20px;
+    font-size: 18px;
+    font-weight: 200;
+    color: #000;
+    /*text-shadow: 0 1px 0 #ce4213;*/
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+
+    font-size: 11px;
+    line-height: 14px;
+    height: 16px;
+}
+
+select{
+    height: 26px;
+}
+
+option{
+    line-height: 20px;
+}
+
+textarea{
+    height:auto;
+}
+
+label, input, button, select, textarea {
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 16px;
+}
+
+label.checkbox{
+    line-height: 20px;
+}
+/*
+.btn {
+    font-size: 11px;
+    line-height: 20px;
+    padding: 4px 9px;
+}
+
+.btn-large {
+    font-size: 13px;
+    line-height: 14px;
+}
+
+.btn-small {
+    line-height: 14px;
+}
+*/
+
+.btn .caret {
+    margin-top: 5px;
+    margin-left: 0;
+}
+
+.btn-group>.btn, .btn-group>.dropdown-menu, .btn-group>.popover {
+    font-size: 11px;
+    line-height: 14px;
+}
+
+a.btn {
+    padding-top: 2px;
+    height: 18px;
+    min-height: 18px;
+    line-height: 12px;
+}
+
+.table th, .table td {
+    padding: 4px 6px;
+}
+
+.table th.action {
+    min-width: 60px;
+}
+
+.label, .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    line-height: 12px;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+    white-space: nowrap;
+    vertical-align: baseline;
+}
+
+.progress {
+    height: 14px;
+    margin-bottom: 20px;
+}
+
+.alert-block {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.well{
+    padding: 10px;
+}
+
+.breadcrumb {
+    padding: 4px 10px;
+    margin: 0 0 16px;
+    list-style: none;
+    background-color: #f5f5f5;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.pagination ul>li>a, .pagination ul>li>span {
+    float: left;
+    padding: 2px 9px;
+    line-height: 20px;
+    text-decoration: none;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-left-width: 0;
+}
+
+.form-horizontal .control-label {
+    width: 120px;
+}
+
+.form-horizontal .controls {
+    margin-left: 130px;
+}
+
+.row-fluid [class*="span"]{
+    min-height: 26px;
+}
+
+.tag{
+    padding: 2px 4px;
+    margin: 2px;
+    background-color: #CCC;
+    display:inline-block;
+}
+
+b.fa{
+    font-size: 16px;
+}
+
+.action{
+    cursor: pointer;
+}
+
+ul#relatedList li, ul#recommendedList li{
+    list-style-type: none;
+}
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    margin-left: 10px;
+    color: white;
+    border-top: 4px solid #000;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+}
+
+table.dataTable {
+    clear: both;
+    margin-top: 6px !important;
+    margin-bottom: 6px !important;
+    max-width: none !important;
+    font-size: 11px;
+}
+
+@media only screen and (max-width: 979px) and (min-width: 768px){
+    .sidebar-nav ul {
+        text-align: center;
+        width: 100%!important;
+        font-size: 12px;
+        margin: -10px 10px 0 10px!important;
+    }
+
+}

@@ -1,0 +1,19 @@
+- column:
+    - label: Test
+      type: text
+      value: Initial value
+      placeholder: Use you name here
+    - label: Test
+      type: text
+      value: Initial value
+      placeholder: Use you name here
+- column:
+    - label: Test
+      type: text
+      value: Initial value
+      placeholder: Use you name here
+    - label: Test
+      type: text
+      value: Initial value
+      placeholder: Use you name here
+

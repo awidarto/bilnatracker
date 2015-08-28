@@ -1,0 +1,61 @@
+{
+	"name": "laravel/laravel",
+	"description": "The Laravel Framework.",
+	"keywords": ["framework", "laravel"],
+	"license": "MIT",
+	"require": {
+		"laravel/framework": "4.2.*",
+        "jenssegers/mongodb": "*",
+        "nitmedia/wkhtml2pdf": "dev-master",
+        "anahkiasen/former": "dev-master",
+        "intervention/image": "2.2.*",
+        "intervention/imagecache": "dev-master",
+        "intervention/validation": "dev-master",
+        "maatwebsite/excel": "1.*",
+        "alexwhitman/view-themes": "1.2.*",
+        "mj/breadcrumb": "dev-master",
+        "knplabs/knp-snappy": "*",
+        "barryvdh/laravel-snappy": "0.1.*",
+        "flynsarmy/db-blade-compiler": "1.*",
+        "pingpong/menus": "1.0.*",
+        "simplesoftwareio/simple-qrcode": "1.1.*",
+        "dinesh/barcode": "4.0.*@dev",
+        "creitive/laravel4-breadcrumbs": "dev-master",
+        "barryvdh/laravel-debugbar":"~1.8",
+        "xethron/migrations-generator": "dev-master",
+        "dayed/auth2": "dev-master",
+        "sleeping-owl/with-join": "1.*",
+        "parse/php-sdk" : "1.1.*"
+	},
+	"autoload": {
+		"classmap": [
+			"app/commands",
+			"app/controllers",
+            "app/controllers/api",
+			"app/models",
+			"app/database/migrations",
+			"app/database/seeds",
+			"app/tests/TestCase.php",
+            "app/helpers",
+            "app/library"
+		]
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"php artisan optimize"
+		],
+		"pre-update-cmd": [
+
+		],
+		"post-update-cmd": [
+			"php artisan optimize"
+		],
+		"post-create-project-cmd": [
+			"php artisan key:generate"
+		]
+	},
+	"config": {
+		"preferred-install": "dist"
+	},
+	"minimum-stability": "dev"
+}

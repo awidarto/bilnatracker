@@ -1,0 +1,31 @@
+    <div id="overviews">
+        <div class="overview">
+            <h3>Overview</h3>
+        </div>
+        <div class="overview">
+            <h3>Financial</h3>
+        </div>
+    </div>
+
+    <div id="propfeatures">
+        <div id="title">
+            <h1>{{$prop['number'].' '.$prop['address']}}</h1>
+            <h1>{{$prop['city'].' '.$prop['state'].' '.$prop['zipCode']}}</h1>
+        </div>
+        <div id="amenity">
+            <table class="feature" >
+                <tbody>
+                    <tr>
+                        <th class="address">Bed</th>
+                        <th class="address">Bath</th>
+                        <th class="address">Garage</th>
+                    </tr>
+                    <tr>
+                        <td>{{ $prop['bed']}}</td>
+                        <td>{{ $prop['bath']}}</td>
+                        <td>{{ $prop['garage']}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
