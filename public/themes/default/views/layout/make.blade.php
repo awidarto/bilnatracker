@@ -273,6 +273,7 @@
     @include('partials.makesearch')
     <!-- END QUICKVIEW SIDEBAR -->
     <!-- BEGIN PRELOADER -->
+    {{--
     <div class="loader-overlay">
       <div class="spinner">
         <div class="bounce1"></div>
@@ -280,6 +281,7 @@
         <div class="bounce3"></div>
       </div>
     </div>
+    --}}
     <!-- END PRELOADER -->
     <a href="#" class="scrollup"><i class="fa fa-angle-up"></i></a>
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/gsap/main-gsap.min.js"></script>

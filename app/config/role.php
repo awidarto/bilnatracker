@@ -2,11 +2,11 @@
 
 return array(
         'entities'=>array(
-                'asset',
-                'advertiser',
-                'location',
-                'rack',
-                'approval',
+                'incoming',
+                'dispatcher',
+                'tracker',
+                'assets',
+                'reports',
                 'devicetype',
                 'report',
                 'log',

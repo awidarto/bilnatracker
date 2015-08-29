@@ -48,7 +48,7 @@ return array(
 
         'mongodb' => array(
             'driver'   => 'mongodb',
-            'host'     => '127.0.0.1',
+            'host'     => 'localhost',
             'port'     => 27017,
             'username' => 'jayonexpress',
             'password' => 'bosseddy234',

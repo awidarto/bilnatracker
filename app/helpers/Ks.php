@@ -65,8 +65,30 @@ class Ks {
     public static function can($action, $entity){
         $roleid = Auth::user()->roleId;
         $role = Role::find($roleid);
+
         if($role){
-            if($role->{$entity.'_'.$action} == 'on'){
+
+            if($role->rolename == 'Superuser'){
+                return true;
+            }else{
+                if($role->{$entity.'_'.$action} == 'on'){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
+        }else{
+            return false;
+        }
+
+    }
+
+    public static function is($role){
+        $roleid = Auth::user()->roleId;
+        $role = Role::find($roleid);
+        if($role){
+            if($role->rolename == $role){
                 return true;
             }else{
                 return false;
@@ -76,5 +98,6 @@ class Ks {
         }
 
     }
+
 }
 

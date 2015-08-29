@@ -283,7 +283,7 @@ class ParsedeviceController extends AdminController {
     public function postSyncparse()
     {
 
-        ParseClient::initialize('lNz2h3vr3eJK9QMAKOLSaIvETaQWsbFJ8Em32TIw', '8QQoPiTZTkqSMkYLQQxHiaKBXO6Jq7iD2dCJjGUz', '2bKlPqYIKMpW1rJOdpBXQ8pf7cMXxGaFKrCXMr19');
+        ParseClient::initialize(Config::get('parse.app_id'), Config::get('parse.rest_key'), Config::get('parse.master_key'));
 
         $query = ParseInstallation::query();
         //$query = new ParseInstallationQuery();

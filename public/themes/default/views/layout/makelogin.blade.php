@@ -29,7 +29,7 @@
             <i class="user-img icons-faces-users-03"></i>
             <div class="account-info">
 
-                <img src="{{ URL::to('/') }}/images/lundin_top_logo.gif">
+                <img src="{{ URL::to('/') }}/images/logo_bilna_2015_2.jpg">
 
             </div>
             <div class="account-form">

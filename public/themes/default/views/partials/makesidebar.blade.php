@@ -8,19 +8,33 @@
         <div class="sidebar-inner">
           <ul class="nav nav-sidebar">
             <li><a href="{{ URL::to('/') }}"><i class="icon-home"></i><span>Dashboard</span></a></li>
+
+            @if(Ks::can('view','incoming'))
+            <li><a href="{{ URL::to('incoming') }}"><i class="fa fa-arrow-circle-down"></i> Incoming</a></li>
+            @endif
+
+            @if(Ks::can('view','dispatcher'))
             <li class="nav-parent">
-              <a href="{{ URL::to('employee') }}"><i class="icon-users"></i><span>Shipment Order</span> <span class="fa arrow"></span></a>
+              <a href="{{ URL::to('employee') }}"><i class="fa fa-arrows-alt"></i><span>Dispatcher</span> <span class="fa arrow"></span></a>
               <ul class="children collapse">
-                <li><a href="{{ URL::to('incoming') }}"> Incoming Order</a></li>
-                <li><a href="{{ URL::to('canceled') }}"> Canceled Order</a></li>
                 <li><a href="{{ URL::to('zoning') }}"> Device Zone Assignment</a></li>
                 <li><a href="{{ URL::to('courierassign') }}"> Courier Assignment</a></li>
+              </ul>
+            </li>
+            @endif
+            @if(Ks::can('view','tracker'))
+            <li class="nav-parent">
+              <a href="{{ URL::to('employee') }}"><i class="icon-users"></i><span>Tracker</span> <span class="fa arrow"></span></a>
+              <ul class="children collapse">
                 <li><a href="{{ URL::to('dispatched') }}"> In Progress</a></li>
                 <li><a href="{{ URL::to('delivered') }}"> Delivery Status</a></li>
                 <li><a href="{{ URL::to('deliverylog') }}"> Delivery Log</a></li>
+                <li><a href="{{ URL::to('canceled') }}"> Canceled Order</a></li>
                 <li><a href="{{ URL::to('orderarchive') }}"> Order Archive</a></li>
               </ul>
             </li>
+            @endif
+            @if(Ks::can('view','assets'))
             <li class="nav-parent">
               <a href="#"><i class="fa fa-cog"></i><span>Assets</span> <span class="fa arrow"></span></a>
               <ul class="children collapse">
@@ -28,6 +42,8 @@
                 <li><a href="{{ URL::to('parsedevice') }}"> Parse Devices</a></li>
               </ul>
             </li>
+            @endif
+            @if(Ks::can('view','reports'))
             <li class="nav-parent {{ hsa( array('gl','coa') ) }} ">
               <a href=""><i class="fa fa-table"></i><span>Reports</span><span class="fa arrow"></span></a>
               <ul class="children collapse">
@@ -35,16 +51,19 @@
                 <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
               </ul>
             </li>
+            @endif
             <li class="nav-parent">
               <a href=""><i class="fa fa-cogs"></i><span>System </span><span class="fa arrow"></span></a>
 
                 <ul class="children collapse">
+                  @if(Ks::can('view','user'))
                     <li class="{{ sa('user') }}" >
                       <a href="{{ URL::to('user') }}" class="{{ sa('user') }}" ><i class="fa fa-group"></i> Users</a>
                     </li>
                     <li class="{{ sa('usergroup') }}">
                       <a href="{{ URL::to('usergroup') }}" class="{{ sa('usergroup') }}" ><i class="fa fa-group"></i> Roles</a>
                     </li>
+                  @endif
                     <li class="{{ sa('holiday') }}"><a href="{{ URL::to('holiday') }}"> Holidays</a></li>
                     <li class="{{ sa('option') }}">
                       <a href="{{ URL::to('option') }}" class="{{ sa('option') }}" ><i class="fa fa-wrench"></i> Options</a>

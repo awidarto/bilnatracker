@@ -47,8 +47,6 @@
 
         {{ Former::select('roleId')->options(Prefs::getRole()->RoleToSelection('_id','rolename' ) )->label('Role')}}
 
-        {{ Former::select('roleId')->options(Prefs::getRole()->RoleToSelection('_id','rolename' ) )->label('Role')}}
-
         <h5>Avatar</h5>
         <?php
             $fupload = new Fupload();
