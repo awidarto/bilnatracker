@@ -64,9 +64,9 @@ return array(
 		'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => 'jayonexpress_main',
-            'username'  => 'jayonadman',
-            'password'  => 'bosseddy123',
+            'database'  => 'bilna_main',
+            'username'  => 'bilna',
+            'password'  => 'Bilna2015',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
