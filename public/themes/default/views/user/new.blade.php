@@ -2,6 +2,8 @@
 
 
 @section('left')
+    {{--
+
         <h4>Employee Info</h4>
 
         {{ Former::text('employeeId','Employee ID') }}
@@ -15,6 +17,7 @@
         {{ Former::text('costControl','Cost Control')->class('form-control form-white') }}
         {{ Former::text('allocControl','Alloc. Control') }}
 
+    --}}
 
         <h4>User Info</h4>
 

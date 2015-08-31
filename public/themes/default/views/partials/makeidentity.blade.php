@@ -6,12 +6,14 @@
       <li>
         <a href="{{ URL::to('profile')}}"><i class="icon-user"></i><span>My Profile</span></a>
       </li>
+{{--
       <li>
         <a href="#"><i class="icon-calendar"></i><span>My Calendar</span></a>
       </li>
       <li>
         <a href="#"><i class="icon-settings"></i><span>Account Settings</span></a>
       </li>
+--}}
       <li>
        <a href="{{ URL::to('logout')}}"><i class="icon-logout"></i><span>Logout</span></a>
       </li>

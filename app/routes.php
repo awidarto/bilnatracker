@@ -56,6 +56,13 @@ Route::controller('gl', 'GlController');
 
 //shipment routes
 Route::controller('incoming', 'IncomingController');
+Route::controller('zoning', 'ZoningController');
+Route::controller('courierassign', 'CourierassignController');
+Route::controller('dispatched', 'DispatchedController');
+Route::controller('canceled', 'CanceledController');
+Route::controller('delivered', 'DeliveredController');
+Route::controller('orderarchive', 'OrderarchiveController');
+Route::controller('deliverylog', 'DeliverylogController');
 
 
 Route::controller('approval', 'ApprovalController');
