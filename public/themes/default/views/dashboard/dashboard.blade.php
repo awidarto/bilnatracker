@@ -10,7 +10,7 @@
                   <h3><i class="icon-basket"></i> <strong>Shipment</strong> Volume Stats</h3>
                 </div>
                 <div class="panel-content p-t-0 p-b-0">
-                  <div id="bar-chart"></div>
+                  <div class="bar-chart"></div>
                 </div>
               </div>
             </div>
@@ -20,7 +20,7 @@
                   <h3><i class="icon-basket"></i> <strong>Shipment</strong> Volume Stats</h3>
                 </div>
                 <div class="panel-content p-t-0 p-b-0">
-                  <div id="bar-chart"></div>
+                  <div class="bar-chart"></div>
                 </div>
               </div>
             </div>
@@ -30,24 +30,11 @@
                   <h3><i class="icon-basket"></i> <strong>Shipment</strong> Volume Stats</h3>
                 </div>
                 <div class="panel-content p-t-0 p-b-0">
-                  <div id="bar-chart"></div>
+                  <div class="bar-chart"></div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="footer">
-            <div class="copyright">
-              <p class="pull-left sm-pull-reset">
-                <span>Copyright <span class="copyright">©</span> 2015 </span>
-                <span></span>.
-                <span>All rights reserved. </span>
-              </p>
-              <p class="pull-right sm-pull-reset">
-                <span><a href="#" class="m-r-10">Support</a> | <a href="#" class="m-l-10 m-r-10">Terms of use</a> | <a href="#" class="m-l-10">Privacy Policy</a></span>
-              </p>
-            </div>
-          </div>
-
 
 @stop
 

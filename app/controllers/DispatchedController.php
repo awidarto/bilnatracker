@@ -407,6 +407,26 @@ class DispatchedController extends AdminController {
                 ->orderBy('ACCNT_CODE','ASC')
                 ->orderBy('TRANS_DATETIME','DESC');
         }
+
+            ->where('status',$this->config->item('trans_status_admin_courierassigned'))
+            ->or_where('status',$this->config->item('trans_status_mobile_pickedup'))
+            ->or_where('status',$this->config->item('trans_status_mobile_enroute'))
+            ->or_()
+                ->group_start()
+                    ->where('status',$this->config->item('trans_status_new'))
+                    ->where('pending_count >', 0)
+                ->group_end()
+            ->group_end();
+
+        $dbca = clone $this->db;
+
+        $this->db->order_by('assignment_date','desc')
+            ->order_by('d.identifier','asc')
+            ->order_by('c.fullname','asc')
+            ->order_by('buyerdeliverycity','asc')
+            ->order_by('buyerdeliveryzone','asc')
+            ->order_by($columns[$sort_col],$sort_dir);
+
         */
 
         $txtab = Config::get('jayon.incoming_delivery_table');
@@ -421,7 +441,18 @@ class DispatchedController extends AdminController {
             )
             ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
             ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-            ->where('status','=', Config::get('jayon.trans_status_new') )
+
+            ->where(function($query){
+                $query->where('status','=', Config::get('jayon.trans_status_admin_courierassigned') )
+                    ->orWhere('status','=', Config::get('jayon.trans_status_mobile_pickedup') )
+                    ->orWhere('status','=', Config::get('jayon.trans_status_mobile_enroute') )
+                    ->orWhere(function($q){
+                            $q->where('status', Config::get('jayon.trans_status_new'))
+                                ->where(Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
+                    });
+
+            })
+
             ->orderBy('ordertime','desc');
 
         //print_r($in);

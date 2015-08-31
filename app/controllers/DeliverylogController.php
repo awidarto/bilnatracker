@@ -407,6 +407,12 @@ class DeliverylogController extends AdminController {
                 ->orderBy('ACCNT_CODE','ASC')
                 ->orderBy('TRANS_DATETIME','DESC');
         }
+
+            ->where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_delivered'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_revoked'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_noshow'))
+            ->or_where($this->config->item('assigned_delivery_table').'.status',$this->config->item('trans_status_mobile_return'))
+
         */
 
         $txtab = Config::get('jayon.incoming_delivery_table');
@@ -421,7 +427,14 @@ class DeliverylogController extends AdminController {
             )
             ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
             ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-            ->where('status','=', Config::get('jayon.trans_status_new') )
+
+            ->where(function($query){
+                $query->where('status','=', Config::get('jayon.trans_status_mobile_delivered') )
+                    ->orWhere('status','=', Config::get('jayon.trans_status_mobile_revoked') )
+                    ->orWhere('status','=', Config::get('jayon.trans_status_mobile_noshow') )
+                    ->orWhere('status','=', Config::get('jayon.trans_status_mobile_return') );
+            })
+
             ->orderBy('ordertime','desc');
 
         //print_r($in);

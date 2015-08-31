@@ -421,7 +421,10 @@ class CanceledController extends AdminController {
             )
             ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
             ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-            ->where('status','=', Config::get('jayon.trans_status_new') )
+
+            ->where('status','=', Config::get('jayon.trans_status_canceled') )
+            ->where('status','not like', 'assigned' )
+
             ->orderBy('ordertime','desc');
 
         //print_r($in);
