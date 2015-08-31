@@ -54,24 +54,27 @@
               </ul>
             </li>
             @endif
+            @if(Ks::can('view','user'))
+
             <li class="nav-parent">
               <a href=""><i class="fa fa-cogs"></i><span>System </span><span class="fa arrow"></span></a>
 
                 <ul class="children collapse">
-                  @if(Ks::can('view','user'))
+
                     <li class="{{ sa('user') }}" >
                       <a href="{{ URL::to('user') }}" class="{{ sa('user') }}" ><i class="fa fa-group"></i> Users</a>
                     </li>
                     <li class="{{ sa('usergroup') }}">
                       <a href="{{ URL::to('usergroup') }}" class="{{ sa('usergroup') }}" ><i class="fa fa-group"></i> Roles</a>
                     </li>
-                  @endif
                     <li class="{{ sa('holiday') }}"><a href="{{ URL::to('holiday') }}"> Holidays</a></li>
                     <li class="{{ sa('option') }}">
                       <a href="{{ URL::to('option') }}" class="{{ sa('option') }}" ><i class="fa fa-wrench"></i> Options</a>
                     </li>
                 </ul>
             </li>
+
+            @endif
           </ul>
           <!-- SIDEBAR WIDGET FOLDERS -->
           <div class="sidebar-widgets">
