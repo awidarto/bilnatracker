@@ -47,8 +47,10 @@
             <li class="nav-parent {{ hsa( array('gl','coa') ) }} ">
               <a href=""><i class="fa fa-table"></i><span>Reports</span><span class="fa arrow"></span></a>
               <ul class="children collapse">
+                {{--
                 <li class="{{ sa('gl') }}" ><a href="{{ URL::to('gl') }}"> General Ledger</a></li>
                 <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
+                --}}
               </ul>
             </li>
             @endif
