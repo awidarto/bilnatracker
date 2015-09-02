@@ -36,7 +36,7 @@ class DeliveryapiController extends \BaseController {
     public function index()
     {
         $key = Input::get('key');
-        $deliverydate = Input::get('d');
+        $deliverydate = Input::get('date');
 
         /*
                     ->join('members as m','d.merchant_id=m.id','left')
@@ -55,6 +55,8 @@ class DeliveryapiController extends \BaseController {
 
         */
 
+        $dev = \Device::where('key','=',$key)->first();
+
         $txtab = \Config::get('jayon.incoming_delivery_table');
 
         $orders = $this->model
@@ -68,9 +70,18 @@ class DeliveryapiController extends \BaseController {
                     )
                     ->leftJoin(\Config::get('jayon.jayon_members_table'), \Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', \Config::get('jayon.jayon_members_table').'.id' )
                     ->leftJoin(\Config::get('jayon.applications_table'), \Config::get('jayon.incoming_delivery_table').'.application_id', '=', \Config::get('jayon.applications_table').'.id' )
-                    ->where('status','=', \Config::get('jayon.trans_status_new') )
+
+                    ->where('device_id','=',$dev->id)
+                    ->where('assignment_date','=',$deliverydate)
+
+                    ->where(function($q){
+                        $q->where('status','=', \Config::get('jayon.trans_status_new') )
+                            ->orWhere(function($ql){
+                                $ql->where('status','=', \Config::get('jayon.trans_status_new') )
+                                    ->where('pending_count','>',0);
+                            });
+                    })
                     ->orderBy('ordertime','desc')
-                    ->take(10)
                     ->get();
 
         for($n = 0; $n < count($orders);$n++){

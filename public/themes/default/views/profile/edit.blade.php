@@ -33,14 +33,19 @@
 
         <h5>Avatar</h5>
         <?php
-            $fupload = new Fupload();
+            $fupload = new Wupload();
         ?>
-
-        {{ $fupload->id('photoupload')->title('Select Photo')->label('Upload Photo')
+        {{ $fupload->id('photoupload')
+            ->ns('photo')
+            ->parentid($formdata['_id'])
+            ->parentclass('user')
+            ->title('Select Picture')
+            ->label('Upload Picture')
             ->url('upload/avatar')
             ->singlefile(true)
             ->prefix('photo')
-            ->multi(false)->make($formdata) }}
+            ->multi(false)
+            ->make($formdata) }}
 
 @stop
 

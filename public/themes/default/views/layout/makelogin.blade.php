@@ -13,7 +13,7 @@
 
         <style type="text/css">
             .account2 .account-info{
-                background-color: #F4F4F4;
+                background-color: #FFFFFF;
             }
 
             .account2 .form-footer{

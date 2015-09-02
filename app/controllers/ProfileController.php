@@ -46,7 +46,7 @@ class ProfileController extends AdminController {
 
         //return parent::getIndex();
 
-        $bt_edit = '<a href="'.URL::to('profile/edit/'.Auth::user()->_id).'" class="btn btn-primary"><i class="fa fa-edit"></i></a>';
+        $bt_edit = '<a href="'.URL::to('profile/edit/'.Auth::user()->_id).'" class="btn btn-sm btn-primary btn-transparent"><i class="fa fa-edit"></i> Edit</a>';
 
         return View::make('profile.index')
             ->with('title',Auth::user()->fullname.' '.$bt_edit );
@@ -89,33 +89,8 @@ class ProfileController extends AdminController {
 
         $data['fullname'] = $data['firstname'].' '.$data['lastname'];
 
-            $photo = array();
-            $avatar = '';
-
-            if( isset($data['file_id']) && count($data['file_id'])){
-
-                for($i = 0 ; $i < count($data['thumbnail_url']);$i++ ){
-
-                    $photo['role'] = $data['role'][$i];
-                    $photo['thumbnail_url'] = $data['thumbnail_url'][$i];
-                    $photo['large_url'] = $data['large_url'][$i];
-                    $photo['medium_url'] = $data['medium_url'][$i];
-                    $photo['full_url'] = $data['full_url'][$i];
-                    $photo['delete_type'] = $data['delete_type'][$i];
-                    $photo['delete_url'] = $data['delete_url'][$i];
-                    $photo['filename'] = $data['filename'][$i];
-                    $photo['filesize'] = $data['filesize'][$i];
-                    $photo['temp_dir'] = $data['temp_dir'][$i];
-                    $photo['filetype'] = $data['filetype'][$i];
-                    $photo['is_image'] = $data['is_image'][$i];
-                    $photo['is_audio'] = $data['is_audio'][$i];
-                    $photo['is_video'] = $data['is_video'][$i];
-                    $photo['fileurl'] = $data['fileurl'][$i];
-                    $photo['file_id'] = $data['file_id'][$i];
-
-                    $avatar = $photo['medium_url'];
-                }
-            }
+            $photo = Img::getPictures($data['_id']);
+            $avatar = Img::getAvatarUrl($data['_id']);
 
             $data['photo']= $photo;
             $data['avatar'] = $avatar;
@@ -138,38 +113,13 @@ class ProfileController extends AdminController {
 
         $data['fullname'] = $data['firstname'].' '.$data['lastname'];
 
-            $photo = array();
-            $avatar = '';
-
-            if( isset($data['file_id']) && count($data['file_id'])){
-
-                for($i = 0 ; $i < count($data['thumbnail_url']);$i++ ){
-
-                    $photo['role'] = $data['role'][$i];
-                    $photo['thumbnail_url'] = $data['thumbnail_url'][$i];
-                    $photo['large_url'] = $data['large_url'][$i];
-                    $photo['medium_url'] = $data['medium_url'][$i];
-                    $photo['full_url'] = $data['full_url'][$i];
-                    $photo['delete_type'] = $data['delete_type'][$i];
-                    $photo['delete_url'] = $data['delete_url'][$i];
-                    $photo['filename'] = $data['filename'][$i];
-                    $photo['filesize'] = $data['filesize'][$i];
-                    $photo['temp_dir'] = $data['temp_dir'][$i];
-                    $photo['filetype'] = $data['filetype'][$i];
-                    $photo['is_image'] = $data['is_image'][$i];
-                    $photo['is_audio'] = $data['is_audio'][$i];
-                    $photo['is_video'] = $data['is_video'][$i];
-                    $photo['fileurl'] = $data['fileurl'][$i];
-                    $photo['file_id'] = $data['file_id'][$i];
-
-                    $avatar = $photo['medium_url'];
-
-                }
-            }
+            $photo = Img::getPictures($data['id']);
+            $avatar = Img::getAvatarUrl($data['id']);
 
             $data['photo']= $photo;
             $data['avatar'] = $avatar;
 
+            //die();
         return $data;
     }
 

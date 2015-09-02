@@ -13,10 +13,14 @@
             <i class="icon-lock"></i>
         </div>
         <button type="submit" id="submit-form" class="btn btn-lg btn-dark btn-rounded ladda-button" data-style="expand-left">Sign In</button>
+        {{--
         <span class="forgot-password"><a id="password" href="account-forgot-password.html">Forgot password?</a></span>
+        --}}
         <div class="form-footer">
             <div class="clearfix">
+                {{--
                 <p class="new-here"><a href="user-signup-v2.html">New here? Sign up</a></p>
+                --}}
             </div>
         </div>
     {{ Form::close() }}

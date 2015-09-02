@@ -566,6 +566,22 @@ class AjaxController extends BaseController {
         }
     }
 
+    public function postDelfile(){
+        $_id = Input::get('id');
+
+        $file = Uploaded::find($_id);
+
+        if($file){
+            $file->deleted = 1;
+            $file->save();
+            return Response::json( array('status'=>'OK', 'timestamp'=>time() ));
+        }else{
+            return Response::json( array('status'=>'NOK', 'timestamp'=>time() ));
+        }
+
+    }
+
+
     public function postPrintdefault()
     {
         $in = Input::get();

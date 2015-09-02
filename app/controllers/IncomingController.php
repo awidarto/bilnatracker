@@ -93,6 +93,7 @@ class IncomingController extends AdminController {
             array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
             array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
             array('Status',array('search'=>true,'sort'=>true)),
+            array('Disposition',array('search'=>true,'sort'=>true)),
             array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
             array('Slot',array('search'=>true,'sort'=>true)),
             array('Zone',array('search'=>true,'sort'=>true)),
@@ -139,7 +140,8 @@ class IncomingController extends AdminController {
             array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
             array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true)),
+            array('package_position',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
             array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
@@ -859,7 +861,13 @@ class IncomingController extends AdminController {
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
         */
-        $actions = '';
+        $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
+        $edit = '<a href="'.URL::to('advertiser/edit/'.$data['delivery_id']).'">Update</a>';
+        $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
+
+        $actions = View::make('shared.action')
+                        ->with('actions',array($dl))
+                        ->render();
         return $actions;
     }
 
@@ -1058,6 +1066,13 @@ class IncomingController extends AdminController {
         //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
         return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['delivery_id']).'" >'.$data['merchant_trans_id'].'</a>';
     }
+
+    public function statusList($data)
+    {
+
+        return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
+    }
+
 
     public function colorizetype($data)
     {

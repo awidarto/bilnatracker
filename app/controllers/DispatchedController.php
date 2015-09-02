@@ -93,6 +93,7 @@ class DispatchedController extends AdminController {
             array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
             array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
             array('Status',array('search'=>true,'sort'=>true)),
+            array('Disposition',array('search'=>true,'sort'=>true)),
             array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
             array('Slot',array('search'=>true,'sort'=>true)),
             array('Zone',array('search'=>true,'sort'=>true)),
@@ -132,9 +133,12 @@ class DispatchedController extends AdminController {
 
         $this->product_info_url = strtolower($this->controller_name).'/info';
 
-        $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
+        $this->column_styles = '';
+
+        /* '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },
                     { "sClass": "column-amt", "aTargets": [ 10 ] }';
+        */
 
         return parent::getIndex();
 
@@ -149,7 +153,8 @@ class DispatchedController extends AdminController {
             array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
             array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true)),
+            array('package_position',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
             array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
@@ -1098,6 +1103,12 @@ class DispatchedController extends AdminController {
         $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'] ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
         //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
         return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['delivery_id']).'" >'.$data['merchant_trans_id'].'</a>';
+    }
+
+    public function statusList($data)
+    {
+
+        return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
     public function colorizetype($data)
