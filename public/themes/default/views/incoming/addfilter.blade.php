@@ -9,7 +9,7 @@
         <h6>Print options</h6>
         <div style="border-bottom:thin solid #ccc;" class="row clearfix">
             <div class="col-md-2">
-                {{ Former::text('label_columns','Number of columns')->value('2')->id('label_columns')->class('form-control input-sm') }}
+                {{ Former::text('label_columns','Number of columns')->value('4')->id('label_columns')->class('form-control input-sm') }}
                 {{ Former::text('label_res','Resolution')->value('150')->id('label_res')->class('form-control input-sm') }}
             </div>
             <div class="col-md-2">
