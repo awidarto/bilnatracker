@@ -10,6 +10,14 @@
             <li><a href="{{ URL::to('/') }}"><i class="icon-home"></i><span>Dashboard</span></a></li>
 
             @if(Ks::can('view','incoming'))
+            <li class="nav-parent">
+              <a href="{{ URL::to('importer') }}"><i class="fa fa-arrows-alt"></i><span>Data Input</span> <span class="fa arrow"></span></a>
+              <ul class="children collapse">
+                <li><a href="{{ URL::to('inputform') }}"><i class="fa fa-bullseye"></i> Input Form</a></li>
+                <li><a href="{{ URL::to('importer') }}"><i class="fa fa-bullseye"></i> Import Data</a></li>
+                <li><a href="{{ URL::to('courierassign') }}"><i class="fa fa-user-plus"></i> AWB Update</a></li>
+              </ul>
+            </li>
             <li><a href="{{ URL::to('incoming') }}"><i class="fa fa-arrow-circle-down"></i> Incoming</a></li>
             @endif
 

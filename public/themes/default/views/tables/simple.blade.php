@@ -51,9 +51,11 @@ td.group{
 }
 
 th.action{
+    /*
     min-width: 150px !important;
     max-width: 200px !important;
     width: 175px !important;
+    */
 }
 
 td i.fa{
@@ -69,6 +71,7 @@ td{
     font-size: 11px;
     padding: 4px 6px 6px 4px !important;
     hyphens:none !important;
+    color: black;
 }
 
 td .dropdown-menu{
@@ -459,7 +462,8 @@ select.input-sm {
 				"oLanguage": { "sSearch": "Search "},
 				"sPaginationType": "full_numbers",
                 "sDom": "lpirt",
-				"iDisplayLength":50,
+				"iDisplayLength":150,
+                "lengthMenu": [[100, 150, 200, 250], [100, 150, 200, 250]],
                 "initComplete": function(settings, json){
                     //alert( 'DataTables has finished its initialisation.' );
                     $('.dataTables_length select').select2('destroy');

@@ -96,11 +96,11 @@ class ParsedeviceController extends AdminController {
             array('App Identifier',array('search'=>true,'sort'=>true)),
             array('App Name',array('search'=>true,'sort'=>true)),
             array('App Version',array('search'=>true,'sort'=>true)),
-            array('Device Brand',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Device Type',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Installation Id',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Parse Version',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Time Zone',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('Device Brand',array('search'=>true,'sort'=>true)),
+            array('Device Type',array('search'=>true,'sort'=>true)),
+            array('Installation Id',array('search'=>true,'sort'=>true)),
+            array('Parse Version',array('search'=>true,'sort'=>true)),
+            array('Time Zone',array('search'=>true,'sort'=>true)),
         );
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
@@ -283,7 +283,7 @@ class ParsedeviceController extends AdminController {
     public function postSyncparse()
     {
 
-        ParseClient::initialize(Config::get('parse.app_id'), Config::get('parse.rest_key'), Config::get('parse.master_key'));
+        ParseClient::initialize('lNz2h3vr3eJK9QMAKOLSaIvETaQWsbFJ8Em32TIw', '8QQoPiTZTkqSMkYLQQxHiaKBXO6Jq7iD2dCJjGUz', '2bKlPqYIKMpW1rJOdpBXQ8pf7cMXxGaFKrCXMr19');
 
         $query = ParseInstallation::query();
         //$query = new ParseInstallationQuery();
@@ -336,13 +336,13 @@ class ParsedeviceController extends AdminController {
             array('Zone',array('search'=>true,'sort'=>true)),
             array('City',array('search'=>true,'sort'=>true)),
             array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
+            array('No Kode Penjualan Toko',array('search'=>true,'sort'=>true)),
             array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector') )),
             array('Merchant & Shop Name',array('search'=>true,'sort'=>true)),
-            array('Box ID',array('search'=>true,'sort'=>true)),
+            array('Delivery ID',array('search'=>true,'sort'=>true)),
             array('Status',array('search'=>true,'sort'=>true)),
             array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
+            array('TTD Toko',array('search'=>true,'sort'=>true)),
             array('Delivery Charge',array('search'=>true,'sort'=>true)),
             array('COD Surcharge',array('search'=>true,'sort'=>true)),
             array('COD Value',array('search'=>true,'sort'=>true)),

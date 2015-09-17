@@ -2,18 +2,22 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>{{ Config::get('site.name') }}</title>
+        <title>Themes Lab - Creative Laborator</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta content="" name="description" />
         <meta content="themes-lab" name="author" />
+
         <link rel="shortcut icon" href="{{ URL::to('makeadmin') }}/assets/global/images/favicon.png">
+
+        {{ HTML::style('css/typography.css')}}
+
         <link href="{{ URL::to('makeadmin') }}/assets/global/css/style.css" rel="stylesheet">
         <link href="{{ URL::to('makeadmin') }}/assets/global/css/ui.css" rel="stylesheet">
         <link href="{{ URL::to('makeadmin') }}/assets/global/plugins/bootstrap-loading/lada.min.css" rel="stylesheet">
 
         <style type="text/css">
             .account2 .account-info{
-                background-color: #FFFFFF;
+                background-color: #F4F4F4;
             }
 
             .account2 .form-footer{
@@ -29,7 +33,7 @@
             <i class="user-img icons-faces-users-03"></i>
             <div class="account-info">
 
-                <img src="{{ URL::to('/') }}/images/logo_bilna_2015_2.jpg">
+                <img src="{{ URL::to('/') }}/images/jex_top_logo.png">
 
             </div>
             <div class="account-form">

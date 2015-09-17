@@ -98,15 +98,15 @@ $config['trans_status_admin_devassigned'] = 'dev_assigned';
 $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
-$config['trans_status_tobepickup'] = 'akan diambil';
-$config['trans_status_pickup'] = 'sudah diambil';
+$config['trans_status_tobepickup'] = 'to_be_picked_up';
+$config['trans_status_pickup'] = 'picked_up';
 
-$config['trans_status_atmerchant'] = 'belum di gudang';
-$config['trans_status_pu2wh'] = 'diterima di gudang';
-$config['trans_status_inwh'] = 'di gudang';
-$config['trans_status_wh2ds'] = 'di delivery';
-$config['trans_status_ds2wh'] = 'kembali di gudang';
-$config['trans_status_return2merchant'] = 'kembali ke merchant';
+$config['trans_status_atmerchant'] = 'at_merchant_premise';
+$config['trans_status_pu2wh'] = 'accepted_warehouse';
+$config['trans_status_inwh'] = 'in_warehouse';
+$config['trans_status_wh2ds'] = 'on_delivery';
+$config['trans_status_ds2wh'] = 'back_to_warehouse';
+$config['trans_status_return2merchant'] = 'return_to_merchant';
 
 $config['status_list'] = array(
     'pending'=>'Pending',

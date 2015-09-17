@@ -94,7 +94,7 @@ return array(
 	|
 	*/
 
-	'cookie' => 'tmadmin_session',
+	'cookie' => 'bilnatracker_session',
 
 	/*
 	|--------------------------------------------------------------------------

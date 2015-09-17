@@ -1,7 +1,11 @@
 <?php
+use Jenssegers\Mongodb\Model as Eloquent;
 
 class Shipment extends Eloquent {
 
+    protected $collection = 'shipments';
+
+/*
     protected $connection = 'mysql';
     protected $table = '';
 
@@ -10,5 +14,6 @@ class Shipment extends Eloquent {
         $this->table = Config::get('jayon.incoming_delivery_table');
 
     }
+*/
 
 }

@@ -6,20 +6,15 @@
     .form-horizontal .controls {
         margin-left: 0px;
     }
-
-    table{
-        font-size: 12px;
-    }
 </style>
 
 <script type="text/javascript">
     $(document).ready(function(){
-        /*
         $('#select_all').on('click',function(){
             if($('#select_all').is(':checked')){
-                $('.selector').prop('checked', true);
+                $('.selector').attr('checked', true);
             }else{
-                $('.selector').prop('checked',false);
+                $('.selector').attr('checked', false);
             }
         });
 
@@ -31,30 +26,6 @@
             }
         });
 
-        */
-
-        $('#select_all').on('ifChecked',function(){
-            $('.selector').iCheck('check');
-            //$('.selector').prop('checked', true);
-        });
-
-        $('#select_all').on('ifUnchecked',function(){
-            $('.selector').iCheck('uncheck');
-            //$('.selector').prop('checked', false);
-        });
-
-
-        $('#edit_select_all').on('ifChecked',function(){
-            $('.edit_selector').iCheck('check');
-            //$('.selector').prop('checked', true);
-        });
-
-        $('#edit_select_all').on('ifUnchecked',function(){
-            $('.edit_selector').iCheck('uncheck');
-            //$('.selector').prop('checked', false);
-        });
-
-
     });
 
 </script>
@@ -64,17 +35,21 @@
     <h5>Import {{ $title }} Preview</h5>
     <div class="row">
         <div class="col-md-4">
-            {{ Former::select('edit_key')->label('Edit Key')->options($headselect)->id('importkey')->class('form-control importkey input-sm')->help('select to set which field used for update id') }}
+            {{ Former::select('edit_key')->label('Edit Key')->options($headselect)->id('importkey')->class('form-control importkey')->help('select to set which field used for update id') }}
         </div>
-        <div class="col-md-5" style="padding-top:25px;">
-            {{ Former::submit('Commit Import')->id('execute')->class('btn btn-primary input-sm') }}&nbsp;&nbsp;
-            {{ HTML::link($back,'Cancel',array('class'=>'btn input-sm'))}}
+        <div class="col-md-3" style="padding-top:12px;">
+            {{ Former::submit('Commit Import')->id('execute')->class('btn btn-primary') }}&nbsp;&nbsp;
+            {{ HTML::link($back,'Cancel',array('class'=>'btn'))}}
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" style="padding-top:22px;">
+            <span class="badge badge-primary">Duplicated in this import</span>
+            <br /><br />
+            <span class="badge badge-danger">Already exists in database</span>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
-
 
         <table class="table table-condensed">
             <thead>
@@ -93,7 +68,7 @@
                     <?php $head_id = 0; ?>
                     @foreach($heads as $head)
                         <th>
-                            {{ Former::select()->name('headers[]')->label('')->options($headselect)->id($head)->class('heads form-control input-sm')->value($head) }}
+                            {{ Former::select()->name('headers[]')->label('')->options($headselect)->id($head)->class('heads form-control')->value($head) }}
                             <?php $head_id++; ?>
                         </th>
                     @endforeach
@@ -110,10 +85,12 @@
                     </td>
                     @foreach($row as $d)
                         <td>
-                            @if( $d instanceof Carbon || $d instanceof MongoDate )
-                                {{ $d->toRfc822String() }}
-                            @else
-                                {{ $d }}
+                            {{ $d }}
+                            @if(isset($inval[$d]) && $inval[$d] > 1 )
+                                <span class="badge badge-primary">{{ $inval[$d] - 1}}</span>
+                            @endif
+                            @if(isset($dbval[$d]) && $dbval[$d] > 0)
+                                <span class="badge badge-danger">{{ $dbval[$d]}}</span>
                             @endif
                         </td>
                     @endforeach

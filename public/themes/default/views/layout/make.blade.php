@@ -9,6 +9,9 @@
     <title>{{ Config::get('site.name') }}</title>
 
     @include('layout.css')
+
+    {{ HTML::style('css/typography.css')}}
+
     <link href="{{ URL::to('makeadmin') }}/assets/global/css/style.css" rel="stylesheet">
     <link href="{{ URL::to('makeadmin') }}/assets/global/css/theme.css" rel="stylesheet">
     <link href="{{ URL::to('makeadmin') }}/assets/global/css/ui.css" rel="stylesheet">
@@ -21,6 +24,7 @@
 
     <link href="{{ URL::to('makeadmin') }}/assets/global/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
 
+    {{ HTML::style('css/syscolors.css') }}
 
     <script src="{{ URL::to('makeadmin') }}/assets/global/plugins/modernizr/modernizr-2.6.2-respond-1.1.0.min.js"></script>
 
@@ -68,27 +72,6 @@
           font-size: initial !important;
           color: #666666 !important;
           padding-left: 0px !important;
-      }
-
-      .main-content .page-content > .header h2, .main-content .page-content > div > .header h2 {
-        font-size: 20px !important;
-      }
-
-      td h3, th h3{
-        font-weight: bold !important;
-        margin-top: 4px !important;
-        margin-bottom: 4px !important;
-      }
-
-      td h2, th h2{
-        font-size: 18px;
-        font-weight: bold !important;
-        margin-top: 4px !important;
-        margin-bottom: 4px !important;
-      }
-
-      .total{
-        font-weight: bold;
       }
     </style>
 
@@ -143,6 +126,8 @@
               <!-- HERE COMES YOUR CONTENT -->
 
               <div class="panel">
+                <div class="panel-header panel-controls">
+                </div>
                 <div class="panel-content pagination2 table-responsive">
 
                   @yield('content')
@@ -273,21 +258,14 @@
     @include('partials.makesearch')
     <!-- END QUICKVIEW SIDEBAR -->
     <!-- BEGIN PRELOADER -->
-    {{--
-    <div class="loader-overlay">
-      <div class="spinner">
-        <div class="bounce1"></div>
-        <div class="bounce2"></div>
-        <div class="bounce3"></div>
-      </div>
-    </div>
-    --}}
     <!-- END PRELOADER -->
     <a href="#" class="scrollup"><i class="fa fa-angle-up"></i></a>
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/gsap/main-gsap.min.js"></script>
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/jquery-cookies/jquery.cookies.min.js"></script> <!-- Jquery Cookies, for theme -->
+    {{--
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/jquery-block-ui/jquery.blockUI.min.js"></script> <!-- simulate synchronous behavior when using AJAX -->
+    --}}
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/bootbox/bootbox.min.js"></script> <!-- Modal with Validation -->
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/mcustom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script> <!-- Custom Scrollbar sidebar -->
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/bootstrap-dropdown/bootstrap-hover-dropdown.min.js"></script> <!-- Show Dropdown on Mouseover -->

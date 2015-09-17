@@ -109,25 +109,39 @@
 <div id="container">
 
 @foreach( $labels as $l )
-    <?php $pd = $products[ $l['SKU'] ]; ?>
-    <div class="label">
-        <table>
-            <tr>
-                <td style="text-align:center">
-                    @if($code_type == 'qr')
-                        <img src="{{ URL::to('qr/'.urlencode(base64_encode($l['SKU'])) ) }}" class="barcode" alt="{{ $l['_id'] }}" />
-                    @else
-                        <img src="{{ URL::to('pdf417/'.urlencode(base64_encode($l['SKU'])) ) }}" class="barcode" alt="{{ $l['_id'] }}" />
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td style="text-align:center">
-                    {{ $pd['SKU']}}
-                </td>
-            </tr>
-        </table>
-    </div>
+    <?php $pd = $products[ $l['_id'] ]; ?>
+
+    @for($b = 0; $b < $pd['NUMBER_OF_PACKAGE'];$b++)
+
+        <div class="label">
+            <table>
+                <tr>
+                    <td style="text-align:center">
+                        @if($code_type == 'qr')
+
+                            <?php
+
+                                $qrstring = $l['_id'].'|'.$l['NO_SALES_ORDER'].'|'.$l['CONSIGNEE_OLSHOP_ORDERID'].'|box:'.($b + 1);
+
+                            ?>
+
+                            <img src="{{ URL::to('qr/'.urlencode(base64_encode($qrstring)) ) }}" class="barcode" alt="{{ $l['_id'] }}" />
+                        @else
+                            <img src="{{ URL::to('barcode/'.urlencode(base64_encode($l['CONSIGNEE_OLSHOP_ORDERID'].'-'.($b + 1))) ) }}" class="barcode" alt="{{ $l['_id'] }}" />
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center">
+                        {{ $pd['CONSIGNEE_OLSHOP_ORDERID'].' '.($b + 1).'/'.$pd['NUMBER_OF_PACKAGE']}}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    @endfor
+
 <?php endforeach; ?>
 
 </div>

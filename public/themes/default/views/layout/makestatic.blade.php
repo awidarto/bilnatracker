@@ -8,6 +8,8 @@
     <link rel="shortcut icon" href="../assets/global/images/favicon.png" type="image/png">
     <title>{{ Config::get('site.name') }}</title>
 
+    {{ HTML::style('css/typography.css')}}
+
     <link href="{{ URL::to('makeadmin') }}/assets/global/css/style.css" rel="stylesheet">
     <link href="{{ URL::to('makeadmin') }}/assets/global/css/theme.css" rel="stylesheet">
     <link href="{{ URL::to('makeadmin') }}/assets/global/css/ui.css" rel="stylesheet">

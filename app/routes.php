@@ -38,6 +38,9 @@ Route::controller('assetlocation', 'AssetlocationController');
 Route::controller('rack', 'RackController');
 Route::controller('asset', 'AssetController');
 
+
+Route::controller('importer', 'ImporterController');
+
 Route::controller('device', 'DeviceController');
 Route::controller('parsedevice', 'ParsedeviceController');
 
@@ -459,12 +462,14 @@ Route::get('xcat',function(){
 });
 
 Route::get('barcode/dl/{txt}',function($txt){
+    $txt = base64_decode($txt);
     $barcode = new Barcode();
     $barcode->make($txt,'code128',60, 'horizontal' ,true);
     return $barcode->render('jpg',$txt,true);
 });
 
 Route::get('barcode/{txt}',function($txt){
+    $txt = base64_decode($txt);
     $barcode = new Barcode();
     $barcode->make($txt,'code128',60, 'horizontal' ,true);
     return $barcode->render('jpg',$txt);

@@ -566,29 +566,13 @@ class AjaxController extends BaseController {
         }
     }
 
-    public function postDelfile(){
-        $_id = Input::get('id');
-
-        $file = Uploaded::find($_id);
-
-        if($file){
-            $file->deleted = 1;
-            $file->save();
-            return Response::json( array('status'=>'OK', 'timestamp'=>time() ));
-        }else{
-            return Response::json( array('status'=>'NOK', 'timestamp'=>time() ));
-        }
-
-    }
-
-
     public function postPrintdefault()
     {
         $in = Input::get();
 
         $_id = Auth::user()->id;
 
-        $def = Printdefault::where('ownerId',$_id)->where('type',$in['type'])->first();
+        $def = Printdefault::where('ownerId',$_id)->where('type',$in['code_type'])->first();
 
         if($def){
 
