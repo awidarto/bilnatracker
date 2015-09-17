@@ -202,11 +202,11 @@ select.input-sm {
 
             @if(isset($can_add) && $can_add == true)
                 <a href="{{ URL::to($addurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-plus"></i> Add</a>
-                <a href="{{ URL::to($importurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-upload"></i> Excel</a>
             @endif
 
-            <a class="btn btn-sm btn-info btn-transparent" id="download-xls"><i class="fa fa-download"></i> Excel</a>
-            <a class="btn btn-sm btn-info btn-transparent" id="download-csv"><i class="fa fa-download"></i> CSV</a>
+            <a href="{{ URL::to($importurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-upload"></i> Upload Excel</a>
+            <a class="btn btn-sm btn-info btn-transparent" id="download-xls"><i class="fa fa-download"></i> Download Excel</a>
+            <a class="btn btn-sm btn-info btn-transparent" id="download-csv"><i class="fa fa-download"></i> Download CSV</a>
 
             @if(isset($is_report) && $is_report == true)
                 {{ $report_action }}

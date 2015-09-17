@@ -104,6 +104,8 @@ class IncomingController extends AdminController {
 
         $this->product_info_url = strtolower($this->controller_name).'/info';
 
+        $this->can_add = false;
+
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },
                     { "sClass": "column-amt", "aTargets": [ 10 ] }';
