@@ -103,6 +103,16 @@ Route::group(array('prefix' => 'api/v1/mobile'), function (){
     Route::put('/auth/login', 'Api\AuthController@login');
     Route::post('/auth/logout', 'Api\AuthController@logout');
     Route::put('/auth/logout', 'Api\AuthController@logout');
+    Route::post('/upload', 'Api\UploadapiController@postFile');
+    Route::put('/sync/assets', 'Api\SyncapiController@putAssets');
+    Route::post('/sync/scanlog', 'Api\SyncapiController@postScanlog');
+    Route::post('/sync/note', 'Api\SyncapiController@postNote');
+    Route::post('/sync/geolog', 'Api\SyncapiController@postGeolog');
+    Route::post('/sync/order', 'Api\SyncapiController@postOrder');
+    Route::post('/sync/orderstatus', 'Api\SyncapiController@postOrderstatus');
+    Route::post('/sync/box', 'Api\SyncapiController@postBox');
+    Route::post('/sync/boxstatus', 'Api\SyncapiController@postBoxstatus');
+    Route::resource('img', 'Api\ImgapiController');
     Route::resource('location', 'Api\LocationapiController');
     Route::resource('rack', 'Api\RackapiController');
     Route::resource('asset', 'Api\AssetapiController');

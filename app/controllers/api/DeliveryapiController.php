@@ -26,8 +26,6 @@ class DeliveryapiController extends \BaseController {
 
         $this->model = \DB::connection($this->sql_connection)->table($this->sql_table_name);
 
-        $this->model = new \Shipment();
-
     }
 
     /**
@@ -59,10 +57,12 @@ class DeliveryapiController extends \BaseController {
 
         $dev = \Device::where('key','=',$key)->first();
 
+        //print_r($dev);
+
         $txtab = \Config::get('jayon.incoming_delivery_table');
 
+        /*
         $orders = $this->model
-                    /*
                     ->select(
                             \DB::raw(
                                 \Config::get('jayon.incoming_delivery_table').'.* ,'.
@@ -84,26 +84,57 @@ class DeliveryapiController extends \BaseController {
                                     ->where('pending_count','>',0);
                             });
                     })
-                    */
                     ->orderBy('ordertime','desc')
                     ->get();
+        */
 
-                    $orders = $orders->toArray();
+        $orders = $this->model
+                ->select(
+                    \DB::raw(
+                        \Config::get('jayon.incoming_delivery_table').'.* ,'.
+                        \Config::get('jayon.jayon_couriers_table').'.fullname as courier ,'.
+                        \Config::get('jayon.jayon_devices_table').'.identifier as device ,'.
+                        \Config::get('jayon.jayon_members_table').'.merchantname as merchant_name ,'.
+                        \Config::get('jayon.applications_table').'.application_name as app_name ,'.
+                        '('.$txtab.'.width * '.$txtab.'.height * '.$txtab.'.length ) as volume'
+                )
+            )
+            ->leftJoin(\Config::get('jayon.jayon_couriers_table'), \Config::get('jayon.incoming_delivery_table').'.courier_id', '=', \Config::get('jayon.jayon_couriers_table').'.id' )
+            ->leftJoin(\Config::get('jayon.jayon_devices_table'), \Config::get('jayon.incoming_delivery_table').'.device_id', '=', \Config::get('jayon.jayon_devices_table').'.id' )
+            ->leftJoin(\Config::get('jayon.jayon_members_table'), \Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', \Config::get('jayon.jayon_members_table').'.id' )
+            ->leftJoin(\Config::get('jayon.applications_table'), \Config::get('jayon.incoming_delivery_table').'.application_id', '=', \Config::get('jayon.applications_table').'.id' )
+
+            ->where(function($q) use($dev, $deliverydate){
+                    $q->where('device_id','=',$dev->id)
+                    ->where('assignment_date','=',$deliverydate);
+
+            })
+            ->where(function($query){
+                $query->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
+                    ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_pickedup') )
+                    ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
+                    ->orWhere(function($q){
+                            $q->where('status', \Config::get('jayon.trans_status_new'))
+                                ->where(\Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
+                    });
+
+            })
+
+            ->orderBy('ordertime','desc')
+            ->get();
+
 
         for($n = 0; $n < count($orders);$n++){
             $or = new \stdClass();
             foreach( $orders[$n] as $k=>$v ){
-                $nk = $this->underscoreToCamelCase(strtolower($k));
+                $nk = $this->underscoreToCamelCase($k);
                 $or->$nk = (is_null($v))?'':$v;
             }
 
-            $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec );
+            $or->extId = $or->id;
+            unset($or->id);
 
-            $or->createddate = date('Y-m-d H:i:s', $or->createddate->sec );
-            $or->lastupdate = date('Y-m-d H:i:s', $or->lastupdate->sec );
-
-            $or->extId = $or->Id;
-            unset($or->Id);
+            $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
 
             $orders[$n] = $or;
         }
@@ -211,6 +242,24 @@ class DeliveryapiController extends \BaseController {
             return implode('', $strings);
         }else{
             return $string;
+        }
+
+    }
+
+    public function boxList($field,$val){
+
+        $boxes = \Box::where($field,'=',$val)->get();
+
+        $bx = array();
+
+        foreach($boxes as $b){
+            $bx[] = $b->box_id;
+        }
+
+        if(count($bx) > 0){
+            return implode(',',$bx);
+        }else{
+            return '1';
         }
 
     }
