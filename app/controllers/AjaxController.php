@@ -111,6 +111,30 @@ class AjaxController extends BaseController {
         return Response::json($tree);
     }
 
+    public function postMoveorder(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+            foreach($results as $r){
+                $r->bucket = $in['bucket'];
+                $r->save();
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:MOVED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:MOVEFAILED' ));
+        }
+
+    }
+
     public function postScan()
     {
         $in = Input::get();

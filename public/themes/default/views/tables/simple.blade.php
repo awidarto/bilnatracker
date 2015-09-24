@@ -188,6 +188,15 @@ select.input-sm {
       background-image: none;
 }
 
+th ul.select2-results li{
+    font-size: 10px !important;
+    font-weight: 100 !important;
+}
+
+.statbox{
+    padding: 6px !important;
+}
+
 </style>
 
 {{ HTML::style('css/syscolors.css') }}
@@ -204,9 +213,14 @@ select.input-sm {
                 <a href="{{ URL::to($addurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-plus"></i> Add</a>
             @endif
 
-            <a href="{{ URL::to($importurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-upload"></i> Upload Excel</a>
-            <a class="btn btn-sm btn-info btn-transparent" id="download-xls"><i class="fa fa-download"></i> Download Excel</a>
-            <a class="btn btn-sm btn-info btn-transparent" id="download-csv"><i class="fa fa-download"></i> Download CSV</a>
+            @if(isset($can_import) && $can_import == true)
+                <a href="{{ URL::to($importurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-upload"></i> Upload Excel</a>
+            @endif
+
+            @if(isset($can_export) && $can_export == true)
+                <a class="btn btn-sm btn-info btn-transparent" id="download-xls"><i class="fa fa-download"></i> Download Excel</a>
+                <a class="btn btn-sm btn-info btn-transparent" id="download-csv"><i class="fa fa-download"></i> Download CSV</a>
+            @endif
 
             @if(isset($is_report) && $is_report == true)
                 {{ $report_action }}

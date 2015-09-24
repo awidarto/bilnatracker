@@ -66,16 +66,24 @@ $config['jayon_devicerecap_table'] = 'device_aggregate';
 //test only
 $config['jayon_mobile_table'] = 'mobile_orders';
 
+/* Buckets */
+$config['bucket_incoming'] = 'incoming';
+$config['bucket_dispatcher'] = 'dispatcher';
+$config['bucket_tracker'] = 'tracker';
+
+
 
 /* Delivery status strings */
 
 $config['trans_status_new'] = 'pending';
-$config['trans_status_tobeconfirmed'] = 'to be confirmed';
+$config['trans_status_tobeconfirmed'] = 'to_be_confirmed';
 $config['trans_status_purged'] = 'purged';
 $config['trans_status_archived'] = 'archived';
 $config['trans_status_confirmed'] = 'confirmed';
 $config['trans_status_canceled'] = 'canceled';
 $config['trans_status_rescheduled'] = 'rescheduled';
+$config['trans_status_inprogress'] = 'inprogress';
+
 
 $config['trans_status_mobile_pending'] = 'pending';
 $config['trans_status_mobile_dispatched'] = 'dispatched';
@@ -98,15 +106,79 @@ $config['trans_status_admin_devassigned'] = 'dev_assigned';
 $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
+
+
 $config['trans_status_tobepickup'] = 'to_be_picked_up';
 $config['trans_status_pickup'] = 'picked_up';
+$config['trans_status_pickup_canceled'] = 'canceled';
 
-$config['trans_status_atmerchant'] = 'at_merchant_premise';
-$config['trans_status_pu2wh'] = 'accepted_warehouse';
-$config['trans_status_inwh'] = 'in_warehouse';
-$config['trans_status_wh2ds'] = 'on_delivery';
-$config['trans_status_ds2wh'] = 'back_to_warehouse';
-$config['trans_status_return2merchant'] = 'return_to_merchant';
+$config['trans_wh_atmerchant'] = 'at_merchant_premise';
+$config['trans_wh_pu2wh'] = 'accepted_warehouse';
+$config['trans_wh_inwh'] = 'in_warehouse';
+$config['trans_wh_wh2ds'] = 'on_delivery';
+$config['trans_wh_ds2wh'] = 'back_to_warehouse';
+$config['trans_wh_return2merchant'] = 'return_to_merchant';
+$config['trans_wh_canceled'] = 'canceled';
+
+
+$config['trans_cr_atmerchant'] = 'at_merchant_premise';
+$config['trans_cr_inwh'] = 'in_warehouse';
+$config['trans_cr_oncr'] = 'on_courier';
+$config['trans_cr_return2wh'] = 'return_to_warehouse';
+$config['trans_cr_return2merchant'] = 'return_to_merchant';
+$config['trans_cr_canceled'] = 'canceled';
+
+
+/* Translation and Look Up */
+
+$config['dispatcher_status'] = array(
+    $config['trans_status_admin_zoned'] => 'Zone Assigned',
+    $config['trans_status_admin_dated'] => 'Date Assigned',
+    $config['trans_status_admin_devassigned'] => 'Device Assigned',
+    $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
+    $config['trans_status_admin_dispatched'] => 'Dispatched',
+);
+
+
+$config['delivery_status'] = array(
+    $config['trans_status_new'] => 'Pending',
+    $config['trans_status_tobeconfirmed'] => 'To be Confirmed',
+    $config['trans_status_purged'] => 'Purged',
+    $config['trans_status_archived'] => 'Archived',
+    $config['trans_status_confirmed'] => 'Confirmed',
+    $config['trans_status_canceled'] => 'Canceled',
+    $config['trans_status_rescheduled'] => 'Rescheduled',
+    $config['trans_status_inprogress'] => 'In Progress',
+);
+
+$config['pickup_status'] = array(
+    $config['trans_status_tobepickup'] => 'To Be Picked Up',
+    $config['trans_status_pickup'] => 'Picked Up',
+    $config['trans_status_pickup_canceled'] => 'Canceled',
+);
+
+$config['warehouse_status'] = array(
+    $config['trans_wh_atmerchant'] => 'At Merchant Premise',
+    $config['trans_wh_pu2wh'] => 'Accepted Warehouse',
+    $config['trans_wh_inwh'] => 'In Warehouse',
+    $config['trans_wh_wh2ds'] => 'On Delivery',
+    $config['trans_wh_ds2wh'] => 'Back to Warehouse',
+    $config['trans_wh_return2merchant'] => 'Return to Merchant',
+    $config['trans_wh_canceled'] => 'Canceled',
+);
+
+
+$config['courier_status'] = array(
+    $config['trans_cr_atmerchant'] => 'At Merchant Premise',
+    $config['trans_cr_inwh'] => 'In Warehouse',
+    $config['trans_cr_oncr'] => 'On Courier',
+    $config['trans_cr_return2wh'] => 'Return to Warehouse',
+    $config['trans_cr_return2merchant'] => 'Return to Merchant',
+    $config['trans_cr_canceled'] => 'Canceled',
+);
+
+
+
 
 $config['status_list'] = array(
     'pending'=>'Pending',
@@ -146,16 +218,25 @@ $config['status_colors'] = array(
     $config['trans_status_tobepickup'] => 'maroon',
     $config['trans_status_pickup'] => 'green',
 
-    $config['trans_status_atmerchant'] => 'maroon',
-    $config['trans_status_pu2wh'] => 'green',
-    $config['trans_status_inwh'] => 'black',
-    $config['trans_status_wh2ds'] => 'orange',
-    $config['trans_status_ds2wh'] => 'brown',
-    $config['trans_status_return2merchant'] => 'red'
+    $config['trans_wh_atmerchant'] => 'maroon',
+    $config['trans_wh_pu2wh'] => 'green',
+    $config['trans_wh_inwh'] => 'black',
+    $config['trans_wh_wh2ds'] => 'orange',
+    $config['trans_wh_ds2wh'] => 'brown',
+    $config['trans_wh_return2merchant'] => 'maroon',
+    $config['trans_wh_canceled'] => 'red',
+
+    $config['trans_cr_atmerchant'] => 'maroon',
+    $config['trans_cr_inwh'] => 'brown',
+    $config['trans_cr_oncr'] => 'green',
+    $config['trans_cr_return2wh'] => 'brown',
+    $config['trans_cr_return2merchant'] => 'maroon',
+    $config['trans_cr_canceled'] => 'red',
+
 
 );
 
-$config['status_changes'] = array(
+$config['delivery_status_changes'] = array(
     $config['trans_status_new'] => 'orange',
     $config['trans_status_tobeconfirmed'] => 'orange',
     $config['trans_status_purged'] => 'red',
@@ -187,12 +268,23 @@ $config['pickup_status_changes'] = array(
 
 $config['warehouse_status_changes'] = array(
 
-    $config['trans_status_atmerchant'] => 'maroon',
-    $config['trans_status_pu2wh'] => 'green',
-    $config['trans_status_inwh'] => 'black',
-    $config['trans_status_wh2ds'] => 'orange',
-    $config['trans_status_ds2wh'] => 'brown',
-    $config['trans_status_return2merchant'] => 'red'
+    $config['trans_wh_atmerchant'] => 'maroon',
+    $config['trans_wh_pu2wh'] => 'green',
+    $config['trans_wh_inwh'] => 'black',
+    $config['trans_wh_wh2ds'] => 'orange',
+    $config['trans_wh_ds2wh'] => 'brown',
+    $config['trans_wh_return2merchant'] => 'maroon',
+    $config['trans_wh_canceled'] => 'red',
+);
+
+$config['courier_status_changes'] = array(
+
+    $config['trans_cr_atmerchant'] => 'maroon',
+    $config['trans_cr_inwh'] => 'brown',
+    $config['trans_cr_oncr'] => 'green',
+    $config['trans_cr_return2wh'] => 'brown',
+    $config['trans_cr_return2merchant'] => 'maroon',
+    $config['trans_cr_canceled'] => 'red',
 );
 
 $config['max_lat'] = -6.288176;

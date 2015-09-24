@@ -56,6 +56,10 @@ class AdminController extends Controller {
 
     public $can_add = true;
 
+    public $can_import = true;
+
+    public $can_export = true;
+
     public $is_report = false;
 
     public $report_action = '';
@@ -128,6 +132,11 @@ class AdminController extends Controller {
     public $responder_type = 's';
 
     public $print = false;
+
+    public $import_main_form = 'shared.importinput';
+
+    public $import_aux_form = '';
+
 
 	public function __construct(){
 
@@ -353,6 +362,8 @@ class AdminController extends Controller {
 			->with('crumb',$this->crumb )
             ->with('printlink', $this->printlink )
             ->with('can_add', $this->can_add )
+            ->with('can_import', $this->can_import )
+            ->with('can_export', $this->can_export )
             ->with('is_report',$this->is_report)
             ->with('report_action',$this->report_action)
             ->with('is_additional_action',$this->is_additional_action)
@@ -696,6 +707,8 @@ class AdminController extends Controller {
 
 			$counter++;
 		}
+
+        $aadata = $this->rows_post_process($aadata, $this->aux_data);
 
         $sEcho = (int) Input::get('sEcho');
 
@@ -2092,7 +2105,7 @@ class AdminController extends Controller {
 			->with('obj',$obj);
 	}
 
-    public function postDlxl()
+    public function ___postDlxl()
     {
 
         $fields = $this->fields; // fields set must align with search column index
@@ -2131,142 +2144,22 @@ class AdminController extends Controller {
         $hilite_replace = array();
 
         $colheads = array();
+        $coltitles = array();
+
+
+        $model = $this->model;
+
+        $model = $this->SQL_additional_query($model);
+
+        //$model = $this->SQL_make_join($model);
+
+        $comres = $this->SQLcompileSearch($fields, $model);
+
+        $model = $comres['model'];
+        $q = $comres['q'];
+
 
         //exit();
-
-        for($i = 0;$i < count($fields);$i++){
-            $idx = $i;
-
-            //print_r($fields[$i]);
-
-            $field = $fields[$i][0];
-            $title = $titles[$i][0];
-            $type = $fields[$i][1]['kind'];
-
-            if( isset($titles[$i][1]['alias']) && $titles[$i][1]['alias']){
-                $title = $titles[$i][1]['alias'];
-                $field = $titles[$i][1]['alias'];
-            }else{
-                $title = $titles[$i][0];
-            }
-
-            //print $field;
-
-            $colheads[$i] = $field;
-            $coltitles[$i] = ucwords( str_replace('_', ' ', $title) );
-
-
-            $qval = '';
-
-            //print 'filter : '. $field.' : '.$infilters[$i];
-
-            if( isset($infilters[$i]) && $infilters[$i])
-            {
-                if( $type == 'text'){
-                    if($fields[$i][1]['query'] == 'like'){
-                        $pos = $fields[$i][1]['pos'];
-                        if($pos == 'both'){
-                            //$model->whereRegex($field,'/'.Input::get('sSearch_'.$idx).'/i');
-                            //$this->model->where($field,'like','%'.Input::get('sSearch_'.$idx).'%');
-
-                            $qval = new MongoRegex('/'.$infilters[$i].'/i');
-                        }else if($pos == 'before'){
-                            //$this->model->whereRegex($field,'/^'.$infilters[$i].'/i');
-                            //$this->model->where($field,'like','%'.$infilters[$i]);
-
-                            $qval = new MongoRegex('/^'.$infilters[$i].'/i');
-                        }else if($pos == 'after'){
-                            //$this->model->whereRegex($field,'/'.$infilters[$i].'$/i');
-                            //$this->model->where($field,'like', $infilters[$i].'%');
-
-                            $qval = new MongoRegex('/'.$infilters[$i].'$/i');
-                        }
-                    }else{
-                        $qval = $infilters[$i];
-
-                        //$this->model->where($field,$qval);
-                    }
-
-                    $q[$field] = $qval;
-
-                }elseif($type == 'numeric' || $type == 'currency'){
-                    $str = $infilters[$i];
-
-                    $sign = null;
-
-                    $strval = trim(str_replace(array('<','>','='), '', $str));
-
-                    $qval = (double)$strval;
-
-                    /*
-                    if(is_null($sign)){
-                        $qval = new MongoInt32($strval);
-                    }else{
-                        $str = new MongoInt32($str);
-                        $qval = array($sign=>$str);
-                    }
-                    */
-
-
-                    if(strpos($str, "<=") !== false){
-                        $sign = '$lte';
-
-                        //$this->model->whereLte($field,$qval);
-                        //$this->model->where($field,'<=',$qval);
-
-                    }elseif(strpos($str, ">=") !== false){
-                        $sign = '$gte';
-
-                        //$this->model->whereGte($field,$qval);
-                        //$this->model->where($field,'>=',$qval);
-
-                    }elseif(strpos($str, ">") !== false){
-                        $sign = '$gt';
-
-                        //$this->model->whereGt($field,$qval);
-                        //$this->model->where($field,'>',$qval);
-
-                    }elseif(stripos($str, "<") !== false){
-                        $sign = '$lt';
-
-                        //$this->model->whereLt($field,$qval);
-                        //$this->model->where($field,'<',$qval);
-
-                    }
-
-                    //print $sign;
-                    if(!is_null($sign)){
-                        $qval = array($sign=>$qval);
-                    }
-
-                    $q[$field] = $qval;
-
-                }elseif($type == 'date'|| $type == 'datetime'){
-                    $datestring = $infilters[$i];
-                    $datestring = date('d-m-Y', $datestring / 1000);
-
-                    if (($timestamp = $datestring) === false) {
-                    } else {
-                        $daystart = new MongoDate(strtotime($datestring.' 00:00:00'));
-                        $dayend = new MongoDate(strtotime($datestring.' 23:59:59'));
-
-                        $qval = array($field =>array('$gte'=>$daystart,'$lte'=>$dayend));
-                        //echo "$str == " . date('l dS \o\f F Y h:i:s A', $timestamp);
-
-                        //$this->model->whereBetween($field,$daystart,$dayend);
-
-                    }
-                    $qval = array('$gte'=>$daystart,'$lte'=>$dayend);
-                    //$qval = $infilters[$i];
-
-                    $q[$field] = $qval;
-
-                }
-
-
-            }
-
-        }
 
         //print_r($q);
 
@@ -2298,7 +2191,14 @@ class AdminController extends Controller {
         //print $sort_col.' -> '.$sort_dir;
 
 
+        $count_all = $this->model->count();
+        $count_display_all = $this->model->count();
 
+        $this->aux_data = $this->SQL_before_paging($model);
+
+        $results = $model->orderBy($sort_col, $sort_dir )->get();
+
+        /*
         if(is_array($q) && count($q) > 0){
             $results = $this->model->whereRaw($q)->orderBy($sort_col, $sort_dir )->get();
 
@@ -2310,6 +2210,7 @@ class AdminController extends Controller {
             $count_display_all = $this->model->count();
 
         }
+        */
 
         $lastQuery = $q;
 
@@ -2453,6 +2354,279 @@ class AdminController extends Controller {
         print json_encode($result);
 
     }
+
+    public function postDlxl()
+    {
+
+        $fields = $this->fields; // fields set must align with search column index
+
+        if(is_null($this->heads)){
+            $titles = array();
+            foreach ($this->fields as $fh) {
+
+                $alias = (isset($fh[1]['alias']))?$fh[1]['alias']:false;
+                $titles[] = array(ucwords($fh[0]),array('search'=>true,'sort'=>true, 'alias'=>$alias));
+            }
+        }else{
+            $titles = $this->heads;
+        }
+
+        //print_r($titles);
+
+        array_unshift($fields, array('seq',array('kind'=>false)));
+        array_unshift($fields, array('action',array('kind'=>false)));
+
+        array_unshift($titles, array('seq',array('kind'=>false)));
+        array_unshift($titles, array('action',array('kind'=>false)));
+
+        $infilters = Input::get('filter');
+        $insorting = Input::get('sort');
+
+        //print_r($infilters);
+        //print_r($fields);
+
+        $defsort = 1;
+        $defdir = -1;
+
+        $idx = 0;
+        $q = array();
+
+        $hilite = array();
+        $hilite_replace = array();
+
+        $colheads = array();
+        $coltitles = array();
+
+        //exit();
+        $model = $this->model;
+
+        $model = $this->SQL_additional_query($model);
+
+        //$model = $this->SQL_make_join($model);
+
+        $comres = $this->SQLcompileSearch($fields, $model);
+
+        $model = $comres['model'];
+        $q = $comres['q'];
+
+
+
+        //print_r($q);
+
+        /*
+        if(count($q) > 0){
+            $results = $model->skip( $pagestart )->take( $pagelength )->orderBy($sort_col, $sort_dir )->get();
+            $count_display_all = $model->count();
+        }else{
+            $results = $model->find(array(),array(),array($sort_col=>$sort_dir),$limit);
+            $count_display_all = $model->count();
+        }
+        */
+
+        //$model->where('docFormat','picture');
+
+        //array_unshift($fields, array('sel',array('kind'=>false)));
+
+        if($insorting[0] == 0){
+            $sort_col = $this->def_order_by;
+
+            $sort_dir = $this->def_order_dir;
+        }else{
+            $sort_col = $fields[$insorting[0]][0];
+
+            $sort_dir = $insorting[1];
+
+        }
+
+        //print $sort_col.' -> '.$sort_dir;
+
+        $count_all = $model->count();
+        //$count_display_all = $model->count();
+        $count_display_all = $count_all;
+
+        $this->aux_data = $this->SQL_before_paging($model);
+
+        $results = $model->orderBy($sort_col, $sort_dir )->get();
+
+        $lastQuery = $q;
+
+        //print_r($results->toArray());
+
+        $aadata = array();
+
+        $counter = 1;
+
+        //print_r($titles);
+
+
+
+        //print count($fields)."\r\n";
+        //print count($titles);
+
+        for($i = 0;$i < count($titles);$i++){
+            $idx = $i;
+
+
+            $field = $fields[$i][0];
+
+            if( isset($titles[$i][1]['alias']) && $titles[$i][1]['alias']){
+                $title = $titles[$i][1]['alias'];
+                $field = $titles[$i][1]['alias'];
+            }else{
+                $title = $titles[$i][0];
+            }
+
+            //print $field;
+
+            $colheads[$i] = $field;
+            $coltitles[$i] = ucwords( str_replace('_', ' ', $title) );
+        }
+
+        //die();
+
+        foreach ($results->toArray() as $doc) {
+
+            $row = array();
+
+            //print_r($results);
+
+            $tdoc = array();
+            foreach($doc as $k=>$v){
+                $tdoc[$k]= $v;
+            }
+
+            $doc = $tdoc;
+            //$row[] = $counter;
+
+            foreach($fields as $field){
+                if($field[1]['kind'] != false && ( isset($field[1]['show']) && $field[1]['show'] == true ) ){
+
+                    $fieldarray = explode('.',$field[0]);
+                    if(is_array($fieldarray) && count($fieldarray) > 1){
+                        $fieldarray = implode('\'][\'',$fieldarray);
+                        $cstring = '$label = (isset($doc[\''.$fieldarray.'\']))?true:false;';
+                        eval($cstring);
+                    }else{
+                        $label = (isset($doc[$field[0]]))?true:false;
+                    }
+
+
+                    if($label){
+
+                        if( isset($field[1]['callback']) && $field[1]['callback'] != ''){
+                            $callback = $field[1]['callback'];
+                            $row[] = $this->$callback($doc, $field[0]);
+                        }else{
+                            if($field[1]['kind'] == 'datetime'){
+                                if($doc[$field[0]] instanceof MongoDate){
+                                    $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]->sec);
+                                }elseif ($doc[$field[0]] instanceof Date) {
+                                    $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]);
+                                }else{
+                                    //$rowitem = $doc[$field[0]];
+                                    if(is_array($doc[$field[0]])){
+                                        $rowitem = date('d-m-Y H:i:s', time() );
+                                    }else{
+                                        $rowitem = date('d-m-Y H:i:s',strtotime($doc[$field[0]]) );
+                                    }
+                                }
+                            }elseif($field[1]['kind'] == 'date'){
+                                if($doc[$field[0]] instanceof MongoDate){
+                                    $rowitem = date('d-m-Y',$doc[$field[0]]->sec);
+                                }elseif ($doc[$field[0]] instanceof Date) {
+                                    $rowitem = date('d-m-Y',$doc[$field[0]]);
+                                }else{
+                                    //$rowitem = $doc[$field[0]];
+                                    $rowitem = date('d-m-Y',strtotime($doc[$field[0]]) );
+                                }
+                            }elseif($field[1]['kind'] == 'currency'){
+                                $num = (double) $doc[$field[0]];
+                                $rowitem = number_format($num,2,',','.');
+                            }else{
+                                $rowitem = $doc[$field[0]];
+                            }
+
+                            if(isset($field[1]['attr'])){
+                                $attr = '';
+                                foreach ($field[1]['attr'] as $key => $value) {
+                                    $attr .= $key.'="'.$value.'" ';
+                                }
+                                $row[] = '<span '.$attr.' >'.$rowitem.'</span>';
+                            }else{
+                                $row[] = $rowitem;
+                            }
+
+                        }
+
+
+                    }else{
+                        $row[] = '';
+                    }
+                }
+            }
+
+            $aadata[] = $row;
+
+            $counter++;
+        }
+
+        $sdata = $aadata;
+
+        array_shift($colheads);
+        array_shift($colheads);
+        array_shift($coltitles);
+        array_shift($coltitles);
+
+        array_unshift($sdata,$colheads);
+        array_unshift($sdata,$coltitles);
+
+        //print_r($sdata);
+        //print public_path();
+
+        $fname =  $this->controller_name.'_'.date('d-m-Y-H-m-s',time());
+
+        /*
+        Excel::create( $fname )
+            ->sheet('sheet1')
+            ->with($sdata)
+            ->save('xls',public_path().'/storage/dled');
+
+        Excel::create( $fname )
+            ->sheet('sheet1')
+            ->with($sdata)
+            ->save('xls',public_path().'/storage/dled');
+        */
+
+        $path = Excel::create( $fname, function($excel) use ($sdata){
+                $excel->sheet('sheet1', function($sheet) use ($sdata){
+                    $sheet->fromArray($sdata);
+                });
+                    //->with($sdata);
+            })->store('xls',public_path().'/storage/dled',true);
+
+        //print_r($path);
+
+        $fp = fopen(public_path().'/storage/dled/'.$fname.'.csv', 'w');
+
+        foreach ($sdata as $fields) {
+            fputcsv($fp, $fields, ',' , '"');
+        }
+
+        fclose($fp);
+
+
+        $result = array(
+            'status'=>'OK',
+            'filename'=>$fname,
+            'urlxls'=>URL::to(strtolower($this->controller_name).'/dl/'.$path['file']),
+            'urlcsv'=>URL::to(strtolower($this->controller_name).'/csv/'.$fname.'.csv'),
+            'q'=>$lastQuery
+        );
+
+        print json_encode($result);
+
+    }
+
 
     public function postSQLDlxl()
     {
@@ -2756,8 +2930,9 @@ class AdminController extends Controller {
 
         Breadcrumbs::addCrumb('Import '.$this->title,URL::to('/'));
 
-        return View::make('shared.importinput')
+        return View::make($this->import_main_form)
             ->with('title',$this->title)
+            ->with('aux_form',$this->import_aux_form)
             //->with('input_name',$this->input_name)
             ->with('importkey', $this->importkey)
             ->with('back',strtolower($this->controller_name))
@@ -2766,6 +2941,8 @@ class AdminController extends Controller {
 
     public function postUploadimport()
     {
+        date_default_timezone_set('Asia/Jakarta');
+
         $file = Input::file('inputfile');
 
         $headindex = Input::get('headindex');
@@ -2773,6 +2950,8 @@ class AdminController extends Controller {
         $firstdata = Input::get('firstdata');
 
         $importkey = (!is_null($this->importkey))?Input::get('importkey'):$this->importkey;
+
+        $aux_form_data = $this->processImportAuxForm();
 
         //$importkey = $this->importkey;
 
@@ -2800,7 +2979,8 @@ class AdminController extends Controller {
             $imp = array();
 
             Excel::load($xlsfile,function($reader) use (&$imp){
-                $reader->setDateFormat('Y-m-d H:i:s');
+                //$reader->formatDates(true, 'Y-m-d H:i:s');
+                $reader->formatDates(true);
                 $imp = $reader->toArray();
             })->get();
 
@@ -2832,6 +3012,14 @@ class AdminController extends Controller {
                     $sessobj->{ $headrow[$k] } = $this->prepImportItem($headrow[$k],$v);
                     $rowtemp[$headrow[$k]] = $v;
                 }
+
+                if(count($aux_form_data) > 0){
+                    foreach($aux_form_data as $ak=>$av){
+                        $sessobj->{ $ak } = $this->prepImportItem($ak,$av);
+                        $rowtemp[$ak] = $av;
+                    }
+                }
+
                 $rowitem = $rowtemp;
 
                 $sessobj->sessId = $rstring;
@@ -2848,6 +3036,10 @@ class AdminController extends Controller {
 
         return Redirect::to($commit_url);
 
+    }
+
+    public function processImportAuxForm(){
+        return array();
     }
 
     public function prepImportItem($field, $v){
@@ -2918,11 +3110,11 @@ class AdminController extends Controller {
                 if($obj){
 
                     foreach($rowitem as $k=>$v){
-                        if($v != ''){
+                        if($v != '' && $k != '_id'){
                             $obj->{$k} = $v;
                         }
                     }
-
+                    $obj->lastUpdate = new MongoDate();
                     $obj->save();
                 }else{
 
@@ -2942,7 +3134,10 @@ class AdminController extends Controller {
                 $rowitem['createdDate'] = new MongoDate();
                 $rowitem['lastUpdate'] = new MongoDate();
 
+                //print_r($rowitem);
+
                 $rowitem = $this->beforeImportCommit($rowitem);
+
 
                 $this->model->insert($rowitem);
 
@@ -2955,6 +3150,16 @@ class AdminController extends Controller {
 
         return Redirect::to($this->backlink);
 
+    }
+
+    public function traverseFields($fields)
+    {
+        $out = array();
+        foreach ($fields as $f) {
+            $out[$f[0]] = $f[1];
+        }
+
+        return $out;
     }
 
     public function tagToArray($tagstring)

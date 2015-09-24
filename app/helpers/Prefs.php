@@ -8,6 +8,8 @@ class Prefs {
     public static $faqcategory;
     public static $productcategory;
     public static $role;
+    public static $logistic;
+    public static $position;
 
     public function __construct()
     {
@@ -116,6 +118,65 @@ class Prefs {
     {
         return self::$shopcategory;
     }
+
+    //Logistics
+    public static function getLogistic(){
+        $c = Logistic::get();
+
+        self::$logistic = $c;
+        return new self;
+    }
+
+    public function LogisticToSelection($value, $label, $all = true)
+    {
+        if($all){
+            $ret = array(''=>'Select Logistic');
+        }else{
+            $ret = array();
+        }
+
+        foreach (self::$logistic as $c) {
+            $ret[$c->{$value}] = $c->{$label};
+        }
+
+
+        return $ret;
+    }
+
+    public function LogisticToArray()
+    {
+        return self::$logistic;
+    }
+
+    //Disposition
+    public static function getPosition(){
+        $c = Position::get();
+
+        self::$position = $c;
+        return new self;
+    }
+
+    public function PositionToSelection($value, $label, $all = true)
+    {
+        if($all){
+            $ret = array(''=>'Select Position');
+        }else{
+            $ret = array();
+        }
+
+        foreach (self::$position as $c) {
+            $ret[$c->{$value}] = $c->{$label};
+        }
+
+
+        return $ret;
+    }
+
+    public function PositionToArray()
+    {
+        return self::$position;
+    }
+
 
     public static function getRole(){
         $c = Role::get();
@@ -342,20 +403,24 @@ class Prefs {
         }
     }
 
-    public static function colorizestatus($status, $prefix = '', $suffix = ''){
+    public static function colorizestatus($status, $type ,$prefix = '', $suffix = ''){
 
-        $colors = Config::get('jayon.status_colors');
+        $trans = Config::get('jayon.'.$type.'_status');
+
+        $colors = Config::get('jayon.'.$type.'_status_changes');
         if($status == '' || !in_array($status, array_keys($colors))){
             $class = 'brown';
             $status = 'N/A';
         }else{
             $class = $colors[$status];
+            $status = $trans[$status];
         }
 
-        $atatus = str_replace('_', ' ', $status);
-        $status = $prefix.ucwords($status).$suffix;
+        //$atatus = str_replace('_', ' ', $status);
+        //$status = $prefix.ucwords($status).$suffix;
 
-        return sprintf('<span class="%s">%s</span>',$class,$status);
+
+        return sprintf('<span class="%s statbox">%s</span>',$class,$status);
     }
 
     public static function colorizetype($type, $prefix = '', $suffix = ''){

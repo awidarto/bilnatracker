@@ -89,6 +89,23 @@
                 }
         });
 
+
+        $('.d-datepicker').bootstrapDatepicker({
+            startView: 0, // 0: month view , 1: year view, 2: multiple year view
+            language: 'en',
+            //forceParse: false,
+            //daysOfWeekDisabled: $(this).data('day-disabled') ? $(this).data('day-disabled') : "", // Disable 1 or various day. For monday and thursday: 1,3
+            calendarWeeks: $(this).data('calendar-week') ? $(this).data('calendar-week') : false, // Display week number
+            //autoclose: $(this).data('autoclose') ? $(this).data('autoclose') : false,
+            todayHighlight: true, // Highlight today date
+            toggleActive: true, // Close other when open
+            //multidate: $(this).data('multidate') ? $(this).data('multidate') : false, // Allow to select various days
+            //orientation: $(this).data('orientation') ? $(this).data('orientation') : "top", // Allow to select various days,
+            rtl: false,
+            format : 'yyyy-mm-dd'
+        });
+
+
         $('.filterdaterangepicker').daterangepicker({
             opens:'right',
             format:'DD-MM-YYYY'

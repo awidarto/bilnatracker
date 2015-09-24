@@ -1,4 +1,34 @@
-<a class="btn btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print Selected Barcodes</a>
+<a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
+<a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
+<a class="btn btn-transparent btn-info btn-sm" id="set_pickup"><i class="fa fa-calendar"></i> Set Pick Up Date</a>
+
+<div id="move-order-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Move Selected</span></h3>
+    </div>
+    <div class="modal-body" >
+        {{ Former::select('status', 'To' )->id('move-to')->options(Config::get('jex.buckets')) }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-primary" id="do-move">Move</button>
+    </div>
+</div>
+
+<div id="set-pickup-date-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Set Pick Up Date</span></h3>
+    </div>
+    <div class="modal-body" >
+        {{ Former::text('pickup_date', 'Set Pick Up Date' )->id('pickup-date')->class('form-control d-datepicker') }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-primary" id="do-set-date">Set</button>
+    </div>
+</div>
 
 <div id="print-modal" class="modal fade large" tabindex="-1" role="dialog" aria-labelledby="myPrintModalLabel" aria-hidden="true">
     <div class="modal-header">
@@ -62,20 +92,30 @@
     overflow: auto;
 }
 
+#ui-datepicker-div{
+    z-index: 100000 !important;
+}
 </style>
 
 <script type="text/javascript">
     $(document).ready(function(){
+
+
         $('#refresh_filter').on('click',function(){
-            oTable.fnDraw();
+            oTable.draw();
         });
 
         $('#outlet_filter').on('change',function(){
-            oTable.fnDraw();
+            oTable.draw();
         });
 
-        $('#move_outlets').on('click',function(e){
-            $('#assign-modal').modal();
+        $('#move_orders').on('click',function(e){
+            $('#move-order-modal').modal();
+            e.preventDefault();
+        });
+
+        $('#set_pickup').on('click',function(e){
+            $('#set-pickup-date-modal').modal();
             e.preventDefault();
         });
 
@@ -139,7 +179,7 @@
                     ,'json');
 
             }else{
-                alert('No product selected.');
+                alert('No item selected.');
                 $('#print-modal').modal('hide');
             }
 
@@ -190,8 +230,7 @@
 
         });
 
-
-        $('#do-assign').on('click',function(){
+        $('#do-move').on('click',function(){
             var props = $('.selector:checked');
             var ids = [];
             $.each(props, function(index){
@@ -201,19 +240,48 @@
             console.log(ids);
 
             if(ids.length > 0){
-                $.post('{{ URL::to('ajax/assignoutlet')}}',
+                $.post('{{ URL::to('ajax/moveorder')}}',
                     {
-                        outlet : $('#assigned-category').val(),
-                        product_ids : ids
+                        bucket : $('#move-to').val(),
+                        ids : ids
                     },
                     function(data){
-                        $('#assign-modal').modal('hide');
-                        oTable.fnDraw();
+                        $('#move-order-modal').modal('hide');
+                        oTable.draw();
                     }
                     ,'json');
 
             }else{
-                alert('No product selected.');
+                alert('No shipment selected.');
+                $('#move-order-modal').modal('hide');
+            }
+
+        });
+
+
+        $('#do-set-date').on('click',function(){
+            var props = $('.selector:checked');
+            var ids = [];
+            $.each(props, function(index){
+                ids.push( $(this).val() );
+            });
+
+            console.log(ids);
+
+            if(ids.length > 0){
+                $.post('{{ URL::to('incoming/assigndate')}}',
+                    {
+                        date : $('#pickup-date').val(),
+                        ids : ids
+                    },
+                    function(data){
+                        $('#set-pickup-date-modal').modal('hide');
+                        oTable.draw();
+                    }
+                    ,'json');
+
+            }else{
+                alert('No item selected.');
                 $('#assign-modal').modal('hide');
             }
 
@@ -240,7 +308,7 @@
                     prop_ids : ids
                 },
                 function(data){
-                    oTable.fnDraw();
+                    oTable.draw();
                 }
                 ,'json');
 

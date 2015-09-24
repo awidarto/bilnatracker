@@ -77,7 +77,21 @@
                     <li class="{{ sa('usergroup') }}">
                       <a href="{{ URL::to('usergroup') }}" class="{{ sa('usergroup') }}" ><i class="fa fa-group"></i> Roles</a>
                     </li>
+                    <li class="{{ sa('courier') }}" >
+                      <a href="{{ URL::to('courier') }}" class="{{ sa('courier') }}" ><i class="fa fa-group"></i> Couriers</a>
+                    </li>
+
+
                     <li class="{{ sa('holiday') }}"><a href="{{ URL::to('holiday') }}"><i class="fa fa-calendar"></i> Holidays</a></li>
+
+
+                    <li class="{{ sa('logistics') }}" >
+                      <a href="{{ URL::to('logistics') }}" class="{{ sa('logistics') }}" ><i class="fa fa-arrows-h"></i> Logistics</a>
+                    </li>
+
+                    <li class="{{ sa('position') }}" >
+                      <a href="{{ URL::to('position') }}" class="{{ sa('position') }}" ><i class="fa fa-map-marker"></i> Logistic Nodes</a>
+                    </li>
                     <li class="{{ sa('option') }}">
                       <a href="{{ URL::to('option') }}" class="{{ sa('option') }}" ><i class="fa fa-wrench"></i> Options</a>
                     </li>

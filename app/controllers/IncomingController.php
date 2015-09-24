@@ -106,9 +106,11 @@ class IncomingController extends AdminController {
 
         $this->can_add = false;
 
+        /*
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },
                     { "sClass": "column-amt", "aTargets": [ 10 ] }';
+        */
 
         return parent::getIndex();
 
@@ -277,6 +279,8 @@ class IncomingController extends AdminController {
         */
 
         $model = $model->where(function($query){
+                    $query->where('bucket','=',Config::get('jayon.bucket_incoming'));
+                /*
                 $query->where(function($q){
                     $q->where('pending_count','=',0)
                         ->where('status','=', Config::get('jayon.trans_status_new') );
@@ -284,7 +288,7 @@ class IncomingController extends AdminController {
                 ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
                 ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') );
 //                ->where('status','not regexp','/*assigned/');
-
+                */
             })
             ->orderBy('ordertime','desc');
 
@@ -611,9 +615,9 @@ class IncomingController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = Config::get('jex.default_heads');
+        $this->heads = Config::get('jex.default_export_heads');
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = Config::get('jex.default_export_fields');
 
         /*
         $this->fields = array(
@@ -661,7 +665,9 @@ class IncomingController extends AdminController {
 
     public function getImport(){
 
-        $this->importkey = 'delivery_id';
+        $this->importkey = '_id';
+
+        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
 
         return parent::getImport();
     }
@@ -673,6 +679,11 @@ class IncomingController extends AdminController {
         return parent::postUploadimport();
     }
 
+    public function processImportAuxForm()
+    {
+        return array('LOGISTIC'=>Input::get('logistic'),'POSITION'=>Input::get('position') );
+    }
+
     public function prepImportItem($field, $v){
 
         return $v;
@@ -680,6 +691,8 @@ class IncomingController extends AdminController {
 
     public function beforeImportCommit($data)
     {
+        date_default_timezone_set('Asia/Jakarta');
+
         /*
         unset($data['createdDate']);
         unset($data['lastUpdate']);
@@ -690,13 +703,47 @@ class IncomingController extends AdminController {
         unset($data['updated_at']);
         */
 
-        $data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
+        $trav = $this->traverseFields(Config::get('jex.default_export_fields'));
 
+        foreach ($data as $key=>$value){
+            if(array_key_exists($key, $trav)){
+                if($trav[$key]['kind'] == 'text'){
+                    $data[$key] = strval($value);
+                }
+
+
+                if($trav[$key]['kind'] == 'daterange' ||
+                    $trav[$key]['kind'] == 'datetimerange'||
+                    $trav[$key]['kind'] == 'date'||
+                    $trav[$key]['kind'] == 'datetime'
+
+                    ){
+
+                    if($key != 'createdDate' && $key != 'lastUpdate'){
+                        $data[$key] = new MongoDate( strtotime($data[$key]) );
+                    }
+
+                }
+
+            }
+        }
+        /*
+        $data['CONSIGNEE_OLSHOP_CUST'] = strval($data['CONSIGNEE_OLSHOP_CUST']);
+        $data['CONSIGNEE_OLSHOP_ORDERID'] = strval($data['CONSIGNEE_OLSHOP_ORDERID']);
+        $data['CONSIGNEE_OLSHOP_PHONE'] = strval($data['CONSIGNEE_OLSHOP_PHONE']);
+        $data['CONSIGNEE_OLSHOP_ZIP'] = strval($data['CONSIGNEE_OLSHOP_ZIP']);
+        $data['NO_SALES_ORDER'] = strval($data['NO_SALES_ORDER']);
+        */
+
+        //$data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
+
+        $data['bucket'] = Config::get('jayon.bucket_incoming');
 
         $data['status'] = Config::get('jayon.trans_status_confirmed');
         $data['logistic_status'] = '';
         $data['pending_count'] = 0;
-        $data['warehouse_status'] = Config::get('jayon.trans_status_atmerchant');
+        $data['courier_status'] = Config::get('jayon.trans_cr_atmerchant');
+        $data['warehouse_status'] = Config::get('jayon.trans_wh_atmerchant');
         $data['pickup_status'] = Config::get('jayon.trans_status_tobepickup');
 
         unset($data['volume']);
@@ -949,8 +996,15 @@ class IncomingController extends AdminController {
 
     public function statusList($data)
     {
+        $slist = array(
+            Prefs::colorizestatus($data['status'],'delivery'),
+            Prefs::colorizestatus($data['courier_status'],'courier'),
+            Prefs::colorizestatus($data['pickup_status'],'pickup'),
+            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
+        );
 
-        return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
+        return implode('<br />', $slist);
+        //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
 
@@ -969,6 +1023,30 @@ class IncomingController extends AdminController {
         }else{
             return $name;
         }
+    }
+
+    public function postAssigndate(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+            foreach($results as $r){
+                $r->PICK_UP_DATE = new MongoDate(strtotime($in['date'])) ;
+                $r->save();
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:MOVED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:MOVEFAILED' ));
+        }
+
     }
 
     public function getPrintlabel($sessionname, $printparam, $format = 'html' )

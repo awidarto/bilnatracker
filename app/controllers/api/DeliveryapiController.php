@@ -26,6 +26,8 @@ class DeliveryapiController extends \BaseController {
 
         $this->model = \DB::connection($this->sql_connection)->table($this->sql_table_name);
 
+        $this->model = new \Shipment();
+
     }
 
     /**
@@ -60,6 +62,7 @@ class DeliveryapiController extends \BaseController {
         $txtab = \Config::get('jayon.incoming_delivery_table');
 
         $orders = $this->model
+                    /*
                     ->select(
                             \DB::raw(
                                 \Config::get('jayon.incoming_delivery_table').'.* ,'.
@@ -81,18 +84,26 @@ class DeliveryapiController extends \BaseController {
                                     ->where('pending_count','>',0);
                             });
                     })
+                    */
                     ->orderBy('ordertime','desc')
                     ->get();
+
+                    $orders = $orders->toArray();
 
         for($n = 0; $n < count($orders);$n++){
             $or = new \stdClass();
             foreach( $orders[$n] as $k=>$v ){
-                $nk = $this->underscoreToCamelCase($k);
+                $nk = $this->underscoreToCamelCase(strtolower($k));
                 $or->$nk = (is_null($v))?'':$v;
             }
 
-            $or->extId = $or->id;
-            unset($or->id);
+            $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec );
+
+            $or->createddate = date('Y-m-d H:i:s', $or->createddate->sec );
+            $or->lastupdate = date('Y-m-d H:i:s', $or->lastupdate->sec );
+
+            $or->extId = $or->Id;
+            unset($or->Id);
 
             $orders[$n] = $or;
         }

@@ -61,6 +61,7 @@ $('.toggle_fullscreen').click(function() {
 });
 
 /* Simulate Ajax call on Panel with reload effect */
+/*
 function blockUI(item) {
     $(item).block({
         message: '<svg class="circular"><circle class="path" cx="40" cy="40" r="10" fill="none" stroke-width="2" stroke-miterlimit="10"/></svg>',
@@ -80,7 +81,7 @@ function blockUI(item) {
 function unblockUI(item) {
     $(item).unblock();
 }
-
+*/
 /**** PANEL ACTIONS ****/
 function handlePanelAction() {
     /* Create Portlets Controls automatically: reload, fullscreen, toggle, remove, popout */
@@ -95,7 +96,7 @@ function handlePanelAction() {
         });
     }
     handlePanelControls();
-    // Remove Panel 
+    // Remove Panel
     $(".panel-header .panel-close").on("click", function(event) {
         event.preventDefault();
         $item = $(this).parents(".panel:first");
@@ -153,7 +154,7 @@ function handlePanelAction() {
             unblockUI(el);
         }, 1800);
     });
-    // Maximize Panel Dimension 
+    // Maximize Panel Dimension
     $(document).on("click", ".panel-header .panel-maximize", function(event) {
         event.preventDefault();
         var panel = $(this).parents(".panel:first");
@@ -184,15 +185,15 @@ function maximizePanel(){
         if(panel.hasClass('maximized')){
             if(windowHeight > panelHeight){
                 panel.parent().height(windowHeight);
-            } 
+            }
             else{
                 if($('.main-content').height() > panelHeight) {
-                    panel.parent().height($('.main-content').height()); 
+                    panel.parent().height($('.main-content').height());
                 }
                 else{
-                    panel.parent().height(panelHeight); 
+                    panel.parent().height(panelHeight);
                 }
-            } 
+            }
         }
         else {
             panel.parent().height('');
@@ -611,7 +612,7 @@ function reposition_topnav() {
 if ($('body').hasClass('sidebar-collapsed')) $('.nav-sidebar .children').css({
     display: ''
 });
-// Handles form inside of dropdown 
+// Handles form inside of dropdown
 $('.dropdown-menu').find('form').click(function(e) {
     e.stopPropagation();
 });
@@ -660,7 +661,7 @@ function detectIE() {
     var trident = ua.indexOf('Trident/');
     var edge = ua.indexOf('Edge/');
     if (msie > 0 || trident > 0 || edge > 0) {
-        $('html').addClass('ie-browser');   
+        $('html').addClass('ie-browser');
     }
 }
 

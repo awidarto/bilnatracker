@@ -70,7 +70,7 @@ class CourierassignController extends AdminController {
         $t = new HtmlTable($tab_data, $attr, $header);
         $itemtable = $t->build();
 
-        $asset = Asset::find($id);
+        $asset = Shipment::find($id);
 
         Breadcrumbs::addCrumb('Ad Assets',URL::to( strtolower($this->controller_name) ));
         Breadcrumbs::addCrumb('Detail',URL::to( strtolower($this->controller_name).'/detail/'.$asset->_id ));
@@ -86,25 +86,7 @@ class CourierassignController extends AdminController {
     {
 
 
-        $this->heads = array(
-            array('Logistic & Fee Scheme',array('search'=>true,'sort'=>true)),
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Fulfillment ID',array('search'=>true,'sort'=>true)),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector_legacy') )),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-        );
+        $this->heads = Config::get('jex.default_courierassign_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
@@ -116,15 +98,19 @@ class CourierassignController extends AdminController {
 
         Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
 
-        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
         $this->product_info_url = strtolower($this->controller_name).'/info';
 
+        $this->can_add = false;
+
+        /*
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },
                     { "sClass": "column-amt", "aTargets": [ 10 ] }';
+        */
 
         return parent::getIndex();
 
@@ -133,25 +119,7 @@ class CourierassignController extends AdminController {
     public function postIndex()
     {
 
-        $this->fields = array(
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('fulfillment_code',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','callback'=>'dispBar' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','callback'=>'colorizetype' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-        );
+        $this->fields = Config::get('jex.default_courierassign_fields');
 
         /*
         $categoryFilter = Input::get('categoryFilter');
@@ -171,42 +139,17 @@ class CourierassignController extends AdminController {
         $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
         $this->sql_connection = 'mysql';
 
-        return parent::SQLtableResponder();
+        return parent::tableResponder();
     }
 
     public function getStatic()
     {
 
-        $this->heads = array(
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Requested Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Requested Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true)),
-            array('Merchant & Shop Name',array('search'=>true,'sort'=>true)),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-            array('Delivery Charge',array('search'=>true,'sort'=>true)),
-            array('COD Surcharge',array('search'=>true,'sort'=>true)),
-            array('COD Value',array('search'=>true,'sort'=>true)),
-            array('Buyer',array('search'=>true,'sort'=>true)),
-            array('ZIP',array('search'=>true,'sort'=>true)),
-            array('Phone',array('search'=>true,'sort'=>true)),
-            array('W x H x L = V',array('search'=>true,'sort'=>true)),
-            array('Weight Range',array('search'=>true,'sort'=>true)),
-        );
+        $this->heads = Config::get('jex.default_courierassign_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'General Ledger';
+        $this->title = 'Courier Assignment';
 
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
@@ -221,32 +164,7 @@ class CourierassignController extends AdminController {
 
         //table generator part
 
-        $this->fields = array(
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-        );
+        $this->fields = Config::get('jex.default_courierassign_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -267,32 +185,7 @@ class CourierassignController extends AdminController {
     public function getPrint()
     {
 
-        $this->heads = array(
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector') )),
-            array('Merchant & Shop Name',array('search'=>true,'sort'=>true)),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-            array('Delivery Charge',array('search'=>true,'sort'=>true)),
-            array('COD Surcharge',array('search'=>true,'sort'=>true)),
-            array('COD Value',array('search'=>true,'sort'=>true)),
-            array('Buyer',array('search'=>true,'sort'=>true)),
-            array('ZIP',array('search'=>true,'sort'=>true)),
-            array('Phone',array('search'=>true,'sort'=>true)),
-            array('W x H x L = V',array('search'=>true,'sort'=>true)),
-            array('Weight Range',array('search'=>true,'sort'=>true)),
-        );
+        $this->fields = Config::get('jex.default_courierassign_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
@@ -310,32 +203,7 @@ class CourierassignController extends AdminController {
 
         //table generator part
 
-        $this->fields = array(
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-        );
+        $this->fields = Config::get('jex.default_courierassign_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -397,6 +265,7 @@ class CourierassignController extends AdminController {
 
         $txtab = Config::get('jayon.incoming_delivery_table');
 
+        /*
         $model = $model->select(
                 DB::raw(
                     Config::get('jayon.incoming_delivery_table').'.* ,'.
@@ -407,8 +276,30 @@ class CourierassignController extends AdminController {
             )
             ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
             ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-            ->where('status','=', Config::get('jayon.trans_status_new') )
-            ->orderBy('ordertime','desc');
+        */
+
+        $model = $model->where(function($query){
+                    $query->where('bucket','=',Config::get('jayon.bucket_dispatcher'));
+                /*
+                $query->where(function($q){
+                    $q->where('pending_count','=',0)
+                        ->where('status','=', Config::get('jayon.trans_status_new') );
+                })
+                ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
+                ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') );
+//                ->where('status','not regexp','/*assigned/');
+                */
+            })
+
+            ->orderBy('PICK_UP_DATE','desc')
+            ->orderBy('DEVICE_ID','desc');
+            /*
+            ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
+            ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
+            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
+            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_tobeconfirmed'))
+            ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
+            */
 
         //print_r($in);
 
@@ -438,8 +329,43 @@ class CourierassignController extends AdminController {
 
     public function rows_post_process($rows, $aux = null){
 
+        $date = '';
+        $device = '';
+
+        //print_r($rows);
+
+        if(count($rows) > 0){
+
+            for($i = 0; $i < count($rows); $i++){
+
+                $extra = $rows[$i]['extra']->toArray();
+
+                if($rows[$i][4] != $date){
+                    $date = $rows[$i][4];
+                    $rows[$i][4] = '<input type="radio" name="date_select" value="'.$rows[$i][4].'" class="date_select form-control" /> '.$rows[$i][4];
+                }else{
+                    $rows[$i][4] = '';
+                }
+
+
+
+                if($rows[$i][5] != $device){
+                    $device_key = (isset($extra['DEVICE_KEY']))?$extra['DEVICE_KEY']:$rows[$i][5];
+                    $device = $rows[$i][5];
+                    $rows[$i][5] = '<input type="radio" name="device_select" value="'.$device_key.'" class="device_select form-control" /> '.$rows[$i][5];
+                }else{
+                    $rows[$i][5] = '';
+                }
+
+            }
+
+
+        }
+
+
         //print_r($this->aux_data);
         /*
+
         $total_base = 0;
         $total_converted = 0;
         $end = 0;
@@ -725,8 +651,11 @@ class CourierassignController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = null;
+        $this->heads = Config::get('jex.default_export_heads');
 
+        $this->fields = Config::get('jex.default_export_fields');
+
+        /*
         $this->fields = array(
             array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
@@ -739,7 +668,7 @@ class CourierassignController extends AdminController {
             array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
             array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
+            array('merchant_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
@@ -751,79 +680,110 @@ class CourierassignController extends AdminController {
             array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
+            array('actual_weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
         );
+        */
+
+        $db = Config::get('jayon.main_db');
 
         $this->def_order_by = 'ordertime';
         $this->def_order_dir = 'desc';
+        $this->place_action = 'first';
+        $this->show_select = true;
+
+        $this->sql_key = 'delivery_id';
+        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
+        $this->sql_connection = 'mysql';
 
         return parent::postDlxl();
     }
 
     public function getImport(){
 
-        $this->importkey = 'SKU';
+        $this->importkey = '_id';
+
+        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
 
         return parent::getImport();
     }
 
     public function postUploadimport()
     {
-        $this->importkey = 'SKU';
+        $this->importkey = 'CONSIGNEE_OLSHOP_ORDERID';
 
         return parent::postUploadimport();
     }
 
-    public function beforeImportCommit($data)
+    public function processImportAuxForm()
     {
-        $defaults = array();
-
-        $files = array();
-
-        // set new sequential ID
-
-
-        $data['priceRegular'] = new MongoInt32($data['priceRegular']);
-
-        $data['thumbnail_url'] = array();
-        $data['large_url'] = array();
-        $data['medium_url'] = array();
-        $data['full_url'] = array();
-        $data['delete_type'] = array();
-        $data['delete_url'] = array();
-        $data['filename'] = array();
-        $data['filesize'] = array();
-        $data['temp_dir'] = array();
-        $data['filetype'] = array();
-        $data['fileurl'] = array();
-        $data['file_id'] = array();
-        $data['caption'] = array();
-
-        $data['defaultpic'] = '';
-        $data['brchead'] = '';
-        $data['brc1'] = '';
-        $data['brc2'] = '';
-        $data['brc3'] = '';
-
-
-        $data['defaultpictures'] = array();
-        $data['files'] = array();
-
-        return $data;
+        return array('LOGISTIC'=>Input::get('logistic'),'POSITION'=>Input::get('position') );
     }
 
-    public function postRack()
+    public function prepImportItem($field, $v){
+
+        return $v;
+    }
+
+    public function beforeImportCommit($data)
     {
-        $locationId = Input::get('loc');
-        if($locationId == ''){
-            $racks = Assets::getRack()->RackToSelection('_id','SKU',true);
-        }else{
-            $racks = Assets::getRack(array('locationId'=>$locationId))->RackToSelection('_id','SKU',true);
+        /*
+        unset($data['createdDate']);
+        unset($data['lastUpdate']);
+
+        $data['created'] = $data['created_at'];
+
+        unset($data['created_at']);
+        unset($data['updated_at']);
+        */
+
+        $trav = $this->traverseFields(Config::get('jex.default_export_fields'));
+
+        foreach ($data as $key=>$value){
+            if(array_key_exists($key, $trav)){
+                if($trav[$key]['kind'] == 'text'){
+                    $data[$key] = strval($value);
+                }
+
+                if($trav[$key]['kind'] == 'daterange' ||
+                    $trav[$key]['kind'] == 'datetimerange'||
+                    $trav[$key]['kind'] == 'date'||
+                    $trav[$key]['kind'] == 'datetime'
+
+                    ){
+
+                    if($key != 'createdDate' && $key != 'lastUpdate'){
+                        $data[$key] = new MongoDate( strtotime($data[$key]) );
+                    }
+
+                }
+
+            }
         }
+        /*
+        $data['CONSIGNEE_OLSHOP_CUST'] = strval($data['CONSIGNEE_OLSHOP_CUST']);
+        $data['CONSIGNEE_OLSHOP_ORDERID'] = strval($data['CONSIGNEE_OLSHOP_ORDERID']);
+        $data['CONSIGNEE_OLSHOP_PHONE'] = strval($data['CONSIGNEE_OLSHOP_PHONE']);
+        $data['CONSIGNEE_OLSHOP_ZIP'] = strval($data['CONSIGNEE_OLSHOP_ZIP']);
+        $data['NO_SALES_ORDER'] = strval($data['NO_SALES_ORDER']);
+        */
 
-        $options = Assets::getRack(array('locationId'=>$locationId));
+        //$data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
 
-        return Response::json(array('result'=>'OK','html'=>$racks, 'options'=>$options ));
+        $data['bucket'] = Config::get('jayon.bucket_incoming');
+
+        $data['status'] = Config::get('jayon.trans_status_confirmed');
+        $data['logistic_status'] = '';
+        $data['pending_count'] = 0;
+        $data['courier_status'] = Config::get('jayon.trans_cr_atmerchant');
+        $data['warehouse_status'] = Config::get('jayon.trans_wh_atmerchant');
+        $data['pickup_status'] = Config::get('jayon.trans_status_tobepickup');
+
+        unset($data['volume']);
+        unset($data['sessId']);
+        unset($data['isHead']);
+
+        return $data;
     }
 
     public function makeActions($data)
@@ -849,7 +809,13 @@ class CourierassignController extends AdminController {
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
         */
-        $actions = '';
+        $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
+        $edit = '<a href="'.URL::to('advertiser/edit/'.$data['delivery_id']).'">Update</a>';
+        $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
+
+        $actions = View::make('shared.action')
+                        ->with('actions',array($dl))
+                        ->render();
         return $actions;
     }
 
@@ -1041,13 +1007,39 @@ class CourierassignController extends AdminController {
         }
     }
 
+    public function puDisp($data){
+        return $data['pickup_person'].'<br />'.$data['pickup_dev_id'];
+    }
+
+    public function dispFBar($data)
+
+    {
+        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
+        //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
+        return $display.'<br />'. '<a href="'.URL::to('incoming/detail/'.$data['delivery_id']).'" >'.$data['fulfillment_code'].' ('.$data['box_count'].' box)</a>';
+    }
+
     public function dispBar($data)
 
     {
-        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'] ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
+        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
         //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
         return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['delivery_id']).'" >'.$data['merchant_trans_id'].'</a>';
     }
+
+    public function statusList($data)
+    {
+        $slist = array(
+            Prefs::colorizestatus($data['status'],'delivery'),
+            Prefs::colorizestatus($data['courier_status'],'courier'),
+            Prefs::colorizestatus($data['pickup_status'],'pickup'),
+            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
+        );
+
+        return implode('<br />', $slist);
+        //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
+    }
+
 
     public function colorizetype($data)
     {
@@ -1082,20 +1074,20 @@ class CourierassignController extends AdminController {
         $top_offset = $pr[9];
 
         $session = Printsession::find($sessionname)->toArray();
-        $labels = Asset::whereIn('_id', $session)->get()->toArray();
+        $labels = Shipment::whereIn('_id', $session)->get()->toArray();
 
         $skus = array();
         foreach($labels as $l){
-            $skus[] = $l['SKU'];
+            $skus[] = $l['_id'];
         }
 
         $skus = array_unique($skus);
 
-        $products = Asset::whereIn('SKU',$skus)->get()->toArray();
+        $products = Shipment::whereIn('_id',$skus)->get()->toArray();
 
         $plist = array();
         foreach($products as $product){
-            $plist[$product['SKU']] = $product;
+            $plist[$product['_id']] = $product;
         }
 
         return View::make('asset.printlabel')
