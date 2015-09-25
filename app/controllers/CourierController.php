@@ -16,13 +16,13 @@ class CourierController extends AdminController {
 
         private $default_fields = array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('NAME',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('TYPE',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('EMAIL',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('ADDR',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('CITY',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('PHONE',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('REMARK',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('type',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('email',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('addr',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('phone',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('remark',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
         );
 
 
@@ -528,7 +528,7 @@ class CourierController extends AdminController {
     public function postAdd($data = null)
     {
         $this->validator = array(
-            'NAME' => 'required'
+            'name' => 'required'
         );
 
         return parent::postAdd($data);
@@ -537,7 +537,7 @@ class CourierController extends AdminController {
     public function postEdit($id,$data = null)
     {
         $this->validator = array(
-            'NAME' => 'required'
+            'name' => 'required'
         );
 
         //exit();

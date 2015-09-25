@@ -3,53 +3,53 @@
 @section('left')
         <h5>Courier Information</h5>
 
-        {{ Former::text('NAME','Full Name') }}
+        {{ Former::text('name','Full Name') }}
 
         <div class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::select('ID_TYPE')->options(array('KTP'=>'KTP','SIM'=>'SIM'))->label('ID Type') }}
+                {{ Former::select('id_type')->options(array('KTP'=>'KTP','SIM'=>'SIM'))->label('ID Type') }}
             </div>
             <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-                {{ Former::text('IDENTITY_NUMBER','ID Number') }}
+                {{ Former::text('identity_number','ID Number') }}
             </div>
         </div>
 
-        {{ Former::select('TYPE')->options(array('internal'=>'Internal','external'=>'External'))->label('Courier Type') }}
+        {{ Former::select('type')->options(array('internal'=>'Internal','external'=>'External'))->label('Courier Type') }}
 
         {{ Former::select('status')->options(array('inactive'=>'Inactive','active'=>'Active'))->label('Status') }}
 
         <h5>Personal Contact Info</h5>
 
-        {{ Former::text('ADDR','Address') }}
+        {{ Former::text('addr','Address') }}
 
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                {{ Former::text('CITY','City') }}
+                {{ Former::text('city','City') }}
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                {{ Former::text('ZIP','ZIP / Kode Pos') }}
+                {{ Former::text('zip','ZIP / Kode Pos') }}
             </div>
         </div>
 
         <div class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('PHONE','Phone') }}
+                {{ Former::text('phone','Phone') }}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('MOBILE_1','Mobile 1') }}
+                {{ Former::text('mobile_1','Mobile 1') }}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('MOBILE_2','Mobile 2') }}
+                {{ Former::text('mobile_2','Mobile 2') }}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('MOBILE_3','Mobile 3') }}
+                {{ Former::text('mobile_3','Mobile 3') }}
             </div>
         </div>
 
-        {{ Former::text('EMAIL','Email') }}
+        {{ Former::text('email','Email') }}
 
 
-        {{ Former::select('COUNTRY')->id('country')->options(Config::get('country.countries'))->label('Country of Origin') }}
+        {{ Former::select('country')->id('country')->options(Config::get('country.countries'))->label('Country of Origin') }}
 
 
         {{ Form::submit('Save',array('class'=>'btn btn-primary'))}}&nbsp;&nbsp;
@@ -60,7 +60,7 @@
 @section('right')
         <h5>Description & Support</h5>
 
-        {{ Former::textarea('REMARK','Notes & Remarks')->rows(10)->columns(20) }}
+        {{ Former::textarea('remark','Notes & Remarks')->rows(10)->columns(20) }}
 
 
 @stop

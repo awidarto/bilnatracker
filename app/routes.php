@@ -44,6 +44,9 @@ Route::controller('importer', 'ImporterController');
 Route::controller('device', 'DeviceController');
 Route::controller('parsedevice', 'ParsedeviceController');
 
+Route::controller('coverage', 'CoverageController');
+
+
 Route::controller('logistics', 'LogisticsController');
 Route::controller('courier', 'CourierController');
 Route::controller('position', 'PositionController');

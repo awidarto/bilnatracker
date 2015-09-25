@@ -6,27 +6,42 @@ class LogisticsController extends AdminController {
             array('CREATED DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('NAME',array('search'=>true,'sort'=>true)),
             array('LOGISTIC ID',array('search'=>true,'sort'=>true)),
+            array('CONSIGNEE CUSTOMER ID',array('search'=>true,'sort'=>true)),
             array('TYPE',array('search'=>true,'sort'=>true)),
             array('EMAIL',array('search'=>true,'sort'=>true)),
             array('REP NAME',array('search'=>true,'sort'=>true)),
+            array('PHONE',array('search'=>true,'sort'=>true)),
+            array('MOBILE 1',array('search'=>true,'sort'=>true)),
+            array('MOBILE 2',array('search'=>true,'sort'=>true)),
+            array('MOBILE 3',array('search'=>true,'sort'=>true)),
             array('REP ADDR',array('search'=>true,'style'=>'min-width:120px;width:120px !important;','sort'=>true)),
             array('CITY',array('search'=>true,'sort'=>true)),
-            array('PHONE',array('search'=>true,'sort'=>true)),
+            array('ZIP',array('search'=>true,'sort'=>true)),
+            array('COUNTRY',array('search'=>true,'sort'=>true)),
+            array('SUPPORT URL',array('search'=>true,'sort'=>true)),
             array('DESC',array('search'=>true,'sort'=>true)),
+            array('STATUS',array('search'=>true,'sort'=>true)),
         );
-
 
         private $default_fields = array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('NAME',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('LOGISTIC_CODE',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('TYPE',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('EMAIL',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('REP_NAME',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('REP_ADDR',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('REP_CITY',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('REP_PHONE',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('LOGISTIC_DESC',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('logistic_code',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_cust',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('type',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_email',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_phone',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_mobile_1',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_mobile_2',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_mobile_3',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_addr',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_zip',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('rep_country',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('support_url',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('logistic_desc',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('status',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
         );
 
 
@@ -532,7 +547,7 @@ class LogisticsController extends AdminController {
     public function postAdd($data = null)
     {
         $this->validator = array(
-            'LOGISTIC_CODE' => 'required'
+            'logistic_code' => 'required'
         );
 
         return parent::postAdd($data);
@@ -541,7 +556,7 @@ class LogisticsController extends AdminController {
     public function postEdit($id,$data = null)
     {
         $this->validator = array(
-            'LOGISTIC_CODE' => 'required'
+            'logistic_code' => 'required'
         );
 
         //exit();
@@ -552,39 +567,9 @@ class LogisticsController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = Config::get('jex.default_export_heads');
+        $this->heads = null;
 
-        $this->fields = Config::get('jex.default_export_fields');
-
-        /*
-        $this->fields = array(
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('actual_weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
-        );
-        */
+        $this->fields = $this->default_fields;
 
         $db = Config::get('jayon.main_db');
 
@@ -609,7 +594,7 @@ class LogisticsController extends AdminController {
 
     public function postUploadimport()
     {
-        $this->importkey = 'CONSIGNEE_OLSHOP_ORDERID';
+        $this->importkey = 'consignee_olshop_orderid';
 
         return parent::postUploadimport();
     }

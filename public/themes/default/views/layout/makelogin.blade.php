@@ -17,7 +17,7 @@
 
         <style type="text/css">
             .account2 .account-info{
-                background-color: #F4F4F4;
+                background-color: #FFF;
             }
 
             .account2 .form-footer{
@@ -33,7 +33,7 @@
             <i class="user-img icons-faces-users-03"></i>
             <div class="account-info">
 
-                <img src="{{ URL::to('/') }}/images/jex_top_logo.png">
+                <img src="{{ URL::to('/') }}/images/logo_bilna_2015_2.jpg">
 
             </div>
             <div class="account-form">

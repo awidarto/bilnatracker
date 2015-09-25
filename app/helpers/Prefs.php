@@ -16,6 +16,12 @@ class Prefs {
 
     }
 
+    public static function getDeliveryId()
+    {
+        $d = date('d-mY',time()).'-'.strtoupper( str_random(5) ) ;
+        return $d;
+    }
+
     public static function hashcheck($in , $pass){
 
         $hash = hash("haval256,5", Config::get('kickstart.ci_key') . $in);

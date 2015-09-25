@@ -21,10 +21,12 @@ class DeliveryapiController extends \BaseController {
         //$this->model = "Member";
         $this->controller_name = strtolower( str_replace('Controller', '', get_class()) );
 
-        $this->sql_table_name =  \Config::get('jayon.incoming_delivery_table') ;
-        $this->sql_connection = 'mysql';
+        //$this->sql_table_name =  \Config::get('jayon.incoming_delivery_table') ;
+        //$this->sql_connection = 'mysql';
 
-        $this->model = \DB::connection($this->sql_connection)->table($this->sql_table_name);
+        //$this->model = \DB::connection($this->sql_connection)->table($this->sql_table_name);
+
+        $this->model = new \Shipment();
 
     }
 
@@ -61,53 +63,11 @@ class DeliveryapiController extends \BaseController {
 
         $txtab = \Config::get('jayon.incoming_delivery_table');
 
-        /*
         $orders = $this->model
-                    ->select(
-                            \DB::raw(
-                                \Config::get('jayon.incoming_delivery_table').'.* ,'.
-                                \Config::get('jayon.jayon_members_table').'.merchantname as merchant_name ,'.
-                                \Config::get('jayon.applications_table').'.application_name as app_name ,'.
-                                '('.$txtab.'.width * '.$txtab.'.height * '.$txtab.'.length ) as volume'
-                            )
-                    )
-                    ->leftJoin(\Config::get('jayon.jayon_members_table'), \Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', \Config::get('jayon.jayon_members_table').'.id' )
-                    ->leftJoin(\Config::get('jayon.applications_table'), \Config::get('jayon.incoming_delivery_table').'.application_id', '=', \Config::get('jayon.applications_table').'.id' )
-
-                    ->where('device_id','=',$dev->id)
-                    ->where('assignment_date','=',$deliverydate)
-
-                    ->where(function($q){
-                        $q->where('status','=', \Config::get('jayon.trans_status_new') )
-                            ->orWhere(function($ql){
-                                $ql->where('status','=', \Config::get('jayon.trans_status_new') )
-                                    ->where('pending_count','>',0);
-                            });
-                    })
-                    ->orderBy('ordertime','desc')
-                    ->get();
-        */
-
-        $orders = $this->model
-                ->select(
-                    \DB::raw(
-                        \Config::get('jayon.incoming_delivery_table').'.* ,'.
-                        \Config::get('jayon.jayon_couriers_table').'.fullname as courier ,'.
-                        \Config::get('jayon.jayon_devices_table').'.identifier as device ,'.
-                        \Config::get('jayon.jayon_members_table').'.merchantname as merchant_name ,'.
-                        \Config::get('jayon.applications_table').'.application_name as app_name ,'.
-                        '('.$txtab.'.width * '.$txtab.'.height * '.$txtab.'.length ) as volume'
-                )
-            )
-            ->leftJoin(\Config::get('jayon.jayon_couriers_table'), \Config::get('jayon.incoming_delivery_table').'.courier_id', '=', \Config::get('jayon.jayon_couriers_table').'.id' )
-            ->leftJoin(\Config::get('jayon.jayon_devices_table'), \Config::get('jayon.incoming_delivery_table').'.device_id', '=', \Config::get('jayon.jayon_devices_table').'.id' )
-            ->leftJoin(\Config::get('jayon.jayon_members_table'), \Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', \Config::get('jayon.jayon_members_table').'.id' )
-            ->leftJoin(\Config::get('jayon.applications_table'), \Config::get('jayon.incoming_delivery_table').'.application_id', '=', \Config::get('jayon.applications_table').'.id' )
-
+            /*
             ->where(function($q) use($dev, $deliverydate){
                     $q->where('device_id','=',$dev->id)
-                    ->where('assignment_date','=',$deliverydate);
-
+                    ->where('pick_up_date','=',$deliverydate);
             })
             ->where(function($query){
                 $query->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
@@ -119,22 +79,36 @@ class DeliveryapiController extends \BaseController {
                     });
 
             })
-
+            */
             ->orderBy('ordertime','desc')
             ->get();
 
+        $orders = $orders->toArray();
+
+        //print_r($orders->toArray());
 
         for($n = 0; $n < count($orders);$n++){
             $or = new \stdClass();
             foreach( $orders[$n] as $k=>$v ){
-                $nk = $this->underscoreToCamelCase($k);
+                if($k != '_id' && $k != 'id'){
+                    $nk = $this->underscoreToCamelCase($k);
+                }else{
+                    $nk = $k;
+                }
+
                 $or->$nk = (is_null($v))?'':$v;
             }
 
-            $or->extId = $or->id;
-            unset($or->id);
+            //print_r($or);
+            $or->extId = $or->_id;
+            unset($or->_id);
 
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
+            $or->boxCount = $or->numberOfPackage;
+
+            $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec);
+            $or->createdDate = date('Y-m-d H:i:s', $or->createdDate->sec);
+            $or->lastUpdate = date('Y-m-d H:i:s', $or->lastUpdate->sec);
 
             $orders[$n] = $or;
         }

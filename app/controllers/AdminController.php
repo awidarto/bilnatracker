@@ -2986,6 +2986,10 @@ class AdminController extends Controller {
 
             $headrow = $imp[$headindex - 1];
 
+            for($h=0;$h < count($headrow);$h++){
+                $headrow[$h] = strtolower($headrow[$h]);
+            }
+
             //print_r($headrow);
 
             $firstdata = $firstdata - 1;
@@ -3009,8 +3013,9 @@ class AdminController extends Controller {
 
                 $rowtemp = array();
                 foreach($rowitem as $k=>$v){
-                    $sessobj->{ $headrow[$k] } = $this->prepImportItem($headrow[$k],$v);
-                    $rowtemp[$headrow[$k]] = $v;
+                    $hkey = strtolower($headrow[$k]);
+                    $sessobj->{ $hkey } = $this->prepImportItem($headrow[$k],$v,$rowitem);
+                    $rowtemp[$hkey] = $v;
                 }
 
                 if(count($aux_form_data) > 0){
@@ -3042,8 +3047,8 @@ class AdminController extends Controller {
         return array();
     }
 
-    public function prepImportItem($field, $v){
-        return $v;
+    public function prepImportItem($field, $val){
+        return $val;
     }
 
     public function getCommit($sessid)

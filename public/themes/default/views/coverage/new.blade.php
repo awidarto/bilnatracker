@@ -17,9 +17,9 @@
 @section('right')
         <h5>Device Coverage</h5>
 
-        {{ Former::text('city','City Coverage')->class('form-control tag_city') }}
+        {{ Former::text('city','City Coverage')->class('form-control tag_keyword') }}
 
-        {{ Former::text('district','Area Coverage')->class('form-control tag_district') }}
+        {{ Former::text('district','Area Coverage')->class('form-control') }}
 
 
         <div class="row">

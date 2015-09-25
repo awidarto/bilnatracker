@@ -984,6 +984,41 @@ class AjaxController extends BaseController {
         return Response::json($result);
     }
 
+    public function getDistrict()
+    {
+        $q = Input::get('term');
+
+        $q = '%'.$q.'%';
+
+        $devices = Coverage::where('district','like',$q)->get();
+
+        $result = array();
+
+        foreach($devices as $d){
+            $result[] = array('id'=>$d->key,'value'=>$d->district,'name'=>$d->district,'label'=>$d->district.' ( '.$d->key.' )');
+        }
+
+        return Response::json($result);
+    }
+
+    public function getCity()
+    {
+        $q = Input::get('term');
+
+        $q = '%'.$q.'%';
+
+        $devices = Coverage::distinct('city')->where('city','like',$q)->get();
+
+        $result = array();
+
+        foreach($devices as $d){
+            $result[] = array('id'=>$d->key,'value'=>$d->city,'name'=>$d->city,'label'=>$d->city);
+        }
+
+        return Response::json($result);
+    }
+
+
     public function getDevice()
     {
         $q = Input::get('term');

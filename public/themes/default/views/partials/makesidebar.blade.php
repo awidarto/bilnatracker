@@ -81,6 +81,9 @@
                       <a href="{{ URL::to('courier') }}" class="{{ sa('courier') }}" ><i class="fa fa-group"></i> Couriers</a>
                     </li>
 
+                    <li class="{{ sa('coverage') }}" >
+                      <a href="{{ URL::to('coverage') }}" class="{{ sa('coverage') }}" ><i class="fa fa-arrows-h"></i> Coverage</a>
+                    </li>
 
                     <li class="{{ sa('holiday') }}"><a href="{{ URL::to('holiday') }}"><i class="fa fa-calendar"></i> Holidays</a></li>
 

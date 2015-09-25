@@ -107,6 +107,8 @@ class ZoningController extends AdminController {
 
         $this->can_add = false;
 
+        $this->can_import = false;
+
         /*
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },

@@ -2,6 +2,30 @@
 
 class DeviceController extends AdminController {
 
+    private $default_fields = array(
+            array('identifier',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('devname',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('descriptor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('key',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('mobile',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('district',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('city',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('color',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('is_on',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
+        );
+
+    private $default_heads = array(
+            array('Device Identifier',array('search'=>true,'sort'=>true)),
+            array('Name',array('search'=>true,'sort'=>true)),
+            array('Description',array('search'=>true,'sort'=>true)),
+            array('Key',array('search'=>true,'sort'=>true)),
+            array('Number',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('District',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('City',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('Path Color',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('Status',array('search'=>true,'select'=>array(''=>'All','1'=>'Active','0'=>'Inactive'),'sort'=>true)),
+        );
+
     public function __construct()
     {
         parent::__construct();
@@ -86,17 +110,7 @@ class DeviceController extends AdminController {
     {
 
 
-        $this->heads = array(
-            array('Device Identifier',array('search'=>true,'sort'=>true)),
-            array('Name',array('search'=>true,'sort'=>true)),
-            array('Description',array('search'=>true,'sort'=>true)),
-            array('Key',array('search'=>true,'sort'=>true)),
-            array('Number',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('District',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('City',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Path Color',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Status',array('search'=>true,'sort'=>true,'date'=>true)),
-        );
+        $this->heads = $this->default_heads;
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
@@ -125,17 +139,7 @@ class DeviceController extends AdminController {
     public function postIndex()
     {
 
-        $this->fields = array(
-            array('identifier',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('devname',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('descriptor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('key',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('mobile',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('district',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('city',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('color',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('is_on',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
-        );
+        $this->fields = $this->default_fields;
 
         /*
         $categoryFilter = Input::get('categoryFilter');
@@ -155,30 +159,20 @@ class DeviceController extends AdminController {
         $this->sql_table_name = Config::get('jayon.jayon_devices_table');
         $this->sql_connection = 'mysql';
 
-        return parent::SQLtableResponder();
+        return parent::tableResponder();
     }
 
     public function getStatic()
     {
 
-        $this->heads = array(
-            array('Device Identifier',array('search'=>true,'sort'=>true)),
-            array('Description',array('search'=>true,'sort'=>true)),
-            array('Name',array('search'=>true,'sort'=>true)),
-            array('Key',array('search'=>true,'sort'=>true)),
-            array('Number',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('District',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('City',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Path Color',array('search'=>true,'sort'=>true,'date'=>true)),
-            array('Status',array('search'=>true,'sort'=>true,'date'=>true)),
-        );
+        $this->heads = $this->default_heads;
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'General Ledger';
+        $this->title = 'Devices';
 
 
-        Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
+        Breadcrumbs::addCrumb('Assets',URL::to( strtolower($this->controller_name) ));
 
         //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl/static')->render();
 
@@ -190,18 +184,7 @@ class DeviceController extends AdminController {
 
         //table generator part
 
-        $this->fields = array(
-            array('identifier',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('descriptor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('devname',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('key',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('password',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('mobile',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('district',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('city',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('color',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('is_on',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
-        );
+        $this->fields = $this->default_fields;
 
         $db = Config::get('jayon.main_db');
 
@@ -222,32 +205,7 @@ class DeviceController extends AdminController {
     public function getPrint()
     {
 
-        $this->heads = array(
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector') )),
-            array('Merchant & Shop Name',array('search'=>true,'sort'=>true)),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-            array('Delivery Charge',array('search'=>true,'sort'=>true)),
-            array('COD Surcharge',array('search'=>true,'sort'=>true)),
-            array('COD Value',array('search'=>true,'sort'=>true)),
-            array('Buyer',array('search'=>true,'sort'=>true)),
-            array('ZIP',array('search'=>true,'sort'=>true)),
-            array('Phone',array('search'=>true,'sort'=>true)),
-            array('W x H x L = V',array('search'=>true,'sort'=>true)),
-            array('Weight Range',array('search'=>true,'sort'=>true)),
-        );
+        $this->heads = $this->default_heads;
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
@@ -265,32 +223,7 @@ class DeviceController extends AdminController {
 
         //table generator part
 
-        $this->fields = array(
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-        );
+        $this->fields = $this->default_fields;
 
         $db = Config::get('jayon.main_db');
 
@@ -515,50 +448,8 @@ class DeviceController extends AdminController {
     public function beforeSave($data)
     {
 
-        if( isset($data['file_id']) && count($data['file_id'])){
 
-            $mediaindex = 0;
-
-            for($i = 0 ; $i < count($data['thumbnail_url']);$i++ ){
-
-                $index = $mediaindex;
-
-                $data['files'][ $data['file_id'][$i] ]['ns'] = $data['ns'][$i];
-                $data['files'][ $data['file_id'][$i] ]['role'] = $data['role'][$i];
-                $data['files'][ $data['file_id'][$i] ]['thumbnail_url'] = $data['thumbnail_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['large_url'] = $data['large_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['medium_url'] = $data['medium_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['full_url'] = $data['full_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['delete_type'] = $data['delete_type'][$i];
-                $data['files'][ $data['file_id'][$i] ]['delete_url'] = $data['delete_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['filename'] = $data['filename'][$i];
-                $data['files'][ $data['file_id'][$i] ]['filesize'] = $data['filesize'][$i];
-                $data['files'][ $data['file_id'][$i] ]['temp_dir'] = $data['temp_dir'][$i];
-                $data['files'][ $data['file_id'][$i] ]['filetype'] = $data['filetype'][$i];
-                $data['files'][ $data['file_id'][$i] ]['is_image'] = $data['is_image'][$i];
-                $data['files'][ $data['file_id'][$i] ]['is_audio'] = $data['is_audio'][$i];
-                $data['files'][ $data['file_id'][$i] ]['is_video'] = $data['is_video'][$i];
-                $data['files'][ $data['file_id'][$i] ]['fileurl'] = $data['fileurl'][$i];
-                $data['files'][ $data['file_id'][$i] ]['file_id'] = $data['file_id'][$i];
-                $data['files'][ $data['file_id'][$i] ]['sequence'] = $mediaindex;
-
-                $mediaindex++;
-
-                $data['defaultpic'] = $data['file_id'][0];
-                $data['defaultpictures'] = $data['files'][$data['file_id'][0]];
-
-            }
-
-        }else{
-
-            $data['defaultpic'] = '';
-            $data['defaultpictures'] = '';
-        }
-
-        $cats = Prefs::getShopCategory()->shopcatToSelection('slug', 'name', false);
-        $data['shopcategory'] = $cats[$data['shopcategoryLink']];
-
-            $data['shortcode'] = str_random(5);
+        $data['key'] = str_random(15);
 
         return $data;
     }
@@ -566,53 +457,9 @@ class DeviceController extends AdminController {
     public function beforeUpdate($id,$data)
     {
 
-        if( isset($data['file_id']) && count($data['file_id'])){
-
-            $mediaindex = 0;
-
-            for($i = 0 ; $i < count($data['thumbnail_url']);$i++ ){
-
-                $index = $mediaindex;
-
-                $data['files'][ $data['file_id'][$i] ]['ns'] = $data['ns'][$i];
-                $data['files'][ $data['file_id'][$i] ]['role'] = $data['role'][$i];
-                $data['files'][ $data['file_id'][$i] ]['thumbnail_url'] = $data['thumbnail_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['large_url'] = $data['large_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['medium_url'] = $data['medium_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['full_url'] = $data['full_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['delete_type'] = $data['delete_type'][$i];
-                $data['files'][ $data['file_id'][$i] ]['delete_url'] = $data['delete_url'][$i];
-                $data['files'][ $data['file_id'][$i] ]['filename'] = $data['filename'][$i];
-                $data['files'][ $data['file_id'][$i] ]['filesize'] = $data['filesize'][$i];
-                $data['files'][ $data['file_id'][$i] ]['temp_dir'] = $data['temp_dir'][$i];
-                $data['files'][ $data['file_id'][$i] ]['filetype'] = $data['filetype'][$i];
-                $data['files'][ $data['file_id'][$i] ]['is_image'] = $data['is_image'][$i];
-                $data['files'][ $data['file_id'][$i] ]['is_audio'] = $data['is_audio'][$i];
-                $data['files'][ $data['file_id'][$i] ]['is_video'] = $data['is_video'][$i];
-                $data['files'][ $data['file_id'][$i] ]['fileurl'] = $data['fileurl'][$i];
-                $data['files'][ $data['file_id'][$i] ]['file_id'] = $data['file_id'][$i];
-                $data['files'][ $data['file_id'][$i] ]['sequence'] = $mediaindex;
-
-                $mediaindex++;
-
-                $data['defaultpic'] = $data['file_id'][0];
-                $data['defaultpictures'] = $data['files'][$data['file_id'][0]];
-
-            }
-
-        }else{
-
-            $data['defaultpic'] = '';
-            $data['defaultpictures'] = '';
+        if(!isset($data['key']) || $data['key'] == ''){
+            $data['key'] = str_random(15);
         }
-
-        if(!isset($data['shortcode']) || $data['shortcode'] == ''){
-            $data['shortcode'] = str_random(5);
-        }
-
-        $cats = Prefs::getShopCategory()->shopcatToSelection('slug', 'name', false);
-        $data['shopcategory'] = $cats[$data['shopcategoryLink']];
-
 
         return $data;
     }
@@ -682,17 +529,7 @@ class DeviceController extends AdminController {
 
         $this->heads = null;
 
-        $this->fields = array(
-            array('identifier',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('devname',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('descriptor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('key',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('mobile',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('district',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('city',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('color',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('is_on',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
-        );
+        $this->fields = $this->default_fields;
 
         $this->def_order_by = 'identifier';
         $this->def_order_dir = 'desc';
@@ -709,61 +546,17 @@ class DeviceController extends AdminController {
 
     public function postUploadimport()
     {
-        $this->importkey = 'SKU';
+        $this->importkey = 'identifier';
 
         return parent::postUploadimport();
     }
 
     public function beforeImportCommit($data)
     {
-        $defaults = array();
 
-        $files = array();
-
-        // set new sequential ID
-
-
-        $data['priceRegular'] = new MongoInt32($data['priceRegular']);
-
-        $data['thumbnail_url'] = array();
-        $data['large_url'] = array();
-        $data['medium_url'] = array();
-        $data['full_url'] = array();
-        $data['delete_type'] = array();
-        $data['delete_url'] = array();
-        $data['filename'] = array();
-        $data['filesize'] = array();
-        $data['temp_dir'] = array();
-        $data['filetype'] = array();
-        $data['fileurl'] = array();
-        $data['file_id'] = array();
-        $data['caption'] = array();
-
-        $data['defaultpic'] = '';
-        $data['brchead'] = '';
-        $data['brc1'] = '';
-        $data['brc2'] = '';
-        $data['brc3'] = '';
-
-
-        $data['defaultpictures'] = array();
-        $data['files'] = array();
+        $data['is_on'] = new MongoInt32($data['is_on']);
 
         return $data;
-    }
-
-    public function postRack()
-    {
-        $locationId = Input::get('loc');
-        if($locationId == ''){
-            $racks = Assets::getRack()->RackToSelection('_id','SKU',true);
-        }else{
-            $racks = Assets::getRack(array('locationId'=>$locationId))->RackToSelection('_id','SKU',true);
-        }
-
-        $options = Assets::getRack(array('locationId'=>$locationId));
-
-        return Response::json(array('result'=>'OK','html'=>$racks, 'options'=>$options ));
     }
 
     public function makeActions($data)

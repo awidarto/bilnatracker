@@ -1,6 +1,25 @@
 <?php
 
-class IncomingController extends AdminController {
+class CoverageController extends AdminController {
+
+        private $default_heads = array(
+            array('District',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('City',array('search'=>true,'sort'=>true)),
+            array('Province',array('search'=>true,'sort'=>true)),
+            array('Zip',array('search'=>true,'sort'=>true)),
+            array('Country',array('search'=>true,'sort'=>true)),
+            array('Status',array('search'=>true,'select'=>array(''=>'All','1'=>'Active','0'=>'Inactive'),'sort'=>true)),
+        );
+
+
+        private $default_fields = array(
+            array('district',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('province',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('zips',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('country',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('is_on',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+        );
 
     public function __construct()
     {
@@ -12,9 +31,9 @@ class IncomingController extends AdminController {
         //$this->crumb->append('Home','left',true);
         //$this->crumb->append(strtolower($this->controller_name));
 
-        $this->model = new Shipment();
+        $this->model = new Coverage();
         //$this->model = DB::collection('documents');
-        $this->title = 'Incoming Order';
+        $this->title = 'Coverage';
 
     }
 
@@ -70,7 +89,7 @@ class IncomingController extends AdminController {
         $t = new HtmlTable($tab_data, $attr, $header);
         $itemtable = $t->build();
 
-        $asset = Shipment::find($id);
+        $asset = Asset::find($id);
 
         Breadcrumbs::addCrumb('Ad Assets',URL::to( strtolower($this->controller_name) ));
         Breadcrumbs::addCrumb('Detail',URL::to( strtolower($this->controller_name).'/detail/'.$asset->_id ));
@@ -86,32 +105,28 @@ class IncomingController extends AdminController {
     {
 
 
-        $this->heads = Config::get('jex.default_heads');
+        $this->heads = $this->default_heads;
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Incoming Order';
+        $this->title = 'Coverage';
 
         $this->place_action = 'first';
 
         $this->show_select = true;
 
-        Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
+        Breadcrumbs::addCrumb('Assets',URL::to( strtolower($this->controller_name) ));
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
+        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
         $this->product_info_url = strtolower($this->controller_name).'/info';
-
-        $this->can_add = false;
-
         /*
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },
                     { "sClass": "column-amt", "aTargets": [ 10 ] }';
         */
-
         return parent::getIndex();
 
     }
@@ -119,8 +134,7 @@ class IncomingController extends AdminController {
     public function postIndex()
     {
 
-        $this->fields = Config::get('jex.default_fields');
-
+        $this->fields = $this->default_fields;
         /*
         $categoryFilter = Input::get('categoryFilter');
         if($categoryFilter != ''){
@@ -130,13 +144,13 @@ class IncomingController extends AdminController {
 
         $db = Config::get('jayon.main_db');
 
-        $this->def_order_by = 'ordertime';
+        $this->def_order_by = 'city';
         $this->def_order_dir = 'desc';
         $this->place_action = 'first';
         $this->show_select = true;
 
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
+        $this->sql_key = 'id';
+        $this->sql_table_name = Config::get('jayon.jayon_zones_table');
         $this->sql_connection = 'mysql';
 
         return parent::tableResponder();
@@ -145,11 +159,21 @@ class IncomingController extends AdminController {
     public function getStatic()
     {
 
-        $this->heads = Config::get('jex.default_heads');
+        $this->heads = array(
+            array('Device Identifier',array('search'=>true,'sort'=>true)),
+            array('Description',array('search'=>true,'sort'=>true)),
+            array('Name',array('search'=>true,'sort'=>true)),
+            array('Key',array('search'=>true,'sort'=>true)),
+            array('Number',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('District',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('City',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('Path Color',array('search'=>true,'sort'=>true,'date'=>true)),
+            array('Status',array('search'=>true,'sort'=>true,'date'=>true)),
+        );
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Incoming Order';
+        $this->title = 'General Ledger';
 
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
@@ -164,7 +188,18 @@ class IncomingController extends AdminController {
 
         //table generator part
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = array(
+            array('identifier',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('descriptor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('devname',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('key',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('password',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('mobile',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('district',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('city',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('color',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('is_on',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
+        );
 
         $db = Config::get('jayon.main_db');
 
@@ -185,11 +220,36 @@ class IncomingController extends AdminController {
     public function getPrint()
     {
 
-        $this->fields = Config::get('jex.default_heads');
+        $this->heads = array(
+            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
+            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
+            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
+            array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
+            array('Slot',array('search'=>true,'sort'=>true)),
+            array('Zone',array('search'=>true,'sort'=>true)),
+            array('City',array('search'=>true,'sort'=>true)),
+            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
+            array('No Invoice',array('search'=>true,'sort'=>true)),
+            array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector') )),
+            array('Merchant & Shop Name',array('search'=>true,'sort'=>true)),
+            array('Box ID',array('search'=>true,'sort'=>true)),
+            array('Status',array('search'=>true,'sort'=>true)),
+            array('Directions',array('search'=>true,'sort'=>true)),
+            array('Signatures',array('search'=>true,'sort'=>true)),
+            array('Delivery Charge',array('search'=>true,'sort'=>true)),
+            array('COD Surcharge',array('search'=>true,'sort'=>true)),
+            array('COD Value',array('search'=>true,'sort'=>true)),
+            array('Buyer',array('search'=>true,'sort'=>true)),
+            array('ZIP',array('search'=>true,'sort'=>true)),
+            array('Phone',array('search'=>true,'sort'=>true)),
+            array('W x H x L = V',array('search'=>true,'sort'=>true)),
+            array('Weight Range',array('search'=>true,'sort'=>true)),
+        );
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Incoming Order';
+        $this->title = 'Coverage';
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
 
@@ -203,7 +263,32 @@ class IncomingController extends AdminController {
 
         //table generator part
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = array(
+            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
+            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
+            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
+            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+        );
 
         $db = Config::get('jayon.main_db');
 
@@ -261,11 +346,9 @@ class IncomingController extends AdminController {
                 ->orderBy('ACCNT_CODE','ASC')
                 ->orderBy('TRANS_DATETIME','DESC');
         }
-        */
 
         $txtab = Config::get('jayon.incoming_delivery_table');
 
-        /*
         $model = $model->select(
                 DB::raw(
                     Config::get('jayon.incoming_delivery_table').'.* ,'.
@@ -276,29 +359,9 @@ class IncomingController extends AdminController {
             )
             ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
             ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-        */
-
-        $model = $model->where(function($query){
-                    $query->where('bucket','=',Config::get('jayon.bucket_incoming'));
-                /*
-                $query->where(function($q){
-                    $q->where('pending_count','=',0)
-                        ->where('status','=', Config::get('jayon.trans_status_new') );
-                })
-                ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
-                ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') );
-//                ->where('status','not regexp','/*assigned/');
-                */
-            })
+            ->where('status','=', Config::get('jayon.trans_status_new') )
             ->orderBy('ordertime','desc');
-
-            /*
-            ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
-            ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
-            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
-            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_tobeconfirmed'))
-            ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
-            */
+        */
 
         //print_r($in);
 
@@ -595,7 +658,7 @@ class IncomingController extends AdminController {
     public function postAdd($data = null)
     {
         $this->validator = array(
-            'shopDescription' => 'required'
+            'district' => 'required'
         );
 
         return parent::postAdd($data);
@@ -604,7 +667,7 @@ class IncomingController extends AdminController {
     public function postEdit($id,$data = null)
     {
         $this->validator = array(
-            'shopDescription' => 'required'
+            'district' => 'required'
         );
 
         //exit();
@@ -615,132 +678,50 @@ class IncomingController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = Config::get('jex.default_export_heads');
+        $this->heads = null;
 
-        $this->fields = Config::get('jex.default_export_fields');
+        $this->fields = $this->default_fields;
 
-        $db = Config::get('jayon.main_db');
-
-        $this->def_order_by = 'ordertime';
+        $this->def_order_by = 'city';
         $this->def_order_dir = 'desc';
-        $this->place_action = 'first';
-        $this->show_select = true;
-
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
 
         return parent::postDlxl();
     }
 
     public function getImport(){
 
-        $this->importkey = '_id';
-
-        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
+        $this->importkey = 'SKU';
 
         return parent::getImport();
     }
 
     public function postUploadimport()
     {
-        $this->importkey = 'consignee_olshop_orderid';
+        $this->importkey = 'district';
 
         return parent::postUploadimport();
     }
 
-    public function processImportAuxForm()
-    {
-
-        return array('position'=>Input::get('position') );
-    }
-
-    public function prepImportItem($field, $v){
-
-        return $v;
-    }
-
     public function beforeImportCommit($data)
     {
-        date_default_timezone_set('Asia/Jakarta');
 
-        /*
-        unset($data['createdDate']);
-        unset($data['lastUpdate']);
-
-        $data['created'] = $data['created_at'];
-
-        unset($data['created_at']);
-        unset($data['updated_at']);
-        */
-
-        $trav = $this->traverseFields(Config::get('jex.default_export_fields'));
-
-        foreach ($data as $key=>$value){
-            if(array_key_exists($key, $trav)){
-                if($trav[$key]['kind'] == 'text'){
-                    $data[$key] = strval($value);
-                }
-
-
-                if($trav[$key]['kind'] == 'daterange' ||
-                    $trav[$key]['kind'] == 'datetimerange'||
-                    $trav[$key]['kind'] == 'date'||
-                    $trav[$key]['kind'] == 'datetime'
-
-                    ){
-
-                    if($key != 'createdDate' && $key != 'lastUpdate'){
-                        $data[$key] = new MongoDate( strtotime($data[$key]) );
-                    }
-
-                }
-
-            }
-        }
-        /*
-        $data['CONSIGNEE_OLSHOP_CUST'] = strval($data['CONSIGNEE_OLSHOP_CUST']);
-        $data['CONSIGNEE_OLSHOP_ORDERID'] = strval($data['CONSIGNEE_OLSHOP_ORDERID']);
-        $data['CONSIGNEE_OLSHOP_PHONE'] = strval($data['CONSIGNEE_OLSHOP_PHONE']);
-        $data['CONSIGNEE_OLSHOP_ZIP'] = strval($data['CONSIGNEE_OLSHOP_ZIP']);
-        $data['NO_SALES_ORDER'] = strval($data['NO_SALES_ORDER']);
-        */
-
-        //$data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
-
-        if(isset($data['consignee_olshop_cust'])){
-            $logistic = Logistic::where('consignee_olshop_cust', '=', $data['consignee_olshop_cust'])->first();
-
-            if($logistic){
-                $data['logistic'] = $logistic->logistic_code;
-                $data['logistic_type'] = $logistic->type;
-            }else{
-                $data['logistic'] = 'BRIDER001';
-                $data['logistic_type'] = 'internal';
-            }
-
-        }
-
-
-
-        $data['bucket'] = Config::get('jayon.bucket_incoming');
-
-        $data['delivery_id'] = Prefs::getDeliveryId();
-        $data['orderId'] = $data['no_sales_order'];
-        $data['fulfillment_code'] = $data['consignee_olshop_orderid'];
-
-        $data['status'] = Config::get('jayon.trans_status_confirmed');
-        $data['logistic_status'] = '';
-        $data['pending_count'] = 0;
-        $data['courier_status'] = Config::get('jayon.trans_cr_atmerchant');
-        $data['warehouse_status'] = Config::get('jayon.trans_wh_atmerchant');
-        $data['pickup_status'] = Config::get('jayon.trans_status_tobepickup');
-
-        unset($data['volume']);
-        unset($data['sessId']);
-        unset($data['isHead']);
+        $data['is_on'] = new MongoInt32($data['is_on']);
 
         return $data;
+    }
+
+    public function postRack()
+    {
+        $locationId = Input::get('loc');
+        if($locationId == ''){
+            $racks = Assets::getRack()->RackToSelection('_id','SKU',true);
+        }else{
+            $racks = Assets::getRack(array('locationId'=>$locationId))->RackToSelection('_id','SKU',true);
+        }
+
+        $options = Assets::getRack(array('locationId'=>$locationId));
+
+        return Response::json(array('result'=>'OK','html'=>$racks, 'options'=>$options ));
     }
 
     public function makeActions($data)
@@ -766,13 +747,7 @@ class IncomingController extends AdminController {
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
         */
-        $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
-        $edit = '<a href="'.URL::to('advertiser/edit/'.$data['delivery_id']).'">Update</a>';
-        $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
-
-        $actions = View::make('shared.action')
-                        ->with('actions',array($dl))
-                        ->render();
+        $actions = '';
         return $actions;
     }
 
@@ -964,39 +939,13 @@ class IncomingController extends AdminController {
         }
     }
 
-    public function puDisp($data){
-        return $data['pickup_person'].'<br />'.$data['pickup_dev_id'];
-    }
-
-    public function dispFBar($data)
-
-    {
-        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
-        //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
-        return $display.'<br />'. '<a href="'.URL::to('incoming/detail/'.$data['delivery_id']).'" >'.$data['fulfillment_code'].' ('.$data['box_count'].' box)</a>';
-    }
-
     public function dispBar($data)
 
     {
-        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
+        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'] ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
         //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
         return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['delivery_id']).'" >'.$data['merchant_trans_id'].'</a>';
     }
-
-    public function statusList($data)
-    {
-        $slist = array(
-            Prefs::colorizestatus($data['status'],'delivery'),
-            Prefs::colorizestatus($data['courier_status'],'courier'),
-            Prefs::colorizestatus($data['pickup_status'],'pickup'),
-            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
-        );
-
-        return implode('<br />', $slist);
-        //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
-    }
-
 
     public function colorizetype($data)
     {
@@ -1015,30 +964,6 @@ class IncomingController extends AdminController {
         }
     }
 
-    public function postAssigndate(){
-        $in = Input::get();
-        $results = Shipment::whereIn('_id', $in['ids'])->get();
-
-        //print_r($results->toArray());
-
-        //if($results){
-            $res = false;
-        //}else{
-            foreach($results as $r){
-                $r->PICK_UP_DATE = new MongoDate(strtotime($in['date'])) ;
-                $r->save();
-            }
-            $res = true;
-        //}
-
-        if($res){
-            return Response::json(array('result'=>'OK:MOVED' ));
-        }else{
-            return Response::json(array('result'=>'ERR:MOVEFAILED' ));
-        }
-
-    }
-
     public function getPrintlabel($sessionname, $printparam, $format = 'html' )
     {
         $pr = explode(':',$printparam);
@@ -1055,20 +980,20 @@ class IncomingController extends AdminController {
         $top_offset = $pr[9];
 
         $session = Printsession::find($sessionname)->toArray();
-        $labels = Shipment::whereIn('_id', $session)->get()->toArray();
+        $labels = Asset::whereIn('_id', $session)->get()->toArray();
 
         $skus = array();
         foreach($labels as $l){
-            $skus[] = $l['_id'];
+            $skus[] = $l['SKU'];
         }
 
         $skus = array_unique($skus);
 
-        $products = Shipment::whereIn('_id',$skus)->get()->toArray();
+        $products = Asset::whereIn('SKU',$skus)->get()->toArray();
 
         $plist = array();
         foreach($products as $product){
-            $plist[$product['_id']] = $product;
+            $plist[$product['SKU']] = $product;
         }
 
         return View::make('asset.printlabel')
