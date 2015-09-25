@@ -167,6 +167,8 @@ class SyncapiController extends \Controller {
             //$j['mtimestamp'] = new \MongoDate();
 
             if(is_array($j)){
+
+
                 $olog = new \Orderstatuslog();
 
                 foreach ($j as $k=>$v) {
@@ -176,6 +178,20 @@ class SyncapiController extends \Controller {
                 $olog->mtimestamp = new \MongoDate(time());
 
                 $r = $olog->save();
+
+                $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
+
+                $shipment->status = $olog->status;
+                $shipment->courier_status = $olog->courierStatus;
+
+                if($olog->status == 'pending'){
+                    $shipment->pending_count = $shipment->pending_count + 1;
+                }elseif($olog->status == 'delivered'){
+                    $shipment->deliverytime = date('Y-m-d H:i:s',time());
+                }
+
+                $shipment->save();
+
 
                 if( $r ){
                     $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>'log inserted' );
