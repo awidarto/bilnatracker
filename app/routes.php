@@ -108,6 +108,7 @@ Route::group(array('prefix' => 'api/v1/mobile'), function (){
     Route::put('/auth/logout', 'Api\AuthController@logout');
     Route::post('/upload', 'Api\UploadapiController@postFile');
     Route::put('/sync/assets', 'Api\SyncapiController@putAssets');
+    Route::post('/sync/meta', 'Api\SyncapiController@postMeta');
     Route::post('/sync/scanlog', 'Api\SyncapiController@postScanlog');
     Route::post('/sync/note', 'Api\SyncapiController@postNote');
     Route::post('/sync/geolog', 'Api\SyncapiController@postGeolog');
