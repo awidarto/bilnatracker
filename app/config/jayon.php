@@ -285,6 +285,7 @@ $config['courier_status_changes'] = array(
     $config['trans_cr_atmerchant'] => 'maroon',
     $config['trans_cr_inwh'] => 'brown',
     $config['trans_cr_oncr'] => 'green',
+    $config['trans_cr_oncr_partial'] => 'green',
     $config['trans_cr_return2wh'] => 'brown',
     $config['trans_cr_return2merchant'] => 'maroon',
     $config['trans_cr_canceled'] => 'red',
