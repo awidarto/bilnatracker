@@ -237,9 +237,9 @@ class SyncapiController extends \Controller {
 
         if(!$user){
             $actor = 'no id : no name';
-            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image meta failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Unregistered Device' ));
         }
 
         $json = \Input::all();
