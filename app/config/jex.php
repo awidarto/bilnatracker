@@ -23,7 +23,7 @@ return array(
 
         'default_heads'=>array(
             array('CREATED DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            //array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
+            array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
             array('CURR POSITION',array('search'=>true,'select'=>Prefs::getPosition()->PositionToSelection('node_code','name') ,'sort'=>true)),
             array('LOGISTIC',array('search'=>true,'sort'=>true)),
             array('SERVICE',array('search'=>true,'sort'=>true)),
@@ -53,7 +53,7 @@ return array(
 
         'default_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_service',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
