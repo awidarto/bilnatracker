@@ -103,6 +103,8 @@ class DeliveryapiController extends \BaseController {
             $or->extId = $or->_id;
             unset($or->_id);
 
+            $or->deliveryType = (isset($or->cod) && $or->cod > 0)?'COD':'DO';
+
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
             $or->boxCount = $or->numberOfPackage;
 
