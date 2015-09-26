@@ -70,7 +70,7 @@ $config['jayon_mobile_table'] = 'mobile_orders';
 $config['bucket_incoming'] = 'incoming';
 $config['bucket_dispatcher'] = 'dispatcher';
 $config['bucket_tracker'] = 'tracker';
-
+$config['bucket_archive'] = 'archive';
 
 
 /* Delivery status strings */

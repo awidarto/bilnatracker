@@ -14,7 +14,7 @@ class CanceledController extends AdminController {
 
         $this->model = new Shipment();
         //$this->model = DB::collection('documents');
-        $this->title = 'Canceled Order';
+        $this->title = 'Canceled Data';
 
     }
 
@@ -70,7 +70,7 @@ class CanceledController extends AdminController {
         $t = new HtmlTable($tab_data, $attr, $header);
         $itemtable = $t->build();
 
-        $asset = Asset::find($id);
+        $asset = Shipment::find($id);
 
         Breadcrumbs::addCrumb('Ad Assets',URL::to( strtolower($this->controller_name) ));
         Breadcrumbs::addCrumb('Detail',URL::to( strtolower($this->controller_name).'/detail/'.$asset->_id ));
@@ -86,29 +86,11 @@ class CanceledController extends AdminController {
     {
 
 
-        $this->heads = array(
-            array('Logistic & Fee Scheme',array('search'=>true,'sort'=>true)),
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Fulfillment ID',array('search'=>true,'sort'=>true)),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector_legacy') )),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-        );
+        $this->heads = Config::get('jex.default_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Canceled Order';
+        $this->title = 'Canceled Data';
 
         $this->place_action = 'first';
 
@@ -116,15 +98,20 @@ class CanceledController extends AdminController {
 
         Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
 
-        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
         $this->product_info_url = strtolower($this->controller_name).'/info';
 
+        $this->can_add = false;
+        $this->can_import = false;
+
+        /*
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
                     { "sClass": "column-amt", "aTargets": [ 9 ] },
                     { "sClass": "column-amt", "aTargets": [ 10 ] }';
+        */
 
         return parent::getIndex();
 
@@ -133,26 +120,7 @@ class CanceledController extends AdminController {
     public function postIndex()
     {
 
-        $this->fields = array(
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('fulfillment_code',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','callback'=>'dispBar' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','callback'=>'colorizetype' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-
-        );
+        $this->fields = Config::get('jex.default_fields');
 
         /*
         $categoryFilter = Input::get('categoryFilter');
@@ -172,42 +140,17 @@ class CanceledController extends AdminController {
         $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
         $this->sql_connection = 'mysql';
 
-        return parent::SQLtableResponder();
+        return parent::tableResponder();
     }
 
     public function getStatic()
     {
 
-        $this->heads = array(
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Requested Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Requested Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true)),
-            array('Merchant & Shop Name',array('search'=>true,'sort'=>true)),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-            array('Delivery Charge',array('search'=>true,'sort'=>true)),
-            array('COD Surcharge',array('search'=>true,'sort'=>true)),
-            array('COD Value',array('search'=>true,'sort'=>true)),
-            array('Buyer',array('search'=>true,'sort'=>true)),
-            array('ZIP',array('search'=>true,'sort'=>true)),
-            array('Phone',array('search'=>true,'sort'=>true)),
-            array('W x H x L = V',array('search'=>true,'sort'=>true)),
-            array('Weight Range',array('search'=>true,'sort'=>true)),
-        );
+        $this->heads = Config::get('jex.default_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'General Ledger';
+        $this->title = 'Canceled Data';
 
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
@@ -222,32 +165,7 @@ class CanceledController extends AdminController {
 
         //table generator part
 
-        $this->fields = array(
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-        );
+        $this->fields = Config::get('jex.default_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -268,39 +186,11 @@ class CanceledController extends AdminController {
     public function getPrint()
     {
 
-        $this->heads = array(
-            array('Logistic & Fee Scheme',array('search'=>true,'sort'=>true)),
-            array('Timestamp',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
-            array('PU Time',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
-            array('PU Pic',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
-            array('PU Person & Device',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
-            array('Status',array('search'=>true,'sort'=>true)),
-            array('Delivery Date',array('search'=>true,'style'=>'min-width:125px;','sort'=>true, 'daterange'=>true )),
-            array('Slot',array('search'=>true,'sort'=>true)),
-            array('Zone',array('search'=>true,'sort'=>true)),
-            array('City',array('search'=>true,'sort'=>true)),
-            array('Shipping Address',array('search'=>true,'sort'=>true, 'style'=>'max-width:200px;width:200px;' )),
-            array('No Invoice',array('search'=>true,'sort'=>true)),
-            array('Type',array('search'=>true,'sort'=>true,'select'=>Config::get('jayon.deliverytype_selector_legacy') )),
-            array('Box ID',array('search'=>true,'sort'=>true)),
-            array('Directions',array('search'=>true,'sort'=>true)),
-            array('Signatures',array('search'=>true,'sort'=>true)),
-/*
-            array('Delivery Charge',array('search'=>true,'sort'=>true)),
-            array('COD Surcharge',array('search'=>true,'sort'=>true)),
-            array('COD Value',array('search'=>true,'sort'=>true)),
-            array('Buyer',array('search'=>true,'sort'=>true)),
-            array('ZIP',array('search'=>true,'sort'=>true)),
-            array('Phone',array('search'=>true,'sort'=>true)),
-            array('W x H x L = V',array('search'=>true,'sort'=>true)),
-            array('Weight Range',array('search'=>true,'sort'=>true)),
-*/
-
-        );
+        $this->fields = Config::get('jex.default_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Canceled Order';
+        $this->title = 'Incoming Order';
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
 
@@ -314,34 +204,7 @@ class CanceledController extends AdminController {
 
         //table generator part
 
-        $this->fields = array(
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','callback'=>'dispBar' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','callback'=>'colorizetype' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-/*
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-*/
-        );
+        $this->fields = Config::get('jex.default_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -384,40 +247,30 @@ class CanceledController extends AdminController {
 
         $company = strtolower($company);
 
-        /*
-        if($period_from == ''){
-            $model = $model->select($company.'_a_salfldg.*',$company.'_acnt.DESCR as ACC_DESCR')
-                ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' );
-        }else{
-            $model = $model->select($company.'_a_salfldg.*',$company.'_acnt.DESCR as ACC_DESCR')
-                ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-                ->where('PERIOD','>=', Input::get('acc-period-from') )
-                ->where('PERIOD','<=', Input::get('acc-period-to') )
-                ->where('ACCNT_CODE','>=', Input::get('acc-code-from') )
-                ->where('ACCNT_CODE','<=', Input::get('acc-code-to') )
-                ->orderBy('PERIOD','DESC')
-                ->orderBy('ACCNT_CODE','ASC')
-                ->orderBy('TRANS_DATETIME','DESC');
-        }
-        */
-
         $txtab = Config::get('jayon.incoming_delivery_table');
 
-        $model = $model->select(
-                DB::raw(
-                    Config::get('jayon.incoming_delivery_table').'.* ,'.
-                    Config::get('jayon.jayon_members_table').'.merchantname as merchant_name ,'.
-                    Config::get('jayon.applications_table').'.application_name as app_name ,'.
-                    '('.$txtab.'.width * '.$txtab.'.height * '.$txtab.'.length ) as volume'
-                )
-            )
-            ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
-            ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-
-            ->where('status','=', Config::get('jayon.trans_status_canceled') )
-            ->where('status','not like', 'assigned' )
-
+        $model = $model->where(function($query){
+                    $query->where('bucket','=',Config::get('jayon.bucket_tracker'))
+                        ->where('status','=',Config::get('jayon.trans_status_canceled'));
+                /*
+                $query->where(function($q){
+                    $q->where('pending_count','=',0)
+                        ->where('status','=', Config::get('jayon.trans_status_new') );
+                })
+                ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
+                ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') );
+//                ->where('status','not regexp','/*assigned/');
+                */
+            })
             ->orderBy('ordertime','desc');
+
+            /*
+            ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
+            ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
+            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
+            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_tobeconfirmed'))
+            ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
+            */
 
         //print_r($in);
 
@@ -734,105 +587,133 @@ class CanceledController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = null;
+        $this->heads = Config::get('jex.default_export_heads');
 
-        $this->fields = array(
-            array('ordertime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickuptime',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('pickup_person',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverytime',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliveryslot',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('buyerdeliveryzone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyerdeliverycity',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_address',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('merchant_trans_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_type',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array(Config::get('jayon.jayon_members_table').'.merchantname',array('kind'=>'text','alias'=>'merchant_name','query'=>'like','callback'=>'merchantInfo','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('directions',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('delivery_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('cod_cost',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('total_price',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('buyer_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('shipping_zip',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('phone',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('volume',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
-            array('weight',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
-        );
+        $this->fields = Config::get('jex.default_export_fields');
+
+        $db = Config::get('jayon.main_db');
 
         $this->def_order_by = 'ordertime';
         $this->def_order_dir = 'desc';
+        $this->place_action = 'first';
+        $this->show_select = true;
+
+        $this->sql_key = 'delivery_id';
+        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
+        $this->sql_connection = 'mysql';
 
         return parent::postDlxl();
     }
 
     public function getImport(){
 
-        $this->importkey = 'SKU';
+        $this->importkey = '_id';
+
+        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
 
         return parent::getImport();
     }
 
     public function postUploadimport()
     {
-        $this->importkey = 'SKU';
+        $this->importkey = 'consignee_olshop_orderid';
 
         return parent::postUploadimport();
     }
 
-    public function beforeImportCommit($data)
+    public function processImportAuxForm()
     {
-        $defaults = array();
 
-        $files = array();
-
-        // set new sequential ID
-
-
-        $data['priceRegular'] = new MongoInt32($data['priceRegular']);
-
-        $data['thumbnail_url'] = array();
-        $data['large_url'] = array();
-        $data['medium_url'] = array();
-        $data['full_url'] = array();
-        $data['delete_type'] = array();
-        $data['delete_url'] = array();
-        $data['filename'] = array();
-        $data['filesize'] = array();
-        $data['temp_dir'] = array();
-        $data['filetype'] = array();
-        $data['fileurl'] = array();
-        $data['file_id'] = array();
-        $data['caption'] = array();
-
-        $data['defaultpic'] = '';
-        $data['brchead'] = '';
-        $data['brc1'] = '';
-        $data['brc2'] = '';
-        $data['brc3'] = '';
-
-
-        $data['defaultpictures'] = array();
-        $data['files'] = array();
-
-        return $data;
+        return array('position'=>Input::get('position') );
     }
 
-    public function postRack()
+    public function prepImportItem($field, $v){
+
+        return $v;
+    }
+
+    public function beforeImportCommit($data)
     {
-        $locationId = Input::get('loc');
-        if($locationId == ''){
-            $racks = Assets::getRack()->RackToSelection('_id','SKU',true);
-        }else{
-            $racks = Assets::getRack(array('locationId'=>$locationId))->RackToSelection('_id','SKU',true);
+        date_default_timezone_set('Asia/Jakarta');
+
+        /*
+        unset($data['createdDate']);
+        unset($data['lastUpdate']);
+
+        $data['created'] = $data['created_at'];
+
+        unset($data['created_at']);
+        unset($data['updated_at']);
+        */
+
+        $trav = $this->traverseFields(Config::get('jex.default_export_fields'));
+
+        foreach ($data as $key=>$value){
+            if(array_key_exists($key, $trav)){
+                if($trav[$key]['kind'] == 'text'){
+                    $data[$key] = strval($value);
+                }
+
+
+                if($trav[$key]['kind'] == 'daterange' ||
+                    $trav[$key]['kind'] == 'datetimerange'||
+                    $trav[$key]['kind'] == 'date'||
+                    $trav[$key]['kind'] == 'datetime'
+
+                    ){
+
+                    if($key != 'createdDate' && $key != 'lastUpdate'){
+                        $data[$key] = new MongoDate( strtotime($data[$key]) );
+                    }
+
+                }
+
+            }
+        }
+        /*
+        $data['CONSIGNEE_OLSHOP_CUST'] = strval($data['CONSIGNEE_OLSHOP_CUST']);
+        $data['CONSIGNEE_OLSHOP_ORDERID'] = strval($data['CONSIGNEE_OLSHOP_ORDERID']);
+        $data['CONSIGNEE_OLSHOP_PHONE'] = strval($data['CONSIGNEE_OLSHOP_PHONE']);
+        $data['CONSIGNEE_OLSHOP_ZIP'] = strval($data['CONSIGNEE_OLSHOP_ZIP']);
+        $data['NO_SALES_ORDER'] = strval($data['NO_SALES_ORDER']);
+        */
+
+        //$data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
+
+        if(isset($data['consignee_olshop_cust'])){
+            $logistic = Logistic::where('consignee_olshop_cust', '=', $data['consignee_olshop_cust'])->first();
+
+            if($logistic){
+                $data['logistic'] = $logistic->logistic_code;
+                $data['logistic_type'] = $logistic->type;
+            }else{
+                $data['logistic'] = 'BRIDER001';
+                $data['logistic_type'] = 'internal';
+            }
+
         }
 
-        $options = Assets::getRack(array('locationId'=>$locationId));
 
-        return Response::json(array('result'=>'OK','html'=>$racks, 'options'=>$options ));
+        $data['bucket'] = Config::get('jayon.bucket_incoming');
+
+        $data['delivery_id'] = Prefs::getDeliveryId();
+        $data['order_id'] = $data['no_sales_order'];
+        $data['fulfillment_code'] = $data['consignee_olshop_orderid'];
+
+        $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package']);
+
+        $data['status'] = Config::get('jayon.trans_status_confirmed');
+        $data['logistic_status'] = '';
+        $data['pending_count'] = 0;
+        $data['courier_status'] = Config::get('jayon.trans_cr_atmerchant');
+        $data['warehouse_status'] = Config::get('jayon.trans_wh_atmerchant');
+        $data['pickup_status'] = Config::get('jayon.trans_status_tobepickup');
+
+        unset($data['volume']);
+        unset($data['sessId']);
+        unset($data['isHead']);
+
+        return $data;
     }
 
     public function makeActions($data)
@@ -858,7 +739,13 @@ class CanceledController extends AdminController {
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
         */
-        $actions = '';
+        $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
+        $edit = '<a href="'.URL::to('advertiser/edit/'.$data['delivery_id']).'">Update</a>';
+        $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
+
+        $actions = View::make('shared.action')
+                        ->with('actions',array($dl))
+                        ->render();
         return $actions;
     }
 
@@ -1050,13 +937,39 @@ class CanceledController extends AdminController {
         }
     }
 
+    public function puDisp($data){
+        return $data['pickup_person'].'<br />'.$data['pickup_dev_id'];
+    }
+
+    public function dispFBar($data)
+
+    {
+        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
+        //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
+        return $display.'<br />'. '<a href="'.URL::to('incoming/detail/'.$data['delivery_id']).'" >'.$data['fulfillment_code'].' ('.$data['box_count'].' box)</a>';
+    }
+
     public function dispBar($data)
 
     {
-        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'] ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
+        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
         //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
         return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['delivery_id']).'" >'.$data['merchant_trans_id'].'</a>';
     }
+
+    public function statusList($data)
+    {
+        $slist = array(
+            Prefs::colorizestatus($data['status'],'delivery'),
+            Prefs::colorizestatus($data['courier_status'],'courier'),
+            Prefs::colorizestatus($data['pickup_status'],'pickup'),
+            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
+        );
+
+        return implode('<br />', $slist);
+        //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
+    }
+
 
     public function colorizetype($data)
     {
@@ -1075,6 +988,30 @@ class CanceledController extends AdminController {
         }
     }
 
+    public function postAssigndate(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+            foreach($results as $r){
+                $r->PICK_UP_DATE = new MongoDate(strtotime($in['date'])) ;
+                $r->save();
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:MOVED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:MOVEFAILED' ));
+        }
+
+    }
+
     public function getPrintlabel($sessionname, $printparam, $format = 'html' )
     {
         $pr = explode(':',$printparam);
@@ -1091,23 +1028,23 @@ class CanceledController extends AdminController {
         $top_offset = $pr[9];
 
         $session = Printsession::find($sessionname)->toArray();
-        $labels = Asset::whereIn('_id', $session)->get()->toArray();
+        $labels = Shipment::whereIn('_id', $session)->get()->toArray();
 
         $skus = array();
         foreach($labels as $l){
-            $skus[] = $l['SKU'];
+            $skus[] = $l['_id'];
         }
 
         $skus = array_unique($skus);
 
-        $products = Asset::whereIn('SKU',$skus)->get()->toArray();
+        $products = Shipment::whereIn('_id',$skus)->get()->toArray();
 
         $plist = array();
         foreach($products as $product){
-            $plist[$product['SKU']] = $product;
+            $plist[$product['_id']] = $product;
         }
 
-        return View::make('asset.printlabel')
+        return View::make('shared.printlabel')
             ->with('columns',$columns)
             ->with('resolution',$resolution)
             ->with('cell_width',$cell_width)
@@ -1122,6 +1059,17 @@ class CanceledController extends AdminController {
             ->with('labels', $labels);
     }
 
+
+    public function updateBox($delivery_id, $order_id, $fulfillment_code, $box_count){
+        for($n = 0; $n < $box_count; $n++){
+            $box = new Box();
+            $box->delivery_id = $delivery_id;
+            $box->order_id = $order_id;
+            $box->fulfillment_code = $fulfillment_code;
+            $box->box_id = $n + 1;
+            $box->save();
+        }
+    }
 
     public function getViewpics($id)
     {

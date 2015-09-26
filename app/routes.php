@@ -70,6 +70,7 @@ Route::controller('courierassign', 'CourierassignController');
 Route::controller('dispatched', 'DispatchedController');
 Route::controller('canceled', 'CanceledController');
 Route::controller('delivered', 'DeliveredController');
+Route::controller('returned', 'ReturnedController');
 Route::controller('orderarchive', 'OrderarchiveController');
 Route::controller('deliverylog', 'DeliverylogController');
 

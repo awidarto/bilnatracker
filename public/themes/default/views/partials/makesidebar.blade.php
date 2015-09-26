@@ -44,6 +44,13 @@
               </ul>
             </li>
             @endif
+            <li class="nav-parent">
+              <a href="{{ URL::to('employee') }}"><i class="icon-users"></i><span>Archive</span> <span class="fa arrow"></span></a>
+              <ul class="children collapse">
+                <li><a href="{{ URL::to('canceled') }}"><i class="fa fa-times"></i> Canceled Data</a></li>
+                <li><a href="{{ URL::to('returned') }}"><i class="fa fa-history"></i> Returned Shipment</a></li>
+              </ul>
+            </li>
             @if(Ks::can('view','assets'))
             <li class="nav-parent">
               <a href="#"><i class="fa fa-cog"></i><span>Assets</span> <span class="fa arrow"></span></a>

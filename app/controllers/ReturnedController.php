@@ -1,6 +1,6 @@
 <?php
 
-class DispatchedController extends AdminController {
+class ReturnedController extends AdminController {
 
     public function __construct()
     {
@@ -14,7 +14,7 @@ class DispatchedController extends AdminController {
 
         $this->model = new Shipment();
         //$this->model = DB::collection('documents');
-        $this->title = 'In Progress';
+        $this->title = 'Returned Shipment';
 
     }
 
@@ -90,7 +90,7 @@ class DispatchedController extends AdminController {
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'In Progress';
+        $this->title = 'Returned Shipment';
 
         $this->place_action = 'first';
 
@@ -105,7 +105,6 @@ class DispatchedController extends AdminController {
         $this->product_info_url = strtolower($this->controller_name).'/info';
 
         $this->can_add = false;
-        $this->can_import = false;
 
         /*
         $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
@@ -150,7 +149,7 @@ class DispatchedController extends AdminController {
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'In Progress';
+        $this->title = 'Returned Shipment';
 
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
@@ -190,7 +189,7 @@ class DispatchedController extends AdminController {
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Incoming Order';
+        $this->title = 'Returned Shipment';
 
         Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
 
@@ -250,27 +249,16 @@ class DispatchedController extends AdminController {
         $txtab = Config::get('jayon.incoming_delivery_table');
 
         $model = $model->where(function($query){
-                            $query->where('bucket','=',Config::get('jayon.bucket_tracker'))
-                                ->where(function($qs){
-                                    $qs->where('logistic_type','=','external')
-                                        ->orWhere(function($qx){
-                                                $qx->where('logistic_type','=','internal')
-                                                    ->where(function($qz){
-                                                        $qz->where('status','=', Config::get('jayon.trans_status_admin_courierassigned') )
-                                                            ->orWhere('status','=', Config::get('jayon.trans_status_mobile_pickedup') )
-                                                            ->orWhere('status','=', Config::get('jayon.trans_status_mobile_enroute') )
-                                                            ->orWhere(function($qx){
-                                                                $qx->where('status', Config::get('jayon.trans_status_new'))
-                                                                    ->where(Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
-                                                            });
-                                                    });
+                    $query->where('bucket','=',Config::get('jayon.bucket_archive'))
+                        ->where(function($q){
+                            $q->where('status','=', Config::get('jayon.trans_status_mobile_revoked') )
+                                ->orWhere('status','=', Config::get('jayon.trans_status_mobile_noshow') )
+                                ->orWhere('status','=', Config::get('jayon.trans_status_mobile_return') );
 
-                                        });
-                                });
-
-
-        })
-        ->orderBy('pick_up_date');
+                        });
+                    })
+                    ->orderBy('delivered_time','desc')
+                    ->orderBy('pick_up_date','desc');
 
         return $model;
 
