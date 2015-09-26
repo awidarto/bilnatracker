@@ -419,7 +419,11 @@ class Prefs {
             $status = 'N/A';
         }else{
             $class = $colors[$status];
-            $status = $trans[$status];
+            if(isset($trans[$status])){
+                $status = $trans[$status];
+            }else{
+                $status = 'N/A';
+            }
         }
 
         //$atatus = str_replace('_', ' ', $status);

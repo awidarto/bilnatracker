@@ -187,6 +187,7 @@ class SyncapiController extends \Controller {
                 if($olog->status == 'pending'){
                     $shipment->pending_count = $shipment->pending_count + 1;
                 }elseif($olog->status == 'delivered'){
+                    $shipment->deliverytime = date('Y-m-d H:i:s',time());
                     $shipment->delivered_time = date('Y-m-d H:i:s',time());
                 }
 
