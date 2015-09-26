@@ -36,8 +36,6 @@
               <ul class="children collapse">
                 <li><a href="{{ URL::to('dispatched') }}"><i class="fa fa-paper-plane-o"></i> In Progress</a></li>
                 <li><a href="{{ URL::to('delivered') }}"><i class="fa fa-check-circle-o"></i> Delivery Status</a></li>
-                <li><a href="{{ URL::to('canceled') }}"><i class="fa fa-times"></i> Canceled Order</a></li>
-                <li><a href="{{ URL::to('orderarchive') }}"><i class="fa fa-history"></i> Order Archive</a></li>
               @if(Ks::can('view','log'))
                 <li><a href="{{ URL::to('deliverylog') }}"><i class="fa fa-list-ul"></i> Delivery Log</a></li>
               @endif
@@ -49,6 +47,7 @@
               <ul class="children collapse">
                 <li><a href="{{ URL::to('canceled') }}"><i class="fa fa-times"></i> Canceled Data</a></li>
                 <li><a href="{{ URL::to('returned') }}"><i class="fa fa-history"></i> Returned Shipment</a></li>
+                <li><a href="{{ URL::to('orderarchive') }}"><i class="fa fa-history"></i> Order Archive</a></li>
               </ul>
             </li>
             @if(Ks::can('view','assets'))
