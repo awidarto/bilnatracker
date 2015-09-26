@@ -722,12 +722,13 @@ class IncomingController extends AdminController {
         }
 
 
-
         $data['bucket'] = Config::get('jayon.bucket_incoming');
 
         $data['delivery_id'] = Prefs::getDeliveryId();
-        $data['orderId'] = $data['no_sales_order'];
+        $data['order_id'] = $data['no_sales_order'];
         $data['fulfillment_code'] = $data['consignee_olshop_orderid'];
+
+        $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package']);
 
         $data['status'] = Config::get('jayon.trans_status_confirmed');
         $data['logistic_status'] = '';
@@ -1086,6 +1087,17 @@ class IncomingController extends AdminController {
             ->with('labels', $labels);
     }
 
+
+    public function updateBox($delivery_id, $order_id, $fulfillment_code, $box_count){
+        for($n = 0; $n < $box_count; $n++){
+            $box = new Box();
+            $box->delivery_id = $delivery_id;
+            $box->order_id = $order_id;
+            $box->fulfillment_code = $fulfillment_code;
+            $box->box_id = $n + 1;
+            $box->save();
+        }
+    }
 
     public function getViewpics($id)
     {
