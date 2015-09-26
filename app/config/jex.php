@@ -53,7 +53,7 @@ return array(
 
         'default_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','courier_status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_service',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
