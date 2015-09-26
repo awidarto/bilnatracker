@@ -1072,7 +1072,7 @@ class IncomingController extends AdminController {
             $plist[$product['_id']] = $product;
         }
 
-        return View::make('asset.printlabel')
+        return View::make('shared.printlabel')
             ->with('columns',$columns)
             ->with('resolution',$resolution)
             ->with('cell_width',$cell_width)
