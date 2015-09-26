@@ -264,7 +264,7 @@ class SyncapiController extends \Controller {
                 $r = $blog->save();
 
                 if( $r ){
-                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>'log inserted' );
+                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['extId'] );
                 }else{
                     $result[] = array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'insertion failed' );
                 }
