@@ -18,7 +18,7 @@ class DeliveryapiController extends \BaseController {
 
     public function  __construct()
     {
-        date_default_timezone_set("Asia/Jakarta");
+        date_default_timezone_set('Asia/Jakarta');
 
         //$this->model = "Member";
         $this->controller_name = strtolower( str_replace('Controller', '', get_class()) );
@@ -39,6 +39,8 @@ class DeliveryapiController extends \BaseController {
      */
     public function index()
     {
+        date_default_timezone_set('Asia/Jakarta');
+
         $key = Input::get('key');
         $deliverydate = Input::get('date');
 
