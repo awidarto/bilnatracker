@@ -5,9 +5,18 @@
         <h5>Device Information</h5>
 
         {{ Former::text('identifier','Device Identifier') }}
-        {{ Former::text('devname','Device Identifier') }}
+        {{ Former::text('devname','Device Name') }}
         {{ Former::text('descriptor','Description') }}
         {{ Former::text('mobile','Number') }}
+
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                {{ Former::text('color','Color')->class('form-control color-picker') }}
+            </div>
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                {{ Former::select('is_on','Active')->options(array('1'=>'Yes','0'=>'No'))->class('form-control input-sm') }}
+            </div>
+        </div>
 
         {{ Form::submit('Save',array('class'=>'btn btn-primary'))}}&nbsp;&nbsp;
         {{ HTML::link($back,'Cancel',array('class'=>'btn'))}}
@@ -22,14 +31,6 @@
         {{ Former::text('district','Area Coverage')->class('form-control tag_district') }}
 
 
-        <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                {{ Former::text('color','Color')->class('form-control') }}
-            </div>
-            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                {{ Former::select('is_on','Active')->options(array('1'=>'Yes','0'=>'No'))->class('form-control input-sm') }}
-            </div>
-        </div>
 
 @stop
 

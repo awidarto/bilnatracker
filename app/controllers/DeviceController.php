@@ -507,7 +507,7 @@ class DeviceController extends AdminController {
     public function postAdd($data = null)
     {
         $this->validator = array(
-            'shopDescription' => 'required'
+            'identifier' => 'required'
         );
 
         return parent::postAdd($data);
@@ -516,7 +516,7 @@ class DeviceController extends AdminController {
     public function postEdit($id,$data = null)
     {
         $this->validator = array(
-            'shopDescription' => 'required'
+            'identifier' => 'required'
         );
 
         //exit();
