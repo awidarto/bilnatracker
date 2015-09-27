@@ -65,7 +65,7 @@ class DeliveryapiController extends \BaseController {
 
 
         $orders = $this->model->where(function($qz) use($key, $deliverydate){
-                    $qz->where('pick_up_date', '=', new \MongoDate($deliverydate) )
+                    $qz->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
                         ->where('device_key', '=', $key);
                 })
                 ->where(function($qw){
