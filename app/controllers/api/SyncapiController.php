@@ -181,18 +181,19 @@ class SyncapiController extends \Controller {
 
                 $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
 
-                $shipment->status = $olog->status;
-                $shipment->courier_status = $olog->courierStatus;
+                if($shipment){
+                    $shipment->status = $olog->status;
+                    $shipment->courier_status = $olog->courierStatus;
 
-                if($olog->status == 'pending'){
-                    $shipment->pending_count = $shipment->pending_count + 1;
-                }elseif($olog->status == 'delivered'){
-                    $shipment->deliverytime = date('Y-m-d H:i:s',time());
-                    $shipment->delivered_time = date('Y-m-d H:i:s',time());
+                    if($olog->status == 'pending'){
+                        $shipment->pending_count = $shipment->pending_count + 1;
+                    }elseif($olog->status == 'delivered'){
+                        $shipment->deliverytime = date('Y-m-d H:i:s',time());
+                        $shipment->delivered_time = date('Y-m-d H:i:s',time());
+                    }
+
+                    $shipment->save();
                 }
-
-                $shipment->save();
-
 
                 if( $r ){
                     $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>'log inserted' );
