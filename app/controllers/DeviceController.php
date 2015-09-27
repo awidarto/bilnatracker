@@ -449,7 +449,7 @@ class DeviceController extends AdminController {
     {
 
 
-        $data['key'] = str_random(15);
+        $data['key'] = str_random(40);
 
         return $data;
     }
@@ -458,7 +458,7 @@ class DeviceController extends AdminController {
     {
 
         if(!isset($data['key']) || $data['key'] == ''){
-            $data['key'] = str_random(15);
+            $data['key'] = str_random(40);
         }
 
         return $data;
