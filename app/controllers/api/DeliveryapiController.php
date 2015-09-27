@@ -63,7 +63,7 @@ class DeliveryapiController extends \BaseController {
 
         $txtab = \Config::get('jayon.incoming_delivery_table');
 
-
+        /*
         $orders = $this->model->where(function($qz) use($key, $deliverydate){
                     $qz->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
                         ->where('device_key', '=', $key);
@@ -89,6 +89,28 @@ class DeliveryapiController extends \BaseController {
 
                 ->orderBy('pick_up_date')
                 ->get();
+        */
+
+        $orders = $this->model->where(function($qz) use($key, $deliverydate){
+                    $qz->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
+                        ->where('logistic_type','=','internal')
+
+                        ->where(function($qz){
+                            $qz->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
+                                ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_pickedup') )
+                                ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
+                                ->orWhere(function($qx){
+                                    $qx->where('status', \Config::get('jayon.trans_status_new'))
+                                        ->where(\Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
+                                });
+                        })
+
+                        ->where('device_key', '=', $key);
+                })
+
+                ->orderBy('pick_up_date')
+                ->get();
+
 
         $orders = $orders->toArray();
 
