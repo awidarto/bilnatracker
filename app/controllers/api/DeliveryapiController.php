@@ -92,7 +92,7 @@ class DeliveryapiController extends \BaseController {
         */
 
         $orders = $this->model
-                    ->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
+                    //->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
                     //->where('logistic_type','=','internal')
                     ->where('device_key', '=', $key)
                     /*
