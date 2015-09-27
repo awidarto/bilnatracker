@@ -18,6 +18,8 @@ class DeliveryapiController extends \BaseController {
 
     public function  __construct()
     {
+        date_default_timezone_set("Asia/Jakarta");
+
         //$this->model = "Member";
         $this->controller_name = strtolower( str_replace('Controller', '', get_class()) );
 
