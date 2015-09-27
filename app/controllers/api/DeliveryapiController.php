@@ -102,7 +102,7 @@ class DeliveryapiController extends \BaseController {
                             ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
                             ->orWhere(function($qx){
                                 $qx->where('status', \Config::get('jayon.trans_status_new'))
-                                    ->where(\Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
+                                    ->where('pending_count', '>', 0);
                             });
 
                     })
