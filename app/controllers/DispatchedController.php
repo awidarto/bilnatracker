@@ -958,7 +958,7 @@ class DispatchedController extends AdminController {
             Prefs::colorizestatus($data['status'],'delivery'),
             Prefs::colorizestatus($data['courier_status'],'courier'),
             Prefs::colorizestatus($data['pickup_status'],'pickup'),
-            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
+            //Prefs::colorizestatus($data['warehouse_status'],'warehouse')
         );
 
         return implode('<br />', $slist);
