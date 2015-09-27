@@ -218,7 +218,7 @@ return array(
             array('SERVICE',array('search'=>true,'sort'=>true)),
             array('CONSIG',array('search'=>true,'sort'=>true)),
             array('AWB',array('search'=>true,'sort'=>true)),
-            array('CUST ID',array('search'=>true,'sort'=>true)),
+            array('CONS CUST ID',array('search'=>true,'sort'=>true)),
             array('ORDER ID',array('search'=>true,'sort'=>true)),
             array('FULFILLMENT ID',array('search'=>true,'sort'=>true)),
             array('NUMBER OF PACKAGE',array('search'=>true,'sort'=>true)),
@@ -241,7 +241,7 @@ return array(
         'default_courierassign_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('device_id',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
