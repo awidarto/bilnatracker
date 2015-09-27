@@ -150,6 +150,15 @@ $config['delivery_status'] = array(
     $config['trans_status_canceled'] => 'Canceled',
     $config['trans_status_rescheduled'] => 'Rescheduled',
     $config['trans_status_inprogress'] => 'In Progress',
+
+    $config['trans_status_mobile_revoked'] => 'Returned',
+    $config['trans_status_mobile_departure'] => 'Departure',
+    $config['trans_status_admin_zoned'] => 'Zone Assigned',
+    $config['trans_status_admin_dated'] => 'Date Assigned',
+    $config['trans_status_admin_devassigned'] => 'Device Assigned',
+    $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
+    $config['trans_status_admin_dispatched'] => 'In Progress'
+
 );
 
 $config['pickup_status'] = array(
