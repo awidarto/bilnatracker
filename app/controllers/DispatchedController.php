@@ -905,7 +905,7 @@ class DispatchedController extends AdminController {
         $thumbnail_url = '';
 
         if($pics){
-            if(count($pic) > 0){
+            if(count($pics) > 0){
                 foreach($pics as $g){
                     $thumbnail_url = $g->thumbnail_url;
                     $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
