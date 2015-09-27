@@ -91,11 +91,12 @@ class DeliveryapiController extends \BaseController {
                 ->get();
         */
 
-        $orders = $this->model->where(function($qz) use($key, $deliverydate){
-                    $qz->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
-                        ->where('logistic_type','=','internal')
-
-                        ->where(function($qz){
+        $orders = $this->model
+                    ->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
+                    ->where('logistic_type','=','internal')
+                    ->where('device_key', '=', $key);
+                    ->where(function($qz) use($key, $deliverydate){
+                        $qz->where(function($qz){
                             $qz->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
                                 ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_pickedup') )
                                 ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
@@ -105,7 +106,6 @@ class DeliveryapiController extends \BaseController {
                                 });
                         })
 
-                        ->where('device_key', '=', $key);
                 })
 
                 ->orderBy('pick_up_date')
