@@ -95,6 +95,7 @@ class DeliveryapiController extends \BaseController {
                     ->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
                     ->where('logistic_type','=','internal')
                     ->where('device_key', '=', $key)
+                    /*
                     ->where(function($qz) use($key, $deliverydate){
 
                         $qz->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
@@ -106,6 +107,7 @@ class DeliveryapiController extends \BaseController {
                             });
 
                     })
+                    */
                     ->orderBy('pick_up_date')
                     ->get();
 
