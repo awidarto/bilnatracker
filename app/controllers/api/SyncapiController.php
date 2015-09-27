@@ -188,7 +188,7 @@ class SyncapiController extends \Controller {
                     if($olog->status == 'pending'){
                         //$shipment->pending_count = $olog->pendingCount;
                     }elseif($olog->status == 'delivered'){
-                        $shipment->deliverytime = date('Y-m-d H:i:s',time());
+                        //$shipment->deliverytime = date('Y-m-d H:i:s',time());
                         $shipment->delivered_time = date('Y-m-d H:i:s',time());
                     }
 
@@ -399,7 +399,7 @@ class SyncapiController extends \Controller {
                     //$shipment->status = $olog->status;
                     $shipment->courier_status = $olog->courierStatus;
 
-                    $shipment->pending_count = $olog->pendingCount;
+                    $shipment->pending_count = new \MongoInt32($olog->pendingCount) ;
 
                     if($olog->courierStatus == \Config::get('jayon.trans_cr_oncr') || $olog->courierStatus == \Config::get('jayon.trans_cr_oncr_partial'))
                     {
