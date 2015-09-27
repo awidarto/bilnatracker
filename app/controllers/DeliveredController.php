@@ -86,7 +86,7 @@ class DeliveredController extends AdminController {
     {
 
 
-        $this->heads = Config::get('jex.default_heads');
+        $this->heads = Config::get('jex.default_delivered_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
@@ -120,7 +120,7 @@ class DeliveredController extends AdminController {
     public function postIndex()
     {
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = Config::get('jex.default_delivered_fields');
 
         /*
         $categoryFilter = Input::get('categoryFilter');
@@ -885,6 +885,35 @@ class DeliveredController extends AdminController {
 
         return $clicks.' clicks<br />'.$views.' views';
     }
+
+    public function picList($data)
+    {
+        $data = $data->toArray();
+
+        $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
+
+        $glinks = '';
+
+        $thumbnail_url = '';
+
+        if($pics){
+            if(count($pics) > 0){
+                foreach($pics as $g){
+                    $thumbnail_url = $g->thumbnail_url;
+                    $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                }
+
+                $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+
+                return $display;
+            }else{
+                return 'No Picture';
+            }
+        }else{
+            return 'No Picture';
+        }
+    }
+
 
     public function namePic($data)
     {
