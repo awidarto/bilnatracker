@@ -16,6 +16,11 @@ class Prefs {
 
     }
 
+    public static function getTypeselect()
+    {
+        return Config::get('jex.logistic_type_select');
+    }
+
     public static function getDeliveryId()
     {
         $d = date('d-mY',time()).'-'.strtoupper( str_random(5) ) ;

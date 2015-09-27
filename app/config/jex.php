@@ -16,6 +16,12 @@ return array(
                 'inprogress'=>'Tracker'
             ),
 
+        'logistic_type_select'=>array(
+                ''=>'All',
+                'internal'=>'Internal',
+                'external'=>'External'
+            ),
+
         'node_type'=>array(
             'hub'=>'Hub',
             'warehouse'=>'Warehouse',
@@ -29,6 +35,7 @@ return array(
             array('CURR POSITION',array('search'=>true,'select'=>Prefs::getPosition()->PositionToSelection('node_code','name') ,'sort'=>true)),
             array('LOGISTIC',array('search'=>true,'sort'=>true)),
             array('SERVICE',array('search'=>true,'sort'=>true)),
+            array('LOGISTIC TYPE',array('search'=>true,'select'=>array(''=>'All', 'internal'=>'Internal', 'external'=>'External' ),'sort'=>true)),
             array('CONSIG',array('search'=>true,'sort'=>true)),
             array('AWB',array('search'=>true,'sort'=>true)),
             array('CUST ID',array('search'=>true,'sort'=>true)),
@@ -59,6 +66,7 @@ return array(
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_service',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('logistic_type',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consig',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('awb',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_cust',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -233,7 +241,7 @@ return array(
         'default_courierassign_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('device_id',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
