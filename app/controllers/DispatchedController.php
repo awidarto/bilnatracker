@@ -896,6 +896,33 @@ class DispatchedController extends AdminController {
         return $clicks.' clicks<br />'.$views.' views';
     }
 
+    public function picList($data)
+    {
+        $pics = Uploaded::where('parent_id','=', $data['_id'])->get();
+
+        $glinks = '';
+
+        $thumbnail_url = '';
+
+        if($pics){
+            if(count($pic) > 0){
+                foreach($pics as $g){
+                    $thumbnail_url = $g->thumbnail_url;
+                    $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                }
+
+                $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+
+                return $display;
+            }else{
+                return 'No Picture';
+            }
+        }else{
+            return 'No Picture';
+        }
+    }
+
+
     public function namePic($data)
     {
         $name = HTML::link('property/view/'.$data['_id'],$data['address']);
