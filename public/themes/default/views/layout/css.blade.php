@@ -14,6 +14,7 @@
 
     {{ HTML::style('css/gridtable.css') }}
 
+    {{ HTML::style('css/jquery-ui.min.css') }}
 
 
     {{-- HTML::style('font-awesome/css/font-awesome.min.css') --}}

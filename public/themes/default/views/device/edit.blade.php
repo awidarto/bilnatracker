@@ -20,7 +20,7 @@
 
         {{ Former::text('city','City Coverage')->class('form-control tag_keyword') }}
 
-        {{ Former::text('district','Area Coverage')->class('form-control') }}
+        {{ Former::text('district','Area Coverage')->class('form-control tag_district') }}
 
 
         <div class="row">

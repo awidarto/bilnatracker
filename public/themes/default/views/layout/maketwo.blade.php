@@ -66,6 +66,29 @@
           color: #666666 !important;
           padding-left: 0px !important;
       }
+
+      ul.ui-autocomplete{
+        z-index: 20000 !important;
+        border: thin solid #DDD;
+      }
+
+      ul.ui-autocomplete li{
+        background-color: #fff;
+      }
+
+      ul.ui-autocomplete li.ui-state-focus
+      {
+          color:white;
+          background:#058E9D;
+          outline:none;
+      }
+
+      div.tagsinput span.tag , div.tagsinput span.tag a{
+          color:white;
+          background:#058E9D !important;
+          border-color: #058E9D !important;
+      }
+
     </style>
 
 

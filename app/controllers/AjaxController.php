@@ -995,7 +995,7 @@ class AjaxController extends BaseController {
         $result = array();
 
         foreach($devices as $d){
-            $result[] = array('id'=>$d->key,'value'=>$d->district,'name'=>$d->district,'label'=>$d->district.' ( '.$d->key.' )');
+            $result[] = array('id'=>$d->key,'value'=>$d->district,'name'=>$d->district,'label'=>$d->district);
         }
 
         return Response::json($result);
@@ -1009,10 +1009,12 @@ class AjaxController extends BaseController {
 
         $devices = Coverage::distinct('city')->where('city','like',$q)->get();
 
+        //print_r($devices->toArray());
+
         $result = array();
 
         foreach($devices as $d){
-            $result[] = array('id'=>$d->key,'value'=>$d->city,'name'=>$d->city,'label'=>$d->city);
+            $result[] = array('id'=>$d,'value'=>$d,'name'=>$d,'label'=>$d);
         }
 
         return Response::json($result);

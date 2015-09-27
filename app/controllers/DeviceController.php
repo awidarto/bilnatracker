@@ -582,7 +582,13 @@ class DeviceController extends AdminController {
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
         */
-        $actions = '';
+        $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
+        $edit = '<a href="'.URL::to('device/edit/'.$data['_id']).'">Update</a>';
+        $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
+
+        $actions = View::make('shared.action')
+                        ->with('actions',array($edit))
+                        ->render();
         return $actions;
     }
 
