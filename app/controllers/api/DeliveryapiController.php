@@ -63,25 +63,32 @@ class DeliveryapiController extends \BaseController {
 
         $txtab = \Config::get('jayon.incoming_delivery_table');
 
-        $orders = $this->model
-            /*
-            ->where(function($q) use($dev, $deliverydate){
-                    $q->where('device_id','=',$dev->id)
-                    ->where('pick_up_date','=',$deliverydate);
-            })
-            ->where(function($query){
-                $query->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
-                    ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_pickedup') )
-                    ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
-                    ->orWhere(function($q){
-                            $q->where('status', \Config::get('jayon.trans_status_new'))
-                                ->where(\Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
-                    });
 
-            })
-            */
-            ->orderBy('ordertime','desc')
-            ->get();
+        $orders = $this->model->where(function($qz) use($key, $deliverydate){
+                    $qz->where('pick_up_date', '=', new \MongoDate($deliverydate) )
+                        ->where('device_key', '=', $key);
+                })
+                ->where(function($qw){
+
+                    $qw->where('bucket','=',\Config::get('jayon.bucket_tracker'))
+                        ->orWhere(function($qx){
+                                $qx->where('logistic_type','=','internal')
+                                    ->where(function($qz){
+                                        $qz->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
+                                            ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_pickedup') )
+                                            ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
+                                            ->orWhere(function($qx){
+                                                $qx->where('status', \Config::get('jayon.trans_status_new'))
+                                                    ->where(\Config::get('jayon.incoming_delivery_table').'.pending_count', '>', 0);
+                                            });
+                                    });
+
+                        });
+
+                })
+
+                ->orderBy('pick_up_date')
+                ->get();
 
         $orders = $orders->toArray();
 

@@ -280,7 +280,8 @@ class CourierassignController extends AdminController {
         */
 
         $model = $model->where(function($query){
-                    $query->where('bucket','=',Config::get('jayon.bucket_dispatcher'));
+                    $query->where('bucket','=',Config::get('jayon.bucket_dispatcher'))
+                        ->where('status','=', Config::get('jayon.trans_status_admin_zoned'));
                 /*
                 $query->where(function($q){
                     $q->where('pending_count','=',0)
@@ -351,9 +352,9 @@ class CourierassignController extends AdminController {
 
 
                 if($rows[$i][5] != $device){
-                    $device_key = (isset($extra['DEVICE_KEY']))?$extra['DEVICE_KEY']:$rows[$i][5];
+                    $device_key = (isset($extra['device_key']))?$extra['device_key']:$rows[$i][5];
                     $device = $rows[$i][5];
-                    $rows[$i][5] = '<input type="radio" name="device_select" value="'.$device_key.'" class="device_select form-control" /> '.$rows[$i][5];
+                    $rows[$i][5] = '<input type="radio" name="device_select" value="'.$device_key.'" data-name="'.$device.'" class="device_select form-control" /> '.$rows[$i][5];
                 }else{
                     $rows[$i][5] = '';
                 }
@@ -900,6 +901,40 @@ class CourierassignController extends AdminController {
         }
 
     }
+
+    public function postAssigncourier()
+    {
+//courier_name:Shia Le Beouf
+//courier_id:5605512bccae5b64010041b6
+//device_key:0f56deadbc6df60740ef5e2c576876b0e3310f7d
+//device_name:JY-002
+//pickup_date:28-09-2
+
+        $in = Input::get();
+
+        $pickup_date = new MongoDate(strtotime($in['pickup_date']));
+
+        $shipments = Shipment::where('device_key','=', $in['device_key'] )
+                        ->where('pick_up_date','=', $pickup_date )
+                        ->where('status','=',Config::get('jayon.trans_status_admin_zoned'))
+                        ->get();
+
+        //print_r($shipments->toArray());
+
+        foreach($shipments as $sh){
+            $sh->bucket = Config::get('jayon.bucket_tracker');
+            $sh->status = Config::get('jayon.trans_status_admin_courierassigned');
+            $sh->courier_id = $in['courier_id'];
+            $sh->courier_name = $in['courier_name'];
+            $sh->save();
+
+            //print_r($sh);
+        }
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments ) );
+
+    }
+
 
     public function postSynclegacy(){
 

@@ -246,51 +246,23 @@ class IncomingController extends AdminController {
 
         $company = strtolower($company);
 
-        /*
-        if($period_from == ''){
-            $model = $model->select($company.'_a_salfldg.*',$company.'_acnt.DESCR as ACC_DESCR')
-                ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' );
-        }else{
-            $model = $model->select($company.'_a_salfldg.*',$company.'_acnt.DESCR as ACC_DESCR')
-                ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-                ->where('PERIOD','>=', Input::get('acc-period-from') )
-                ->where('PERIOD','<=', Input::get('acc-period-to') )
-                ->where('ACCNT_CODE','>=', Input::get('acc-code-from') )
-                ->where('ACCNT_CODE','<=', Input::get('acc-code-to') )
-                ->orderBy('PERIOD','DESC')
-                ->orderBy('ACCNT_CODE','ASC')
-                ->orderBy('TRANS_DATETIME','DESC');
-        }
-        */
-
         $txtab = Config::get('jayon.incoming_delivery_table');
 
-        /*
-        $model = $model->select(
-                DB::raw(
-                    Config::get('jayon.incoming_delivery_table').'.* ,'.
-                    Config::get('jayon.jayon_members_table').'.merchantname as merchant_name ,'.
-                    Config::get('jayon.applications_table').'.application_name as app_name ,'.
-                    '('.$txtab.'.width * '.$txtab.'.height * '.$txtab.'.length ) as volume'
-                )
-            )
-            ->leftJoin(Config::get('jayon.jayon_members_table'), Config::get('jayon.incoming_delivery_table').'.merchant_id', '=', Config::get('jayon.jayon_members_table').'.id' )
-            ->leftJoin(Config::get('jayon.applications_table'), Config::get('jayon.incoming_delivery_table').'.application_id', '=', Config::get('jayon.applications_table').'.id' )
-        */
-
         $model = $model->where(function($query){
-                    $query->where('bucket','=',Config::get('jayon.bucket_incoming'));
-                /*
-                $query->where(function($q){
-                    $q->where('pending_count','=',0)
-                        ->where('status','=', Config::get('jayon.trans_status_new') );
-                })
-                ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
-                ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') );
-//                ->where('status','not regexp','/*assigned/');
-                */
+
+                    $query->where('bucket','=',Config::get('jayon.bucket_incoming'))
+                    ->where(function($qs){
+                        $qs->where(function($q){
+                                $q->where('pending_count','=',0)
+                                    ->where('status','=', Config::get('jayon.trans_status_new') );
+                            })
+                            ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
+                            ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') )
+                            ->where('status','not regexp','/*assigned/');
+                    });
+
             })
-            ->orderBy('ordertime','desc');
+            ->orderBy('created_at','desc');
 
             /*
             ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
@@ -737,6 +709,10 @@ class IncomingController extends AdminController {
         $data['warehouse_status'] = Config::get('jayon.trans_wh_atmerchant');
         $data['pickup_status'] = Config::get('jayon.trans_status_tobepickup');
 
+        $data['device_key'] = '';
+        $data['device_name'] = '';
+        $data['device_id'] = '';
+
         unset($data['volume']);
         unset($data['sessId']);
         unset($data['isHead']);
@@ -986,15 +962,18 @@ class IncomingController extends AdminController {
     }
 
     public function statusList($data)
-    {
+    {   /*
         $slist = array(
             Prefs::colorizestatus($data['status'],'delivery'),
             Prefs::colorizestatus($data['courier_status'],'courier'),
             Prefs::colorizestatus($data['pickup_status'],'pickup'),
             Prefs::colorizestatus($data['warehouse_status'],'warehouse')
         );
+        */
 
-        return implode('<br />', $slist);
+        return Prefs::colorizestatus($data['status'],'delivery');
+
+        //return implode('<br />', $slist);
         //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
@@ -1026,7 +1005,19 @@ class IncomingController extends AdminController {
             $res = false;
         //}else{
             foreach($results as $r){
-                $r->PICK_UP_DATE = new MongoDate(strtotime($in['date'])) ;
+                $r->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+
+                if($r->logistic_type == 'internal'){
+                    $r->awb = $r->delivery_id;
+                    $r->bucket = Config::get('jayon.bucket_dispatcher');
+                    $r->status = Config::get('jayon.trans_status_admin_dated');
+                }else{
+                    if($r->awb != ''){
+                        $r->bucket = Config::get('jayon.bucket_tracker');
+                        $r->status = Config::get('jayon.trans_status_admin_dated');
+                    }
+                }
+
                 $r->save();
             }
             $res = true;

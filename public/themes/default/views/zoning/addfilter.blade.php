@@ -1,19 +1,57 @@
+<style type="text/css">
+    #device-assign-modal.modal {
+        width: 50% !important;
+        left:35%;
+
+    }
+</style>
+
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
 <a class="btn btn-transparent btn-info btn-sm" id="assign_to_device"><i class="fa fa-phone-square"></i> Assign to Device</a>
 
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
 
-<div id="device-assign-modal" class="modal fade large" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="device-assign-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Assign Selected</span></h3>
     </div>
     <div class="modal-body" >
-        {{ Former::select('status', 'To' )->id('move-to')->options(Config::get('jex.buckets')) }}
+        <div class="row">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <table id="shipment_list">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Order ID</th>
+                            <th>Fulfillment</th>
+                            <th>Package Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <table id="device_list">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Device Name</th>
+                            <th>Current Load</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <button class="btn btn-primary" id="do-move">Move</button>
+        <button class="btn btn-primary" id="do-assign">Assign</button>
     </div>
 </div>
 
@@ -113,13 +151,22 @@
         });
 
         $('#assign_to_device').on('click',function(e){
-            $('#device-assign-modal').modal();
+            var date = $('input[name=date_select]:checked').val();
+            var city = $('input[name=city_select]:checked').val();
+
+            if(date == '' || city == ''){
+                alert('Please select date AND city');
+            }else{
+                $('#device-assign-modal').modal();
+            }
+
             e.preventDefault();
         });
 
         $('#device-assign-modal').on('shown',function(){
             var date = $('input[name=date_select]:checked').val();
             var city = $('input[name=city_select]:checked').val();
+
 
             $.post('{{ URL::to($ajaxdeviceurl)}}',
                 {
@@ -128,6 +175,21 @@
                 },
                 function(data){
                     if(data.result == 'OK'){
+
+                        var device_list = data.device;
+                        var shipment_list = data.shipment;
+
+                        $('table#shipment_list tbody').html('');
+                        $('table#device_list tbody').html('');
+
+                        $.each(device_list, function(index, val) {
+                            $('table#device_list tbody').prepend('<tr><td><input type="radio" name="dev" class="devselect" value="' + val.key + '" ></td><td>' + val.identifier + '</td><td>' + val.count + '</td></tr>');
+                        });
+
+                        $.each(shipment_list, function(index, val) {
+
+                            $('table#shipment_list tbody').prepend('<tr><td><input type="checkbox" class="shipselect" name="ship" value="' + val.delivery_id + '" ></td><td>' + val.order_id + '</td><td>' + val.fulfillment_code + '</td><td>' + val.number_of_package + '</td></tr>');
+                        });
 
                     }else{
 
@@ -281,29 +343,35 @@
 
 
         $('#do-assign').on('click',function(){
-            var props = $('.selector:checked');
+            var ships = $('.shipselect:checked');
+
+            var device = $('.devselect:checked');
+
+            //var props = $('.selector:checked');
             var ids = [];
-            $.each(props, function(index){
+            $.each(ships, function(index){
                 ids.push( $(this).val() );
             });
 
             console.log(ids);
 
+            console.log(device.val());
+
             if(ids.length > 0){
-                $.post('{{ URL::to('ajax/assignoutlet')}}',
+                $.post('{{ URL::to('zoning/assigndevice')}}',
                     {
-                        outlet : $('#assigned-category').val(),
-                        product_ids : ids
+                        device : device.val(),
+                        ship_ids : ids
                     },
                     function(data){
-                        $('#assign-modal').modal('hide');
+                        $('#device-assign-modal').modal('hide');
                         oTable.draw();
                     }
                     ,'json');
 
             }else{
                 alert('No product selected.');
-                $('#assign-modal').modal('hide');
+                $('#device-assign-modal').modal('hide');
             }
 
         });

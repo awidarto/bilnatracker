@@ -1036,6 +1036,22 @@ class AjaxController extends BaseController {
         return Response::json($result);
     }
 
+    public function getCourier()
+    {
+        $q = Input::get('term');
+
+        $q = '%'.$q.'%';
+
+        $couriers = Courier::where('name','like',$q)->get();
+
+        $result = array();
+
+        foreach($couriers as $d){
+            $result[] = array('id'=>$d->_id,'value'=>$d->name,'name'=>$d->name,'label'=>$d->name.' ( '.$d->_id.' )');
+        }
+
+        return Response::json($result);
+    }
 
     public function getEmail()
     {

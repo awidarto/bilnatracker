@@ -1,5 +1,29 @@
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
+{{--
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
+--}}
+<a class="btn btn-transparent btn-info btn-sm" id="set-courier"><i class="fa fa-user"></i> Assign Courier</a>
+
+<div id="assign-courier-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Assign Courier</span></h3>
+    </div>
+    <div class="modal-body" id="push-modal-body" >
+
+        {{ Former::text('courier_name','Courier')->id('courier-name')->class('auto_courier form-control') }}
+        {{ Former::text('courier_id','Courier ID')->id('courier-id') }}
+
+        {{ Former::text('pickup_date','Pick Up Date')->id('pickup-date')->class('form-control')->readonly(true) }}
+        {{ Former::text('device_name','Device')->id('device-name')->class('form-control')->readonly(true) }}
+        {{ Former::text('device_key','Device')->id('device-key')->class('form-control')->readonly(true) }}
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-primary" id="do-assign-courier">Assign</button>
+    </div>
+</div>
 
 <div id="move-order-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
@@ -90,8 +114,16 @@
             oTable.draw();
         });
 
-        $('#move_orders').on('click',function(e){
-            $('#move-order-modal').modal();
+        $('#set-courier').on('click',function(e){
+            var date = $('input[name=date_select]:checked').val();
+            var device = $('input[name=device_select]:checked').val();
+            var device_name = $('input[name=device_select]:checked').data('name');
+
+            $('#device-key').val(device);
+            $('#device-name').val(device_name);
+            $('#pickup-date').val(date);
+
+            $('#assign-courier-modal').modal();
             e.preventDefault();
         });
 
@@ -235,6 +267,38 @@
         });
 
 
+        $('#do-assign-courier').on('click',function(){
+            var courier_name = $('#courier-name').val();
+            var courier_id = $('#courier-id').val();
+            var device_key = $('#device-key').val();
+            var device_name = $('#device-name').val();
+            var pickup_date = $('#pickup-date').val();
+
+            if(courier_id != ''){
+                $.post('{{ URL::to('courierassign/assigncourier')}}',
+                    {
+
+                        courier_name : courier_name,
+                        courier_id : courier_id,
+                        device_key : device_key,
+                        device_name : device_name,
+                        pickup_date : pickup_date
+
+                    },
+                    function(data){
+                        $('#assign-courier-modal').modal('hide');
+                        oTable.draw();
+                    }
+                    ,'json');
+
+            }else{
+                alert('Empty courier information.');
+                $('#assign-courier-modal').modal('hide');
+            }
+
+        });
+
+
         $('#do-assign').on('click',function(){
             var props = $('.selector:checked');
             var ids = [];
@@ -293,6 +357,15 @@
             }
 
         });
+
+        $('.auto_courier').autocomplete({
+            appendTo:'#assign-courier-modal',
+            source: base + 'ajax/courier',
+            select: function(event, ui){
+                $('#courier-id').val(ui.item.id);
+            }
+        });
+
 
     });
 </script>

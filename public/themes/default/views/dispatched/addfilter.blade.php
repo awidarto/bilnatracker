@@ -1,6 +1,29 @@
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
+{{--
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
-<a class="btn btn-transparent btn-info btn-sm" id="set_pickup"><i class="fa fa-calendar"></i> Set Pick Up Date</a>
+--}}
+<a class="btn btn-transparent btn-info btn-sm" id="set-courier"><i class="fa fa-user"></i> Assign Courier</a>
+
+<div id="assign-courier-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Assign Courier</span></h3>
+    </div>
+    <div class="modal-body" id="push-modal-body" >
+
+        {{ Former::text('courier_name','Courier')->id('courier-name')->class('auto_courier form-control') }}
+        {{ Former::text('courier_id','Courier ID')->id('courier-id') }}
+
+        {{ Former::text('pickup_date','Pick Up Date')->id('pickup-date')->class('form-control')->readonly(true) }}
+        {{ Former::text('device_name','Device')->id('device-name')->class('form-control')->readonly(true) }}
+        {{ Former::text('device_key','Device')->id('device-key')->class('form-control')->readonly(true) }}
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-primary" id="do-assign-courier">Assign</button>
+    </div>
+</div>
 
 <div id="move-order-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
@@ -16,19 +39,6 @@
     </div>
 </div>
 
-<div id="set-pickup-date-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Set Pick Up Date</span></h3>
-    </div>
-    <div class="modal-body" >
-        {{ Former::text('pickup_date', 'Set Pick Up Date' )->id('pickup-date')->class('form-control d-datepicker') }}
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <button class="btn btn-primary" id="do-set-date">Set</button>
-    </div>
-</div>
 
 <div id="print-modal" class="modal fade large" tabindex="-1" role="dialog" aria-labelledby="myPrintModalLabel" aria-hidden="true">
     <div class="modal-header">
@@ -92,15 +102,10 @@
     overflow: auto;
 }
 
-#ui-datepicker-div{
-    z-index: 100000 !important;
-}
 </style>
 
 <script type="text/javascript">
     $(document).ready(function(){
-
-
         $('#refresh_filter').on('click',function(){
             oTable.draw();
         });
@@ -109,13 +114,16 @@
             oTable.draw();
         });
 
-        $('#move_orders').on('click',function(e){
-            $('#move-order-modal').modal();
-            e.preventDefault();
-        });
+        $('#set-courier').on('click',function(e){
+            var date = $('input[name=date_select]:checked').val();
+            var device = $('input[name=device_select]:checked').val();
+            var device_name = $('input[name=device_select]:checked').data('name');
 
-        $('#set_pickup').on('click',function(e){
-            $('#set-pickup-date-modal').modal();
+            $('#device-key').val(device);
+            $('#device-name').val(device_name);
+            $('#pickup-date').val(date);
+
+            $('#assign-courier-modal').modal();
             e.preventDefault();
         });
 
@@ -179,7 +187,7 @@
                     ,'json');
 
             }else{
-                alert('No item selected.');
+                alert('No product selected.');
                 $('#print-modal').modal('hide');
             }
 
@@ -259,7 +267,39 @@
         });
 
 
-        $('#do-set-date').on('click',function(){
+        $('#do-assign-courier').on('click',function(){
+            var courier_name = $('#courier-name').val();
+            var courier_id = $('#courier-id').val();
+            var device_key = $('#device-key').val();
+            var device_name = $('#device-name').val();
+            var pickup_date = $('#pickup-date').val();
+
+            if(courier_id != ''){
+                $.post('{{ URL::to('courierassign/assigncourier')}}',
+                    {
+
+                        courier_name : courier_name,
+                        courier_id : courier_id,
+                        device_key : device_key,
+                        device_name : device_name,
+                        pickup_date : pickup_date
+
+                    },
+                    function(data){
+                        $('#assign-courier-modal').modal('hide');
+                        oTable.draw();
+                    }
+                    ,'json');
+
+            }else{
+                alert('Empty courier information.');
+                $('#assign-courier-modal').modal('hide');
+            }
+
+        });
+
+
+        $('#do-assign').on('click',function(){
             var props = $('.selector:checked');
             var ids = [];
             $.each(props, function(index){
@@ -269,19 +309,19 @@
             console.log(ids);
 
             if(ids.length > 0){
-                $.post('{{ URL::to('incoming/assigndate')}}',
+                $.post('{{ URL::to('ajax/assignoutlet')}}',
                     {
-                        date : $('#pickup-date').val(),
-                        ids : ids
+                        outlet : $('#assigned-category').val(),
+                        product_ids : ids
                     },
                     function(data){
-                        $('#set-pickup-date-modal').modal('hide');
+                        $('#assign-modal').modal('hide');
                         oTable.draw();
                     }
                     ,'json');
 
             }else{
-                alert('No item selected.');
+                alert('No product selected.');
                 $('#assign-modal').modal('hide');
             }
 
@@ -317,6 +357,15 @@
             }
 
         });
+
+        $('.auto_courier').autocomplete({
+            appendTo:'#assign-courier-modal',
+            source: base + 'ajax/courier',
+            select: function(event, ui){
+                $('#courier-id').val(ui.item.id);
+            }
+        });
+
 
     });
 </script>

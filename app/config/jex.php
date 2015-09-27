@@ -24,6 +24,7 @@ return array(
 
         'default_heads'=>array(
             array('CREATED DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('PICK UP DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
             array('CURR POSITION',array('search'=>true,'select'=>Prefs::getPosition()->PositionToSelection('node_code','name') ,'sort'=>true)),
             array('LOGISTIC',array('search'=>true,'sort'=>true)),
@@ -33,7 +34,6 @@ return array(
             array('CUST ID',array('search'=>true,'sort'=>true)),
             array('DELIVERY ID',array('search'=>true,'sort'=>true)),
             array('ORDER ID',array('search'=>true,'sort'=>true)),
-            array('PICK UP DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('FULFILLMENT ID',array('search'=>true,'sort'=>true)),
             array('NUMBER OF PACKAGE',array('search'=>true,'sort'=>true)),
             array('COD VALUE',array('search'=>true,'sort'=>true)),
@@ -54,6 +54,7 @@ return array(
 
         'default_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','courier_status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -63,7 +64,6 @@ return array(
             array('consignee_olshop_cust',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('delivery_id',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('no_sales_order',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('consignee_olshop_orderid',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('number_of_package',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('cod',array('kind'=>'currency', 'query'=>'like','pos'=>'both','show'=>true)),
@@ -233,7 +233,7 @@ return array(
         'default_courierassign_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('device_id',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),

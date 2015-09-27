@@ -282,7 +282,8 @@ class ZoningController extends AdminController {
         */
 
         $model = $model->where(function($query){
-                    $query->where('bucket','=',Config::get('jayon.bucket_dispatcher'));
+                    $query->where('bucket','=',Config::get('jayon.bucket_dispatcher'))
+                        ->where('status','=', Config::get('jayon.trans_status_admin_dated') );
                 /*
                 $query->where(function($q){
                     $q->where('pending_count','=',0)
@@ -294,8 +295,8 @@ class ZoningController extends AdminController {
                 */
             })
 
-            ->orderBy('PICK_UP_DATE','desc')
-            ->orderBy('CONSIGNEE_OLSHOP_CITY','desc');
+            ->orderBy('pick_up_date','desc')
+            ->orderBy('consignee_olshop_city','desc');
             /*
             ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
             ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
@@ -906,29 +907,50 @@ class ZoningController extends AdminController {
 
         $date = $in['date'];
 
-        $shipments = Shipment::where('PICK_UP_DATE','=',new MongoDate(strtotime($date)) )->where('CONSIGNEE_OLSHOP_CITY','=',$city)->get();
+        $shipments = Shipment::where('pick_up_date','=',new MongoDate(strtotime($date)) )
+                        ->where('status','=', Config::get('jayon.trans_status_admin_dated'))
+                        ->where('consignee_olshop_city','=',$city)->get();
 
-        print_r($shipments->toArray());
+        $shipments = $shipments->toArray();
+
+        for($i = 0; $i < count($shipments); $i++){
+            $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
+        }
 
         $devices = Device::where('city','like','%'.$city.'%')->get();
 
-        $keys = array();
-
-        foreach($devices as $d){
-            $keys[] = $d->key;
-        }
-
-        print_r($keys);
-
-
         $caps = array();
 
-        foreach($keys as $key){
-            $caps[$key]= Shipment::where('device_key',$key)->where('PICK_UP_DATE',$date)->count();
+        foreach($devices as $d){
+            $caps[$d->key]['identifier'] = $d->identifier;
+            $caps[$d->key]['key'] = $d->key;
+            $caps[$d->key]['count'] = Shipment::where('device_key',$d->key)->where('pick_up_date',$date)->count();
         }
 
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments, 'device'=>$caps ) );
+        //print_r($caps);
 
-        print_r($caps);
+    }
+
+    public function postAssigndevice()
+    {
+        $in = Input::get();
+
+        $device = Device::where('key','=', $in['device'] )->first();
+
+        $shipments = Shipment::whereIn('delivery_id', $in['ship_ids'] )->get();
+
+        //print_r($shipments->toArray());
+
+        foreach($shipments as $sh){
+            $sh->status = Config::get('jayon.trans_status_admin_zoned');
+            $sh->device_key = $device->key;
+            $sh->device_name = $device->identifier;
+            $sh->device_id = $device->_id;
+            $sh->save();
+        }
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments ) );
 
     }
 
