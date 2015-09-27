@@ -26,6 +26,25 @@ class CourierController extends AdminController {
         );
 
 
+
+        private $default_export_fields = array(
+            array('name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('id_type',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('identity_number',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('type',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('status',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('addr',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('zip',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('phone',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('mobile_1',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('mobile_2',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('mobile_3',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('email',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('country',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('remark',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true))
+        );
+
     public function __construct()
     {
         parent::__construct();
@@ -548,9 +567,9 @@ class CourierController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = Config::get('jex.default_export_heads');
+        $this->heads = null;
 
-        $this->fields = Config::get('jex.default_export_fields');
+        $this->fields = $this->default_export_fields;
 
         /*
         $this->fields = array(
