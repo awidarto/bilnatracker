@@ -251,7 +251,7 @@ $config['delivery_status_changes'] = array(
     $config['trans_status_mobile_rescheduled'] => 'brown',
     $config['trans_status_mobile_delivered'] => 'green',
     $config['trans_status_mobile_noshow'] => 'orange',
-    /*
+
     $config['trans_status_mobile_revoked'] => 'red',
     $config['trans_status_mobile_departure'] => 'green',
     $config['trans_status_admin_zoned'] => 'brown',
@@ -259,7 +259,7 @@ $config['delivery_status_changes'] = array(
     $config['trans_status_admin_devassigned'] => 'black',
     $config['trans_status_admin_courierassigned'] => 'black',
     $config['trans_status_admin_dispatched'] => 'green',
-    */
+
 );
 
 $config['pickup_status_changes'] = array(
