@@ -123,6 +123,7 @@ $config['trans_wh_canceled'] = 'canceled';
 
 $config['trans_cr_atmerchant'] = 'at_merchant_premise';
 $config['trans_cr_inwh'] = 'in_warehouse';
+$config['trans_cr_offcr'] = 'off_courier';
 $config['trans_cr_oncr'] = 'on_courier';
 $config['trans_cr_oncr_partial'] = 'on_courier_partial';
 $config['trans_cr_return2wh'] = 'return_to_warehouse';
@@ -151,6 +152,7 @@ $config['delivery_status'] = array(
     $config['trans_status_rescheduled'] => 'Rescheduled',
     $config['trans_status_inprogress'] => 'In Progress',
 
+    $config['trans_status_mobile_delivered'] => 'Delivered',
     $config['trans_status_mobile_revoked'] => 'Returned',
     $config['trans_status_mobile_departure'] => 'Departure',
     $config['trans_status_admin_zoned'] => 'Zone Assigned',
@@ -181,6 +183,7 @@ $config['warehouse_status'] = array(
 $config['courier_status'] = array(
     $config['trans_cr_atmerchant'] => 'At Merchant Premise',
     $config['trans_cr_inwh'] => 'In Warehouse',
+    $config['trans_cr_offcr'] => 'Off Courier',
     $config['trans_cr_oncr'] => 'On Courier',
     $config['trans_cr_oncr_partial'] => 'On Courier Partial',
     $config['trans_cr_return2wh'] => 'Return to Warehouse',
@@ -293,6 +296,7 @@ $config['courier_status_changes'] = array(
 
     $config['trans_cr_atmerchant'] => 'maroon',
     $config['trans_cr_inwh'] => 'brown',
+    $config['trans_cr_offcr'] => 'red',
     $config['trans_cr_oncr'] => 'green',
     $config['trans_cr_oncr_partial'] => 'green',
     $config['trans_cr_return2wh'] => 'brown',
