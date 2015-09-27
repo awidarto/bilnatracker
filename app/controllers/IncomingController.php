@@ -713,6 +713,9 @@ class IncomingController extends AdminController {
         $data['device_name'] = '';
         $data['device_id'] = '';
 
+        $data['courier_name'] = '';
+        $data['courier_id'] = '';
+
         unset($data['volume']);
         unset($data['sessId']);
         unset($data['isHead']);

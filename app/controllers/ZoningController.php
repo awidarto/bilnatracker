@@ -907,7 +907,9 @@ class ZoningController extends AdminController {
 
         $date = $in['date'];
 
-        $shipments = Shipment::where('pick_up_date','=',new MongoDate(strtotime($date)) )
+        $pick_up_date = new MongoDate(strtotime($date));
+
+        $shipments = Shipment::where('pick_up_date','=', $pick_up_date )
                         ->where('status','=', Config::get('jayon.trans_status_admin_dated'))
                         ->where('consignee_olshop_city','=',$city)->get();
 
@@ -924,7 +926,7 @@ class ZoningController extends AdminController {
         foreach($devices as $d){
             $caps[$d->key]['identifier'] = $d->identifier;
             $caps[$d->key]['key'] = $d->key;
-            $caps[$d->key]['count'] = Shipment::where('device_key',$d->key)->where('pick_up_date',$date)->count();
+            $caps[$d->key]['count'] = Shipment::where('device_key',$d->key)->where('pick_up_date',$pick_up_date)->count();
         }
 
         return Response::json( array('result'=>'OK', 'shipment'=>$shipments, 'device'=>$caps ) );
