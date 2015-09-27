@@ -399,9 +399,9 @@ class SyncapiController extends \Controller {
                     //$shipment->status = $olog->status;
                     $shipment->courier_status = $olog->courierStatus;
 
-                    if($olog->courierStatus == Config::get('jayon.trans_cr_oncr') || $olog->courierStatus == Config::get('jayon.trans_cr_oncr_partial'))
+                    if($olog->courierStatus == \Config::get('jayon.trans_cr_oncr') || $olog->courierStatus == \Config::get('jayon.trans_cr_oncr_partial'))
                     {
-                        $shipment->pickup_status = Config::get('jayon.trans_status_pickup');
+                        $shipment->pickup_status = \Config::get('jayon.trans_status_pickup');
                     }
 
 
