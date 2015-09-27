@@ -274,7 +274,6 @@ class SyncapiController extends \Controller {
                    $upl->delivery_id = $blog->parentId;
                    $upl->photo_time = $blog->photoTime;
                    $upl->save();
-
                 }
 
                 if( $r ){
