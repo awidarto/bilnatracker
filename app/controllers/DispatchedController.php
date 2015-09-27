@@ -86,7 +86,7 @@ class DispatchedController extends AdminController {
     {
 
 
-        $this->heads = Config::get('jex.default_heads');
+        $this->heads = Config::get('jex.default_dispatched_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
@@ -120,7 +120,7 @@ class DispatchedController extends AdminController {
     public function postIndex()
     {
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = Config::get('jex.default_dispatched_fields');
 
         /*
         $categoryFilter = Input::get('categoryFilter');
@@ -165,7 +165,7 @@ class DispatchedController extends AdminController {
 
         //table generator part
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = Config::get('jex.default_dispatched_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -186,7 +186,7 @@ class DispatchedController extends AdminController {
     public function getPrint()
     {
 
-        $this->fields = Config::get('jex.default_heads');
+        $this->fields = Config::get('jex.default_dispatched_heads');
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
