@@ -265,6 +265,18 @@ class SyncapiController extends \Controller {
 
                 $r = $blog->save();
 
+                $upl = \Uploaded::where('_id','=',new \MongoId($blog->extId))->first();
+
+                if($upl){
+                   $upl->is_signature = $blog->isSignature;
+                   $upl->latitude = $blog->latitude;
+                   $upl->longitude = $blog->longitude;
+                   $upl->delivery_id = $blog->parentId;
+                   $upl->photo_time = $blog->photoTime;
+                   $upl->save();
+
+                }
+
                 if( $r ){
                     $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['extId'] );
                 }else{
