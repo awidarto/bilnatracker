@@ -1,8 +1,9 @@
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
-{{--
+
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
---}}
+{{--
 <a class="btn btn-transparent btn-info btn-sm" id="set-courier"><i class="fa fa-user"></i> Assign Courier</a>
+--}}
 
 <div id="assign-courier-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
@@ -108,6 +109,11 @@
     $(document).ready(function(){
         $('#refresh_filter').on('click',function(){
             oTable.draw();
+        });
+
+        $('#move_orders').on('click',function(e){
+            $('#move-order-modal').modal();
+            e.preventDefault();
         });
 
         $('#outlet_filter').on('change',function(){

@@ -120,9 +120,18 @@ class AjaxController extends BaseController {
         //if($results){
             $res = false;
         //}else{
+
             foreach($results as $r){
-                $r->bucket = $in['bucket'];
-                $r->save();
+                if($r->logistic_type == 'external'){
+                    if($in['bucket'] == Config::get('jayon.bucket_tracker')){
+                        if(isset($r->awb) && $r->awb != ''){
+                            $r->bucket = $in['bucket'];
+                            $r->save();
+                        }
+                    }
+                }elseif($r->logistic_type == 'internal'){
+
+                }
             }
             $res = true;
         //}
