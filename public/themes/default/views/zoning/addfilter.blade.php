@@ -12,8 +12,9 @@
 
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
 <a class="btn btn-transparent btn-info btn-sm" id="assign_to_device"><i class="fa fa-phone-square"></i> Assign to Device</a>
-
+{{--
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
+--}}
 
 <div id="device-assign-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
