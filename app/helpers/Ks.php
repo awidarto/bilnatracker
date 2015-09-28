@@ -5,6 +5,7 @@ class Ks {
     public static function statusoptions(){
 
         return array(
+                ''=>'All',
                 'Delivery'=>Config::get('jayon.delivery_status'),
                 'Courier'=>Config::get('jayon.courier_status'),
                 'Pickup'=>Config::get('jayon.pickup_status'),

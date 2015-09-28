@@ -397,5 +397,16 @@ return array(
 
         ),
 
+        'default_awb_heads'=>array(
+            array('AWB',array('search'=>true,'sort'=>true)),
+            array('CONS CUST ID',array('search'=>true,'sort'=>true)),
+            array('ORDER ID',array('search'=>true,'sort'=>true)),
+            array('FULFILLMENT ID',array('search'=>true,'sort'=>true)),
+        ),
+
+
+        'default_awb_fields'=>array('awb', 'consignee_olshop_cust','no_sales_order', 'consignee_olshop_orderid'),
+
+
 
     );

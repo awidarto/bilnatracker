@@ -2,6 +2,11 @@
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
 <a class="btn btn-transparent btn-info btn-sm" id="set_pickup"><i class="fa fa-calendar"></i> Set Pick Up Date</a>
 
+<a class="btn btn-sm btn-info btn-transparent" id="download-awb-xls"><i class="fa fa-download"></i> Download AWB Template</a>
+
+<a href="{{ URL::to($importawburl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-upload"></i> Update AWB</a>
+
+
 <div id="move-order-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -192,6 +197,35 @@
             pframeWindow.print();
 
         });
+
+        $('#download-awb-xls').on('click',function(){
+            var flt = $('thead td input, thead td select');
+            var dlfilter = [];
+
+            flt.each(function(){
+                if($(this).hasClass('datetimeinput') || $(this).hasClass('dateinput')){
+                    console.log(this.parentNode);
+                    dlfilter[parseInt(this.parentNode.id)] = this.value ;
+                }else{
+                    dlfilter[parseInt(this.id)] = this.value ;
+                }
+            });
+            console.log(dlfilter);
+
+            //var sort = oTable.fnSettings().aaSorting;
+            var sort = oTable.order();
+            console.log(sort);
+            $.post('{{ URL::to($ajaxawbdlxl) }}',{'filter' : dlfilter, 'sort':sort[0], 'sortdir' : sort[1] }, function(data) {
+                if(data.status == 'OK'){
+
+                    window.location.href = data.urlxls;
+
+                }
+            },'json');
+
+            return false;
+        });
+
 
         $('#label_default').on('click',function(){
             var col = $('#label_columns').val();

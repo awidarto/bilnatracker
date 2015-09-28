@@ -98,7 +98,11 @@ class IncomingController extends AdminController {
 
         Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')
+                                        ->with('submit_url','gl')
+                                        ->with('ajaxawbdlxl','incoming/awbdlxl')
+                                        ->with('importawburl','incoming/importawb')
+                                        ->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
@@ -604,6 +608,39 @@ class IncomingController extends AdminController {
 
         return parent::postDlxl();
     }
+
+
+    public function postAwbdlxl()
+    {
+
+        $this->heads = null;
+        $this->fields = Config::get('jex.default_fields');
+
+        $this->export_output_fields = Config::get('jex.default_awb_fields');
+
+        $db = Config::get('jayon.main_db');
+
+        $this->def_order_by = 'pick_up_date';
+        $this->def_order_dir = 'desc';
+        $this->place_action = 'first';
+        $this->show_select = true;
+
+        $this->sql_key = 'delivery_id';
+        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
+        $this->sql_connection = 'mysql';
+
+        return parent::postDlxl();
+    }
+
+    public function getImportawb(){
+
+        $this->importkey = '_id';
+
+        //$this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
+
+        return parent::getImport();
+    }
+
 
     public function getImport(){
 

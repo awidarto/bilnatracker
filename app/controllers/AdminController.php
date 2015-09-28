@@ -137,6 +137,7 @@ class AdminController extends Controller {
 
     public $import_aux_form = '';
 
+    public $export_output_fields = null;
 
 	public function __construct(){
 
@@ -2510,7 +2511,6 @@ class AdminController extends Controller {
                         $label = (isset($doc[$field[0]]))?true:false;
                     }
 
-
                     if($label){
 
                         if( isset($field[1]['callback']) && $field[1]['callback'] != ''){
@@ -2584,6 +2584,24 @@ class AdminController extends Controller {
         //print public_path();
 
         $fname =  $this->controller_name.'_'.date('d-m-Y-H-m-s',time());
+
+
+
+        if(!is_null($this->export_output_fields) && count($this->export_output_fields) > 0){
+            $tempdata = array();
+            $sfields = $sdata[1];
+            foreach ($sdata as $sd) {
+                $temprow = array();
+                for($i = 0; $i < count($sd); $i++){
+                    if( in_array($sfields[$i], $this->export_output_fields) ){
+                        $temprow[] = $sd[$i];
+                    }
+                }
+                $tempdata[] = $temprow;
+            }
+
+            $sdata = $tempdata;
+        }
 
         /*
         Excel::create( $fname )
@@ -3119,7 +3137,12 @@ class AdminController extends Controller {
                             $obj->{$k} = $v;
                         }
                     }
+
+
                     $obj->lastUpdate = new MongoDate();
+
+                    //print_r($obj);
+
                     $obj->save();
                 }else{
 
