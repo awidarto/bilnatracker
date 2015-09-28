@@ -4,6 +4,10 @@
         left:35%;
 
     }
+
+    table{
+        width: 100%;
+    }
 </style>
 
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
@@ -22,7 +26,7 @@
                 <table id="shipment_list">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th><input type="checkbox" id="dev_select_all" /></th>
                             <th>Order ID</th>
                             <th>Fulfillment</th>
                             <th>Package Count</th>
@@ -137,6 +141,24 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
+
+        $('#dev_select_all').on('click',function(){
+            if($('#dev_select_all').is(':checked')){
+                $('.shipselect').prop('checked', true);
+            }else{
+                $('.shipselect').prop('checked',false);
+            }
+        });
+
+        $('#dev_select_all').on('ifChecked',function(){
+            $('.shipselect').prop('checked', true);
+        });
+
+        $('#dev_select_all').on('ifUnchecked',function(){
+            $('.shipselect').prop('checked', false);
+        });
+
+
         $('#refresh_filter').on('click',function(){
             oTable.draw();
         });
