@@ -2959,6 +2959,8 @@ class AdminController extends Controller {
 
     public function postUploadimport()
     {
+        set_time_limit(0);
+
         date_default_timezone_set('Asia/Jakarta');
 
         $file = Input::file('inputfile');
@@ -3079,6 +3081,8 @@ class AdminController extends Controller {
 
         $imports = Importsession::where('sessId','=',$sessid)
             ->where('isHead','=',0)
+            ->take(200)
+            ->skip(0)
             ->get();
 
         $headselect = array();
@@ -3114,11 +3118,25 @@ class AdminController extends Controller {
     {
         $in = Input::get();
 
+        $force_all = $in['force_all'];
+
         $importkey = $in['edit_key'];
 
-        $selector = $in['selector'];
 
         $edit_selector = isset($in['edit_selector'])?$in['edit_selector']:array();
+
+        if($force_all == 1){
+            $selectall = Importsession::where('sessId','=',$sessid)
+                                        ->where('isHead','=',0)
+                                        ->get()->toArray();
+
+            $selector = array();
+            foreach($selectall as $sel){
+                $selector[] = $sel['_id'];
+            }
+        }else{
+            $selector = $in['selector'];
+        }
 
         foreach($selector as $selected){
             $rowitem = Importsession::find($selected)->toArray();
@@ -3138,6 +3156,7 @@ class AdminController extends Controller {
                         }
                     }
 
+                    unset($obj->isHead);
 
                     $obj->lastUpdate = new MongoDate();
 
@@ -3147,6 +3166,7 @@ class AdminController extends Controller {
                 }else{
 
                     unset($rowitem['_id']);
+                    unset($rowitem['isHead']);
                     $rowitem['createdDate'] = new MongoDate();
                     $rowitem['lastUpdate'] = new MongoDate();
 

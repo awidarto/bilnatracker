@@ -8,7 +8,6 @@ return array(
                 'assets',
                 'reports',
                 'devicetype',
-                'report',
                 'log',
                 'user'
             ),

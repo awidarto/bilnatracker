@@ -64,6 +64,7 @@
     <h5>Import {{ $title }} Preview</h5>
     <div class="row">
         <div class="col-md-4">
+            {{ Former::select('force_all')->label('Commit All Records')->options(array(0=>'No', 1=>'Yes'))->id('importkey')->class('form-control importkey input-sm')->help('Disregard selection checkbox and commit all rows to import. Including all data not shown in current preview page.') }}
             {{ Former::select('edit_key')->label('Edit Key')->options($headselect)->id('importkey')->class('form-control importkey input-sm')->help('select to set which field used for update id') }}
         </div>
         <div class="col-md-5" style="padding-top:25px;">
@@ -79,6 +80,9 @@
         <table class="table table-condensed">
             <thead>
                 <tr>
+                    <th>
+                        #
+                    </th>
                     <th>
                         <label>Select All</label>
                         <input id="select_all" type="checkbox">
@@ -100,8 +104,14 @@
                 </tr>
             </thead>
             <tbody>
+                <?php
+                    $counter = 1;
+                ?>
                 @foreach($imports->toArray() as $row)
                 <tr>
+                    <td>
+                        {{ $counter }}
+                    </td>
                     <td>
                         <input class="selector" name="selector[]" value="{{ $row['_id'] }}" type="checkbox">
                     </td>
@@ -118,10 +128,13 @@
                         </td>
                     @endforeach
                 </tr>
+                <?php
+                    $counter++;
+                ?>
                 @endforeach
             </tbody>
         </table>
-
+        <p>This preview only show max of 200 first data records to commit, therefore the selection checkbox only effective for imports with less than or equal to 200 data records.</p>
     </div>
 </div>
 {{ Former::close() }}

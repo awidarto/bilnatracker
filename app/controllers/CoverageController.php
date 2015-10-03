@@ -5,9 +5,11 @@ class CoverageController extends AdminController {
         private $default_heads = array(
             array('District',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('City',array('search'=>true,'sort'=>true)),
+            array('Area',array('search'=>true,'sort'=>true)),
             array('Province',array('search'=>true,'sort'=>true)),
             array('Zip',array('search'=>true,'sort'=>true)),
             array('Country',array('search'=>true,'sort'=>true)),
+            array('Lead Time',array('search'=>true,'sort'=>true)),
             array('Status',array('search'=>true,'select'=>array(''=>'All','1'=>'Active','0'=>'Inactive'),'sort'=>true)),
         );
 
@@ -15,9 +17,11 @@ class CoverageController extends AdminController {
         private $default_fields = array(
             array('district',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('area',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('province',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('zips',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('country',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('leadtime',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('is_on',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
         );
 
@@ -368,6 +372,12 @@ class CoverageController extends AdminController {
 
         //$model = $model->where('group_id', '=', 4);
 
+        $model = $model
+            ->orderBy('province','asc')
+            ->orderBy('city','asc')
+            ->orderBy('area','asc');
+
+
         return $model;
 
     }
@@ -705,7 +715,10 @@ class CoverageController extends AdminController {
     public function beforeImportCommit($data)
     {
 
-        $data['is_on'] = new MongoInt32($data['is_on']);
+        //$data['is_on'] = new MongoInt32($data['is_on']);
+        $data['leadtime'] = new MongoInt32($data['leadtime']);
+        $data['is_on'] = new MongoInt32(1);
+        $data['country'] = 'Indonesia';
 
         return $data;
     }
