@@ -7,7 +7,7 @@
 		"laravel/framework": "4.2.*",
         "jenssegers/mongodb": "*",
         "nitmedia/wkhtml2pdf": "dev-master",
-        "anahkiasen/former": "dev-master",
+        "anahkiasen/former": "master",
         "intervention/image": "2.2.*",
         "intervention/imagecache": "dev-master",
         "intervention/validation": "dev-master",

@@ -1767,6 +1767,7 @@ class AdminController extends Controller {
 
         Former::framework($this->form_framework);
 
+
 		//$this->crumb->add($controller_name.'/add','New '.Str::singular($this->controller_name));
         $data = $this->beforeAddForm();
 
@@ -1781,6 +1782,7 @@ class AdminController extends Controller {
         Breadcrumbs::addCrumb('New '.$this->title,URL::to('/'));
 
 		return View::make($controller_name.'.'.$this->form_add)
+                    ->with('validator',$this->validator)
 					->with('back',$controller_name)
                     ->with('auxdata',$data)
 					->with('form',$form)
@@ -1792,7 +1794,9 @@ class AdminController extends Controller {
 
 	public function postAdd($data = null){
 
-		//print_r(Session::get('permission'));
+        Former::setOption('fetch_errors', true);
+
+		//print_r(Session::get('errors'));
 		if(is_null($data)){
 			$data = Input::get();
 		}
@@ -1813,7 +1817,9 @@ class AdminController extends Controller {
 
             Event::fire('log.a',array($controller_name, 'add' ,$actor,'validation failed'));
 
-	    	return Redirect::to($controller_name.'/add')->withErrors($validation)->withInput(Input::all());
+	    	return Redirect::to($controller_name.'/add')
+                ->withErrors($validation)
+                ->withInput(Input::all());
 
 	    }else{
 

@@ -66,13 +66,26 @@ class UserController extends AdminController {
         return parent::postIndex();
     }
 
+    public function getAdd()
+    {
+
+        $this->validator = array(
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'email'=> 'required|unique:users',
+            'pass'=>'required|same:repass'
+        );
+
+        return parent::getAdd();
+    }
+
     public function postAdd($data = null)
     {
 
         $this->validator = array(
             'firstname' => 'required',
             'lastname' => 'required',
-            'email'=> 'required|unique:agents',
+            'email'=> 'required|unique:users',
             'pass'=>'required|same:repass'
         );
 

@@ -97,7 +97,15 @@
       font-weight: bold;
       font-size: 20px;
     }
+
+    .error{
+      background-color: orange;
+      padding: 6px;
+      color: white;
+    }
+
     </style>
+
 
 
   </head>
@@ -155,7 +163,20 @@
                 </div>
                 <div class="panel-content pagination2 table-responsive">
 
-                    {{Former::open_for_files_vertical($submit,'POST',array('class'=>'container'))}}
+
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+
+                          @foreach($errors->toArray() as $e=>$v)
+
+                          $('input[name="{{$e}}"]').after('<div class="error">' + '{{ implode('<br />', $v) }}' + '</div>');
+
+                          @endforeach
+
+                        });
+                    </script>
+
+                    {{ Former::open_for_files_vertical($submit,'POST',array('class'=>'container')) }}
                     <div class="row">
                         <div class="col-md-6">
                           @yield('left')
@@ -179,7 +200,6 @@
             <div class="copyright">
               <p class="pull-left sm-pull-reset">
                 <span>Copyright <span class="copyright">©</span> 2015 </span>
-                <span>THEMES LAB</span>.
                 <span>All rights reserved. </span>
               </p>
               <p class="pull-right sm-pull-reset">
@@ -325,7 +345,8 @@
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/plugins.js"></script> <!-- Main Plugin Initialization Script -->
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/application.js"></script> <!-- Main Application Script -->
     {{--
-    <script src="{{ URL::to('makeadmin')}}/assets/admin/layout4/js/layout.js"></script>--}}
+    <script src="{{ URL::to('makeadmin')}}/assets/admin/layout4/js/layout.js"></script>
+    --}}
     <script src="{{ URL::to('makeadmin')}}/assets/admin/md-layout4/material-design/js/material.js"></script>
     <script src="{{ URL::to('makeadmin')}}/assets/admin/layout4/js/layout.js"></script>
 
