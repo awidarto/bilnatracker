@@ -3,12 +3,14 @@
 @section('left')
         {{ Former::hidden('_id')->value($formdata['_id']) }}
 
-        <h5>Device Information</h5>
+        <h5>Coverage Area Information</h5>
 
-        {{ Former::text('identifier','Device Identifier') }}
-        {{ Former::text('devname','Device Identifier') }}
-        {{ Former::text('descriptor','Description') }}
-        {{ Former::text('mobile','Number') }}
+        {{ Former::text('district','Kecamatan / District') }}
+        {{ Former::text('area','Area') }}
+        {{ Former::text('city','City') }}
+        {{ Former::text('zips','ZIPs') }}
+        {{ Former::text('province','Province') }}
+        {{ Former::text('country','Country') }}
 
         {{ Form::submit('Save',array('class'=>'btn btn-primary'))}}&nbsp;&nbsp;
         {{ HTML::link($back,'Cancel',array('class'=>'btn'))}}
@@ -16,16 +18,11 @@
 @stop
 
 @section('right')
-        <h5>Device Coverage</h5>
-
-        {{ Former::text('city','City Coverage')->class('form-control tag_keyword') }}
-
-        {{ Former::text('district','Area Coverage')->class('form-control') }}
-
+        <h5>Metadata</h5>
 
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                {{ Former::text('color','Color')->class('form-control') }}
+                {{ Former::text('leadtime','Lead Time')->class('form-control') }}
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 {{ Former::select('is_on','Active')->options(array('1'=>'Yes','0'=>'No'))->class('form-control input-sm') }}
@@ -77,21 +74,6 @@ $(document).ready(function() {
         );
 
     })
-
-    $('.auto_merchant').autocomplete({
-        source: base + 'ajax/merchant',
-        select: function(event, ui){
-            $('#merchant-id').val(ui.item.id);
-        }
-    });
-
-    function updateselector(data){
-        var opt = '';
-        for(var k in data){
-            opt += '<option value="' + k + '">' + data[k] +'</option>';
-        }
-        return opt;
-    }
 
 
 });

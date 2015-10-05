@@ -510,6 +510,12 @@ th ul.select2-results li{
 			}
         );
 
+        oTable.on( 'draw.dt', function () {
+            if ($('[data-rel="tooltip"]').length && $.fn.tooltip) {
+                $('[data-rel="tooltip"]').tooltip();
+            }
+        });
+
 
         @if($table_dnd == true)
         	oTable.rowReordering(

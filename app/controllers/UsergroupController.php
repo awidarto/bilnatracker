@@ -105,14 +105,6 @@ class UsergroupController extends AdminController {
         return parent::postEdit($id,$data);
     }
 
-    public function makeActions($data)
-    {
-        $delete = '<span class="del" id="'.$data['_id'].'" ><i class="fa fa-trash"></i>Delete</span>';
-        $edit = '<a href="'.URL::to('usergroup/edit/'.$data['_id']).'"><i class="fa fa-edit"></i>Update</a>';
-
-        $actions = $edit.'<br />'.$delete;
-        return $actions;
-    }
 
     public function splitTag($data){
         $tags = explode(',',$data['docTag']);

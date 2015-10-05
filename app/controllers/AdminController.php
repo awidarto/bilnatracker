@@ -1993,7 +1993,11 @@ class AdminController extends Controller {
 	}
 
 	public function makeActions($data){
-		return '';
+        $delete = '<span class="del" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete item" id="'.$data['_id'].'" ><i class="fa fa-trash"></i> Del</span>';
+        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit item" ><i class="fa fa-edit"></i> Edit</a>';
+        $actions = $edit.'<br />'.$delete;
+
+		return $actions;
 	}
 
 	public function beforeUpdate($id,$data)

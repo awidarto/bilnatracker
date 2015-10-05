@@ -170,11 +170,7 @@ class OptionController extends AdminController {
 
     public function makeActions($data)
     {
-        $delete = '<span class="del" id="'.$data['_id'].'" ><i class="fa fa-trash"></i> Delete</span>';
-        $edit = '<a href="'.URL::to('option/edit/'.$data['_id']).'"><i class="fa fa-edit"></i> Update</a>';
-        $dl = '<a href="'.URL::to('brochure/dl/'.$data['_id']).'" target="new"><i class="fa fa-download"></i> Download</a>';
-        $print = '<a href="'.URL::to('brochure/print/'.$data['_id']).'" target="new"><i class="fa fa-print"></i> Print</a>';
-        $upload = '<span class="upload" id="'.$data['_id'].'" rel="'.$data['SKU'].'" ><i class="fa fa-upload"></i> Upload File</span>';
+        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit item" ><i class="fa fa-edit"></i> Edit</a>';
 
         $actions = $edit;
         return $actions;

@@ -667,6 +667,12 @@ class LogisticsController extends AdminController {
 
     public function makeActions($data)
     {
+
+//<button data-rel="tooltip" type="button" class="btn btn-primary m-b-10 f-left" data-toggle="tooltip" data-placement="left" title="" data-original-title="Tooltip on left">Left</button>
+        $delete = '<span class="del" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" id="'.$data['_id'].'" ><i class="fa fa-trash"></i></span>';
+        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Update" ><i class="fa fa-edit"></i></a>';
+        $actions = $edit.'<br />'.$delete;
+
         /*
         if(!is_array($data)){
             $d = array();
@@ -676,8 +682,6 @@ class LogisticsController extends AdminController {
             $data = $d;
         }
 
-        $delete = '<span class="del" id="'.$data['_id'].'" ><i class="fa fa-times-circle"></i> Delete</span>';
-        $edit = '<a href="'.URL::to('advertiser/edit/'.$data['_id']).'"><i class="fa fa-edit"></i> Update</a>';
         $dl = '<a href="'.URL::to('brochure/dl/'.$data['_id']).'" target="new"><i class="fa fa-download"></i> Download</a>';
         $print = '<a href="'.URL::to('brochure/print/'.$data['_id']).'" target="new"><i class="fa fa-print"></i> Print</a>';
         $upload = '<span class="upload" id="'.$data['_id'].'" rel="'.$data['SKU'].'" ><i class="fa fa-upload"></i> Upload Picture</span>';
@@ -686,8 +690,7 @@ class LogisticsController extends AdminController {
 
         $history = '<a href="'.URL::to('advertiser/history/'.$data['_id']).'"><i class="fa fa-clock-o"></i> History</a>';
 
-        $actions = $stat.'<br />'.$edit.'<br />'.$delete;
-        */
+        /*
         $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
         $edit = '<a href="'.URL::to('logistics/edit/'.$data['_id']).'">Update</a>';
         $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
@@ -695,6 +698,7 @@ class LogisticsController extends AdminController {
         $actions = View::make('shared.action')
                         ->with('actions',array($edit))
                         ->render();
+        */
         return $actions;
     }
 
