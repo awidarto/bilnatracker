@@ -124,14 +124,32 @@ Route::group(array('prefix' => 'api/v1/mobile'), function (){
     Route::resource('delivery', 'Api\DeliveryapiController');
 });
 
-Route::get('modtest',function(){
+Route::get('tolower',function(){
 
-    $arr = array(
-            'fullname'=>'full name',
-            'shortname'=>'name'
-        );
+    $pos = new Position();
 
-    $mod = Testmodel::create($arr)->save();
+    $nodes = $pos->get();
+
+    $blist = array('_id', 'createdDate', 'lastUpdate');
+
+    foreach($nodes as $n){
+
+        $nv = $n->toArray();
+
+        print_r($nv);
+
+        foreach ($nv as $key=>$value) {
+            if(in_array($key, $blist) ){
+
+            }else{
+                $n->{ strtolower($key)} = $value;
+            }
+
+        }
+
+        $n->save();
+
+    }
 
 });
 
