@@ -5,10 +5,10 @@
 
         <h5>Node Information</h5>
 
-        {{ Former::text('NAME','Node Name') }}
-        {{ Former::text('NODE_CODE','Node Code') }}
+        {{ Former::text('name','Node Name') }}
+        {{ Former::text('node_code','Node Code') }}
 
-        {{ Former::select('TYPE')->options(Config::get('jex.node_type'))->label('Type') }}
+        {{ Former::select('type')->options(Config::get('jex.node_type'))->label('Type') }}
 
         {{ Former::select('status')->options(array('inactive'=>'Inactive','active'=>'Active'))->label('Status') }}
 
@@ -16,38 +16,38 @@
 
         <h5>Person In Charge Contact Info</h5>
 
-        {{ Former::text('REP_NAME','Full Name') }}
+        {{ Former::text('rep_name','Full Name') }}
 
-        {{ Former::text('REP_EMAIL','Email') }}
+        {{ Former::text('rep_email','Email') }}
 
         <div class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('REP_PHONE','Phone') }}
+                {{ Former::text('rep_phone','Phone') }}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('REP_MOBILE_1','Mobile 1') }}
+                {{ Former::text('rep_mobile_1','Mobile 1') }}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('REP_MOBILE_2','Mobile 2') }}
+                {{ Former::text('rep_mobile_2','Mobile 2') }}
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                {{ Former::text('REP_MOBILE_3','Mobile 3') }}
+                {{ Former::text('rep_mobile_3','Mobile 3') }}
             </div>
         </div>
 
 
-        {{ Former::text('REP_ADDR','Address') }}
+        {{ Former::text('rep_addr','Address') }}
 
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                {{ Former::text('REP_CITY','City') }}
+                {{ Former::text('rep_city','City') }}
             </div>
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                {{ Former::text('REP_ZIP','ZIP / Kode Pos') }}
+                {{ Former::text('rep_zip','ZIP / Kode Pos') }}
             </div>
         </div>
 
-        {{ Former::select('REP_COUNTRY')->id('country')->options(Config::get('country.countries'))->label('Country of Origin') }}
+        {{ Former::select('rep_country')->id('country')->options(Config::get('country.countries'))->label('Country of Origin') }}
 
 
         {{ Form::submit('Save',array('class'=>'btn btn-primary'))}}&nbsp;&nbsp;
@@ -58,13 +58,13 @@
 @section('right')
         <h5>Description & Support</h5>
 
-        {{ Former::text('SUPPORT_URL','Support URL') }}
+        {{ Former::text('support_url','Support URL') }}
 
-        {{ Former::textarea('NODE_DESC','Node Description')->rows(10)->columns(20) }}
+        {{ Former::textarea('node_desc','Node Description')->rows(10)->columns(20) }}
 
-        {{ Former::text('LATITUDE','Latitude') }}
+        {{ Former::text('latitude','Latitude') }}
 
-        {{ Former::text('LONGITUDE','Longitude') }}
+        {{ Former::text('longitude','Longitude') }}
 
 @stop
 

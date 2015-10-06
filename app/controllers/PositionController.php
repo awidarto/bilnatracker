@@ -603,7 +603,6 @@ class PositionController extends AdminController {
 
         unset($data['created_at']);
         unset($data['updated_at']);
-        */
 
         $trav = $this->traverseFields(Config::get('jex.default_export_fields'));
 
@@ -637,7 +636,7 @@ class PositionController extends AdminController {
         */
 
         //$data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
-
+        /*
         $data['bucket'] = Config::get('jayon.bucket_incoming');
 
         $data['status'] = Config::get('jayon.trans_status_confirmed');
@@ -650,6 +649,7 @@ class PositionController extends AdminController {
         unset($data['volume']);
         unset($data['sessId']);
         unset($data['isHead']);
+        */
 
         return $data;
     }
