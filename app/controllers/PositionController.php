@@ -536,7 +536,7 @@ class PositionController extends AdminController {
     public function postAdd($data = null)
     {
         $this->validator = array(
-            'NODE_CODE' => 'required'
+            'node_code' => 'required'
         );
 
         return parent::postAdd($data);
@@ -545,7 +545,7 @@ class PositionController extends AdminController {
     public function postEdit($id,$data = null)
     {
         $this->validator = array(
-            'NODE_CODE' => 'required'
+            'node_code' => 'required'
         );
 
         //exit();
