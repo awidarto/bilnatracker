@@ -1915,7 +1915,7 @@ class AdminController extends Controller {
 
             Event::fire('log.a',array($controller_name, 'update' ,$actor,'validation failed'));
 
-	    	return Redirect::to($controller_name.'/edit/'.$id)->withInput(Input::all())->withErrors($validation);
+	    	return Redirect::to($controller_name.'/edit/'.$_id)->withInput(Input::all())->withErrors($validation);
 
 	    }else{
 
