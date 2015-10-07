@@ -24,6 +24,9 @@
 @stop
 
 @section('right')
+        <h5>Default Node</h5>
+        {{ Former::select('node_id','Node ID')->options(Prefs::getNode()->nodeToSelection('node_code','name',false) )->class('form-control input-sm') }}
+
         <h5>Device Coverage</h5>
 
         {{ Former::text('city','City Coverage')->class('form-control tag_city') }}
@@ -84,6 +87,11 @@ $(document).ready(function() {
             $('#merchant-id').val(ui.item.id);
         }
     });
+
+    $('.auto_node_id').autocomplete({
+        source: base + 'ajax/nodeid'
+    });
+
 
     function updateselector(data){
         var opt = '';

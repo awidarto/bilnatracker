@@ -341,7 +341,10 @@
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/widgets/notes.js"></script> <!-- Notes Widget -->
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/quickview.js"></script> <!-- Chat Script -->
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/pages/search.js"></script> <!-- Search Script -->
+    {{--
     <script src="{{ URL::to('makeadmin')}}/assets/global/plugins/colorpicker/spectrum.min.js"></script> <!-- Color Picker -->
+        --}}
+
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/plugins.js"></script> <!-- Main Plugin Initialization Script -->
     <script src="{{ URL::to('makeadmin')}}/assets/global/js/application.js"></script> <!-- Main Application Script -->
     {{--

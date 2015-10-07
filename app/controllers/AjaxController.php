@@ -1082,6 +1082,25 @@ class AjaxController extends BaseController {
         return Response::json($result);
     }
 
+    public function getNodeid()
+    {
+        $q = Input::get('term');
+
+        $user = Position::where('group_id',4)
+                    ->where(function($query) use($q) {
+                        $query->where('name','regexp', '/'.$q.'/i')
+                            ->orWhere('node_code','regexp', '/'.$q.'/i');
+                    })->get();
+
+        $result = array();
+
+        foreach($user->toArray() as $r){
+            $result[] = array('id'=>$r['node_code'],'value'=>$r['node_code']);
+        }
+
+        return Response::json($result);
+    }
+
     public function getMerchant()
     {
         $q = Input::get('term');

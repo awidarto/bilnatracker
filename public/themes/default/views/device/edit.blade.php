@@ -12,7 +12,7 @@
 
         <div class="row">
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                {{ Former::text('color','Color')->class('form-control color-picker') }}
+                {{ Former::text('color','Color')->class('form-control') }}
             </div>
             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                 {{ Former::select('is_on','Active')->options(array('1'=>'Yes','0'=>'No'))->class('form-control input-sm') }}
@@ -25,6 +25,8 @@
 @stop
 
 @section('right')
+        <h5>Default Node</h5>
+        {{ Former::select('node_id','Node ID')->options(Prefs::getNode()->nodeToSelection('node_code','name',false) )->class('form-control input-sm') }}
         <h5>Device Coverage</h5>
 
         {{ Former::text('city','City Coverage')->class('form-control tag_keyword') }}
@@ -51,7 +53,7 @@
 $(document).ready(function() {
 
 
-    $('.pick-a-color').pickAColor();
+    //$('.pick-a-color').pickAColor();
 
     $('#name').keyup(function(){
         var title = $('#name').val();
@@ -83,6 +85,13 @@ $(document).ready(function() {
         source: base + 'ajax/merchant',
         select: function(event, ui){
             $('#merchant-id').val(ui.item.id);
+        }
+    });
+
+    $('.auto_node_id').autocomplete({
+        source: '{{ URL::to('ajax/nodeid' ) }}',
+        select: function(event, ui){
+            //$('#merchant-id').val(ui.item.id);
         }
     });
 

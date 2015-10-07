@@ -122,6 +122,7 @@ Route::group(array('prefix' => 'api/v1/mobile'), function (){
     Route::resource('rack', 'Api\RackapiController');
     Route::resource('asset', 'Api\AssetapiController');
     Route::resource('delivery', 'Api\DeliveryapiController');
+    Route::resource('hub', 'Api\HubapiController');
 });
 
 Route::get('tolower',function(){

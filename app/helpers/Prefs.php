@@ -10,6 +10,7 @@ class Prefs {
     public static $role;
     public static $logistic;
     public static $position;
+    public static $node;
 
     public function __construct()
     {
@@ -59,6 +60,29 @@ class Prefs {
         self::$category = $c;
         return new self;
     }
+
+    public static function getNode(){
+        $s = Position::get();
+
+        self::$node = $s;
+        return new self;
+    }
+
+    public function nodeToSelection($value, $label, $all = true)
+    {
+        if($all){
+            $ret = array(''=>'All');
+        }else{
+            $ret = array();
+        }
+
+        foreach (self::$node as $s) {
+            $ret[$s->{$value}] = $s->{$label};
+        }
+
+        return $ret;
+    }
+
 
     public static function getSection(){
         $s = Section::get();
