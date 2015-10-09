@@ -1002,18 +1002,18 @@ class IncomingController extends AdminController {
     }
 
     public function statusList($data)
-    {   /*
+    {
         $slist = array(
             Prefs::colorizestatus($data['status'],'delivery'),
             Prefs::colorizestatus($data['courier_status'],'courier'),
-            Prefs::colorizestatus($data['pickup_status'],'pickup'),
+            //Prefs::colorizestatus($data['pickup_status'],'pickup'),
             Prefs::colorizestatus($data['warehouse_status'],'warehouse')
         );
-        */
 
-        return Prefs::colorizestatus($data['status'],'delivery');
 
-        //return implode('<br />', $slist);
+        //return Prefs::colorizestatus($data['status'],'delivery');
+
+        return implode('<br />', $slist);
         //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
