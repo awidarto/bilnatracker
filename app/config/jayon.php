@@ -115,6 +115,7 @@ $config['trans_status_pickup_canceled'] = 'canceled';
 $config['trans_wh_atmerchant'] = 'at_merchant_premise';
 $config['trans_wh_pu2wh'] = 'accepted_warehouse';
 $config['trans_wh_inwh'] = 'in_warehouse';
+$config['trans_wh_inwh_partial'] = 'in_warehouse_partial';
 $config['trans_wh_wh2ds'] = 'on_delivery';
 $config['trans_wh_ds2wh'] = 'back_to_warehouse';
 $config['trans_wh_return2merchant'] = 'return_to_merchant';

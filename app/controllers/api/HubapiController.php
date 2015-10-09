@@ -102,13 +102,9 @@ class HubapiController extends \BaseController {
 
                     ->where(function($qz) use($key, $deliverydate){
 
-                        $qz->where('status','=', \Config::get('jayon.trans_status_admin_courierassigned') )
-                            ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_pickedup') )
-                            ->orWhere('status','=', \Config::get('jayon.trans_status_mobile_enroute') )
-                            ->orWhere(function($qx){
-                                $qx->where('status', \Config::get('jayon.trans_status_new'))
-                                    ->where('pending_count', '>', 0);
-                            });
+                        $qz->where('status','!=', \Config::get('jayon.trans_status_mobile_delivered') )
+                            ->where('status','!=', \Config::get('jayon.trans_status_mobile_revoked') )
+                            ->where('status','!=', \Config::get('jayon.trans_status_mobile_noshow') );
 
                     })
 
