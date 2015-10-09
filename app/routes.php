@@ -115,6 +115,7 @@ Route::group(array('prefix' => 'api/v1/mobile'), function (){
     Route::post('/sync/geolog', 'Api\SyncapiController@postGeolog');
     Route::post('/sync/order', 'Api\SyncapiController@postOrder');
     Route::post('/sync/orderstatus', 'Api\SyncapiController@postOrderstatus');
+    Route::post('/sync/huborder', 'Api\SyncapiController@postHuborder');
     Route::post('/sync/hubstatus', 'Api\SyncapiController@postHubstatus');
     Route::post('/sync/box', 'Api\SyncapiController@postBox');
     Route::post('/sync/boxstatus', 'Api\SyncapiController@postBoxstatus');
