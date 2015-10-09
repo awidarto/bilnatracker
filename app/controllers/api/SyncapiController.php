@@ -177,6 +177,11 @@ class SyncapiController extends \Controller {
 
                 $olog->mtimestamp = new \MongoDate(time());
 
+                if($olog->disposition == $key && isset($user->node_id)){
+
+                    $olog->position = $user->node_id;
+                }
+
                 $r = $olog->save();
 
                 $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
@@ -185,7 +190,7 @@ class SyncapiController extends \Controller {
                     //$shipment->status = $olog->status;
                     $shipment->warehouse_status = $olog->warehouseStatus;
 
-                    if($olog->disposition == 'hub' && isset($user->node_id)){
+                    if($olog->disposition == $key && isset($user->node_id)){
 
                         $shipment->position = $user->node_id;
                     }
@@ -490,6 +495,11 @@ class SyncapiController extends \Controller {
 
                 $olog->mtimestamp = new \MongoDate(time());
 
+                if($olog->disposition == $key && isset($user->node_id)){
+
+                    $olog->position = $user->node_id;
+                }
+
                 $r = $olog->save();
 
                 $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
@@ -498,7 +508,7 @@ class SyncapiController extends \Controller {
                     //$shipment->status = $olog->status;
                     $shipment->warehouse_status = $olog->warehouseStatus;
 
-                    if(isset($user->node_id)){
+                    if($olog->disposition == $key && isset($user->node_id)){
 
                         $shipment->position = $user->node_id;
                     }
