@@ -34,7 +34,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
 
@@ -90,7 +90,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -151,7 +151,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -239,7 +239,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -329,7 +329,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image meta failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Unregistered Device' ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -404,7 +404,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -468,7 +468,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -554,7 +554,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -634,7 +634,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
         $json = \Input::all();
@@ -689,7 +689,7 @@ class SyncapiController extends \Controller {
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
 
-            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>'Device Unregistered' ));
         }
 
 
