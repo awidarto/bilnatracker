@@ -138,6 +138,96 @@ class SyncapiController extends \Controller {
      *
      * @return Response
      */
+    public function postHubstatus()
+    {
+
+        $key = \Input::get('key');
+
+        //$user = \Apiauth::user($key);
+
+        $user = \Device::where('key','=',$key)->first();
+
+        if(!$user){
+            $actor = 'no id : no name';
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'device not found, upload image failed'));
+
+            return \Response::json(array('status'=>'ERR:NODEVICE', 'timestamp'=>time(), 'message'=>$image_id ));
+        }
+
+        $json = \Input::all();
+
+        $batch = \Input::get('batch');
+
+        $result = array();
+
+
+
+        foreach( $json as $j){
+
+            //$j['mtimestamp'] = new \MongoDate();
+
+            if(is_array($j)){
+
+
+                $olog = new \Orderstatuslog();
+
+                foreach ($j as $k=>$v) {
+                    $olog->{$k} = $v;
+                }
+
+                $olog->mtimestamp = new \MongoDate(time());
+
+                $r = $olog->save();
+
+                $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
+
+                if($shipment){
+                    $shipment->status = $olog->status;
+                    $shipment->courier_status = $olog->courierStatus;
+
+                    if($olog->status == 'pending'){
+                        //$shipment->pending_count = $olog->pendingCount;
+                    }elseif($olog->status == 'delivered'){
+                        //$shipment->deliverytime = date('Y-m-d H:i:s',time());
+                        $shipment->delivered_time = date('Y-m-d H:i:s',time());
+                    }
+
+                    $shipment->save();
+                }
+
+                if( $r ){
+                    $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>'log inserted' );
+                }else{
+                    $result[] = array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'insertion failed' );
+                }
+
+            }
+
+            /*
+            if( \Orderstatuslog::insert($j) ){
+                $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>'log inserted' );
+            }else{
+                $result[] = array('status'=>'NOK', 'timestamp'=>time(), 'message'=>'insertion failed' );
+            }
+            */
+
+        }
+
+        //print_r($result);
+
+        //die();
+        $actor = $user->identifier.' : '.$user->devname;
+
+        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'sync scan log'));
+
+        return Response::json($result);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
     public function postOrderstatus()
     {
 
