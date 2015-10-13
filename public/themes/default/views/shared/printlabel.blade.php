@@ -73,7 +73,7 @@
 
     img.barcode{
         max-width: 98%;
-        width: 98%;
+        width: 60%;
         height:auto;
         margin: 0px;
 
@@ -116,7 +116,7 @@
         <div class="label">
             <table>
                 <tr>
-                    <td style="text-align:center">
+                    <td style="text-align:center;">
                         @if($code_type == 'qr')
 
                             <?php
@@ -133,6 +133,7 @@
                 </tr>
                 <tr>
                     <td style="text-align:center">
+                        {{ $pd['no_sales_order'] }}<br />
                         {{ $pd['consignee_olshop_orderid'].' '.($b + 1).'/'.$pd['number_of_package']}}
                     </td>
                 </tr>
