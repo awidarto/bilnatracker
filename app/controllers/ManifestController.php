@@ -1,6 +1,6 @@
 <?php
 
-class IncomingController extends AdminController {
+class ManifestController extends AdminController {
 
     public function __construct()
     {
@@ -14,7 +14,7 @@ class IncomingController extends AdminController {
 
         $this->model = new Shipment();
         //$this->model = DB::collection('documents');
-        $this->title = 'Incoming Order';
+        $this->title = 'Manifest';
 
     }
 
@@ -70,7 +70,7 @@ class IncomingController extends AdminController {
         $t = new HtmlTable($tab_data, $attr, $header);
         $itemtable = $t->build();
 
-        $asset = Shipment::find($id);
+        $asset = Asset::find($id);
 
         Breadcrumbs::addCrumb('Ad Assets',URL::to( strtolower($this->controller_name) ));
         Breadcrumbs::addCrumb('Detail',URL::to( strtolower($this->controller_name).'/detail/'.$asset->_id ));
@@ -85,45 +85,386 @@ class IncomingController extends AdminController {
     public function getIndex()
     {
 
-
-        $this->heads = Config::get('jex.default_heads');
+        $this->heads = array(
+            array('Period',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('Date',array('search'=>true,'sort'=>true, 'style'=>'min-width:100px;','daterange'=>true)),
+            array('JV Ref',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;')),
+            array('Account',array('search'=>true,'style'=>'min-width:100px;','sort'=>true)),
+            array('Account Description',array('search'=>true,'style'=>'min-width:125px;','sort'=>true)),
+            array('Reference Doc.',array('search'=>true,'sort'=>true)),
+            array('Orig. Currency',array('search'=>true,'sort'=>true)),
+            array('Orig. Amount',array('search'=>true,'sort'=>true)),
+            array('Conversion Rate',array('search'=>true,'sort'=>true)),
+            array('Base Amount',array('search'=>true,'sort'=>true)),
+            array('Transaction Description',array('search'=>true,'sort'=>true)),
+        );
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->title = 'Incoming Order';
+        $this->title = 'Manifest';
 
-        $this->place_action = 'first';
+        $this->place_action = 'none';
 
-        $this->show_select = true;
+        $this->show_select = false;
 
-        Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
+        Breadcrumbs::addCrumb('Manifest',URL::to( strtolower($this->controller_name) ));
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')
-                                        ->with('submit_url','gl')
-                                        ->with('ajaxawbdlxl','incoming/awbdlxl')
-                                        ->with('importawburl','incoming/importawb')
-                                        ->render();
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','afelvltwo')->render();
 
-        //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
-        $this->product_info_url = strtolower($this->controller_name).'/info';
+        $db = Config::get('lundin.main_db');
 
-        $this->can_add = false;
+        $company = Input::get('acc-company');
 
-        /*
-        $this->column_styles = '{ "sClass": "column-amt", "aTargets": [ 8 ] },
-                    { "sClass": "column-amt", "aTargets": [ 9 ] },
-                    { "sClass": "column-amt", "aTargets": [ 10 ] }';
-        */
+        $period_from = Input::get('acc-period-from');
+        $period_to = Input::get('acc-period-to');
 
-        return parent::getIndex();
+        if($period_from == '' || is_null($period_from) ){
+            $period_from = date('Y0m',time());
+        }
+
+        if($period_to == '' || is_null($period_to) ){
+            $period_to = date('Y0m',time());
+        }
+
+        $company = strtolower($company);
+
+        if($company == ''){
+            $company = Config::get('lundin.default_company');
+        }
+
+        $afe = Input::get('acc-afe');
+
+        if($afe == '' || is_null($afe) ){
+            //$afes  = Prefs::getAfe($company)->AfeToArray();
+            //$afe = $afes[0]->ANL_CODE;
+        }
+
+
+        $company = strtolower($company);
+
+        $this->def_order_by = 'TRANS_DATETIME';
+        $this->def_order_dir = 'DESC';
+        $this->place_action = 'none';
+        $this->show_select = false;
+
+        $this->sql_key = 'TRANS_DATETIME';
+        $this->sql_table_name = $company.'_a_salfldg';
+        $this->sql_connection = 'mysql2';
+
+        /* Start custom queries */
+        $model = DB::connection($this->sql_connection)->table($this->sql_table_name);
+
+        $tables = array();
+
+        $actualresult = $model
+            ->select(DB::raw(
+                    $company.'_a_salfldg.ACCNT_CODE,'.
+                    $company.'_acnt.DESCR AS ADESCR,'.
+                    'SUM('.$company.'_a_salfldg.AMOUNT) as AMT'
+                ))
+            ->where($company.'_a_salfldg.ACCNT_CODE','like','2%')
+            ->where($company.'_a_salfldg.ANAL_T1','=',$afe)
+            ->where($company.'_a_salfldg.PERIOD','>=', $period_from )
+            ->where($company.'_a_salfldg.PERIOD','<=', $period_to )
+            ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
+            ->groupBy($company.'_a_salfldg.ACCNT_CODE')
+            ->get();
+
+
+        $model = DB::connection($this->sql_connection)->table($company.'_a_salfldg');
+
+        $prioritdresult = $model
+            ->select(DB::raw(
+                    $company.'_a_salfldg.ACCNT_CODE,'.
+                    $company.'_acnt.DESCR AS ADESCR,'.
+                    'SUM('.$company.'_a_salfldg.AMOUNT) as AMT'
+                ))
+            ->where($company.'_a_salfldg.ACCNT_CODE','like','2%')
+            ->where($company.'_a_salfldg.ANAL_T1','=',$afe)
+            ->where($company.'_a_salfldg.PERIOD','<', $period_from )
+            ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
+            ->groupBy($company.'_a_salfldg.ACCNT_CODE')
+            ->get();
+
+        $model = DB::connection($this->sql_connection)->table($company.'_a_salfldg');
+
+        $currentitdresult = $model
+            ->select(DB::raw(
+                    $company.'_a_salfldg.ACCNT_CODE,'.
+                    $company.'_acnt.DESCR AS ADESCR,'.
+                    'SUM('.$company.'_a_salfldg.AMOUNT) as AMT'
+                ))
+            ->where($company.'_a_salfldg.ACCNT_CODE','like','2%')
+            ->where($company.'_a_salfldg.ANAL_T1','=',$afe)
+            ->where($company.'_a_salfldg.PERIOD','<=', $period_to )
+            ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
+            ->groupBy($company.'_a_salfldg.ACCNT_CODE')
+            ->get();
+
+        $model = DB::connection($this->sql_connection)->table($company.'_b_salfldg');
+
+
+        $budgetresult = $model
+            ->select(DB::raw(
+                    $company.'_b_salfldg.ACCNT_CODE,'.
+                    $company.'_acnt.DESCR AS ADESCR,'.
+                    'SUM('.$company.'_b_salfldg.AMOUNT) as AMT'
+                ))
+            ->where($company.'_b_salfldg.ACCNT_CODE','like','2%')
+            ->where($company.'_b_salfldg.ANAL_T1','=',$afe)
+            ->where($company.'_b_salfldg.PERIOD','>=', $period_from )
+            ->where($company.'_b_salfldg.PERIOD','<=', $period_to )
+            ->leftJoin($company.'_acnt', $company.'_b_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
+            ->groupBy($company.'_b_salfldg.ACCNT_CODE')
+            ->get();
+
+
+        $model = DB::connection($this->sql_connection)->table($company.'_d_salfldg');
+
+        $revbudgetresult = $model
+            ->select(DB::raw(
+                    $company.'_d_salfldg.ACCNT_CODE,'.
+                    $company.'_acnt.DESCR AS ADESCR,'.
+                    'SUM('.$company.'_d_salfldg.AMOUNT) as AMT'
+                ))
+            ->where($company.'_d_salfldg.ACCNT_CODE','like','2%')
+            ->where($company.'_d_salfldg.ANAL_T1','=',$afe)
+            ->where($company.'_d_salfldg.PERIOD','>=', $period_from )
+            ->where($company.'_d_salfldg.PERIOD','<=', $period_to )
+            ->leftJoin($company.'_acnt', $company.'_d_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
+            ->groupBy($company.'_d_salfldg.ACCNT_CODE')
+            ->get();
+
+        $tabdata = array();
+
+        foreach($actualresult as $a){
+            $tabdata[$a->ACCNT_CODE] = $a;
+            $tabdata[$a->ACCNT_CODE]->BAMT = 0;
+            $tabdata[$a->ACCNT_CODE]->DAMT = 0;
+            $tabdata[$a->ACCNT_CODE]->PITDAMT = 0;
+            $tabdata[$a->ACCNT_CODE]->CITDAMT = 0;
+        }
+
+        foreach($prioritdresult as $p){
+            if(isset($tabdata[$p->ACCNT_CODE])){
+                $tabdata[$p->ACCNT_CODE]->PITDAMT = $p->AMT;
+            }
+        }
+
+        foreach($currentitdresult as $c){
+            if(isset($tabdata[$c->ACCNT_CODE])){
+                $tabdata[$c->ACCNT_CODE]->CITDAMT = $c->AMT;
+            }
+        }
+
+        foreach($budgetresult as $b){
+            if(isset($tabdata[$b->ACCNT_CODE])){
+                $tabdata[$b->ACCNT_CODE]->BAMT = $b->AMT;
+            }else{
+                $tabdata[$b->ACCNT_CODE] = $b;
+                $tabdata[$b->ACCNT_CODE]->BAMT = $b->AMT;
+                $tabdata[$b->ACCNT_CODE]->AMT = 0;
+                $tabdata[$b->ACCNT_CODE]->DAMT = 0;
+                $tabdata[$b->ACCNT_CODE]->PITDAMT = 0;
+                $tabdata[$b->ACCNT_CODE]->CITDAMT = 0;
+            }
+        }
+
+
+        foreach($revbudgetresult as $d){
+            if(isset($tabdata[$d->ACCNT_CODE])){
+                $tabdata[$d->ACCNT_CODE]->DAMT = $d->AMT;
+            }else{
+                $tabdata[$d->ACCNT_CODE] = $d;
+                $tabdata[$d->ACCNT_CODE]->DAMT = $d->AMT;
+                $tabdata[$d->ACCNT_CODE]->AMT = 0;
+                $tabdata[$d->ACCNT_CODE]->BAMT = 0;
+                $tabdata[$d->ACCNT_CODE]->PITDAMT = 0;
+                $tabdata[$d->ACCNT_CODE]->CITDAMT = 0;
+            }
+        }
+
+        ksort($tabdata);
+
+        $tattrs = array('width'=>'100%','class'=>'table table-bordered');
+
+        $thead = array();
+        $tdataclr = array();
+        $tdataexp = array();
+
+        $thead[] = array(
+                array('value'=>'#','attr'=>'rowspan=2'),
+                array('value'=>'Account','attr'=>'colspan=2 rowspan=2 class="center"'),
+                array('value'=>'Budget','attr'=>'colspan=3'),
+                array('value'=>'Actual','attr'=>'colspan=3'),
+                array('value'=>'Variance','attr'=>'colspan=2')
+            );
+
+        $thead[] = array(
+                array('value'=>'Original'),
+                array('value'=>'Revised'),
+                array('value'=>'Current Year'),
+                array('value'=>'Prior ITD'),
+                array('value'=>'Period To Date'),
+                array('value'=>'Current ITD'),
+                array('value'=>'$'),
+                array('value'=>'%')
+            );
+
+        $seq = 1;
+
+        $sumexp = new stdClass();
+        $sumclr = new stdClass();
+
+        $sumexp->BAMT = 0;
+        $sumexp->DAMT = 0;
+        $sumexp->BREV = 0;
+        $sumexp->PITDAMT = 0;
+        $sumexp->AMT = 0;
+        $sumexp->CITDAMT = 0;
+        $sumexp->VARIANCE = 0;
+        $sumexp->PCT = 0;
+
+        $sumclr->BAMT = 0;
+        $sumclr->DAMT = 0;
+        $sumclr->BREV = 0;
+        $sumclr->PITDAMT = 0;
+        $sumclr->AMT = 0;
+        $sumclr->CITDAMT = 0;
+        $sumclr->VARIANCE = 0;
+        $sumclr->PCT = 0;
+
+        foreach ($tabdata as $m) {
+
+
+            if($m->DAMT > 0){
+                $variance = $m->CITDAMT - $m->DAMT;
+                $pct = $variance / $m->DAMT * 100;
+
+                $brev = $m->DAMT - $m->BAMT;
+            }else{
+                $variance = 0;
+                $pct = 0;
+                $brev = 0;
+            }
+
+
+
+            if(preg_match('/^2009.*/', $m->ACCNT_CODE)){
+                $tdataclr[] = array(
+                        array('value'=>$seq),
+                        array('value'=>$m->ACCNT_CODE ),
+                        array('value'=>$m->ADESCR ),
+                        array('value'=>'', 'attr'=>'class="column-amt"' ),
+                        array('value'=>'', 'attr'=>'class="column-amt"' ),
+                        array('value'=>'' , 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->PITDAMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->AMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->CITDAMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>'' , 'attr'=>'class="column-amt"' ),
+                        array('value'=>'', 'attr'=>'class="column-amt"' )
+                    );
+
+
+
+                    $sumclr->BAMT = '';
+                    $sumclr->DAMT = '';
+                    $sumclr->BREV = '';
+                    $sumclr->PITDAMT += $m->PITDAMT;
+                    $sumclr->AMT += $m->AMT;
+                    $sumclr->CITDAMT += $m->CITDAMT;
+                    $sumclr->VARIANCE = '';
+                    $sumclr->PCT = '';
+
+
+            }else{
+                $tdataexp[] = array(
+                        array('value'=>$seq),
+                        array('value'=>$m->ACCNT_CODE ),
+                        array('value'=>$m->ADESCR ),
+                        array('value'=>$m->BAMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->DAMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$brev , 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->PITDAMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->AMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$m->CITDAMT, 'attr'=>'class="column-amt"' ),
+                        array('value'=>$variance , 'attr'=>'class="column-amt"' ),
+                        array('value'=>$pct, 'attr'=>'class="column-amt"' )
+                    );
+
+                    $sumexp->BAMT += $m->BAMT;
+                    $sumexp->DAMT += $m->DAMT;
+                    $sumexp->BREV += $brev;
+                    $sumexp->PITDAMT += $m->PITDAMT;
+                    $sumexp->AMT += $m->AMT;
+                    $sumexp->CITDAMT += $m->CITDAMT;
+                    $sumexp->VARIANCE += $variance;
+                    $sumexp->PCT += $pct;
+
+            }
+
+            $seq++;
+        }
+
+        $tdataclr[] = array(
+                array('value'=>'Total After Clearing', 'attr'=>'colspan=3 style="text-align:center;font-weight:bold;" ' ),
+                array('value'=>$sumclr->BAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->DAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->BREV , 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->PITDAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->AMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->CITDAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->VARIANCE , 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumclr->PCT, 'attr'=>'class="column-amt"' )
+            );
+
+        $tdataexp[] = array(
+                array('value'=>'Total Expenditure', 'attr'=>'colspan=3 style="text-align:center;font-weight:bold;" ' ),
+                array('value'=>$sumexp->BAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->DAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->BREV , 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->PITDAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->AMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->CITDAMT, 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->VARIANCE , 'attr'=>'class="column-amt"' ),
+                array('value'=>$sumexp->PCT, 'attr'=>'class="column-amt"' )
+            );
+
+        $tdata = array_merge($tdataexp,$tdataclr);
+
+
+        $mtable = new HtmlTable($tdata,$tattrs,$thead);
+
+        $tables[] = $mtable->build();
+
+        $this->table_raw = $tables;
+
+        if($this->print == true){
+            return $tables;
+        }else{
+            return parent::reportPageGenerator();
+        }
+
 
     }
 
     public function postIndex()
     {
 
-        $this->fields = Config::get('jex.default_fields');
+        $this->fields = array(
+            array('PERIOD',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('TRANS_DATETIME',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('VCHR_NUM',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('ACCNT_CODE',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('j10_acnt.DESCR',array('kind'=>'text', 'alias'=>'ACC_DESCR' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('TREFERENCE',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('CONV_CODE',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('OTHER_AMT',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('BASE_RATE',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('AMOUNT',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('DESCRIPTN',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
+        );
 
         /*
         $categoryFilter = Input::get('categoryFilter');
@@ -132,97 +473,47 @@ class IncomingController extends AdminController {
         }
         */
 
-        $db = Config::get('jayon.main_db');
+        $db = Config::get('lundin.main_db');
 
-        $this->def_order_by = 'ordertime';
-        $this->def_order_dir = 'desc';
-        $this->place_action = 'first';
-        $this->show_select = true;
+        $company = Input::get('acc-company');
 
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
+        $company = strtolower($company);
 
-        return parent::tableResponder();
+        if(Schema::hasTable( $db.'.'.$company.'_a_salfldg' )){
+            $company = Config::get('lundin.default_company');
+        }
+
+        $company = strtolower($company);
+
+        $this->def_order_by = 'TRANS_DATETIME';
+        $this->def_order_dir = 'DESC';
+        $this->place_action = 'none';
+        $this->show_select = false;
+
+        $this->sql_key = 'TRANS_DATETIME';
+        $this->sql_table_name = $company.'_a_salfldg';
+        $this->sql_connection = 'mysql2';
+
+        return parent::SQLtableResponder();
     }
 
     public function getStatic()
     {
 
-        $this->heads = Config::get('jex.default_heads');
-
-        //print $this->model->where('docFormat','picture')->get()->toJSON();
-
-        $this->title = 'Incoming Order';
-
-
-        Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
-
-        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl/static')->render();
-
-        //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
-
-        $this->product_info_url = strtolower($this->controller_name).'/info';
-
-        $this->printlink = strtolower($this->controller_name).'/print';
-
-        //table generator part
-
-        $this->fields = Config::get('jex.default_fields');
-
-        $db = Config::get('jayon.main_db');
-
-        $this->def_order_by = 'ordertime';
-        $this->def_order_dir = 'desc';
-        $this->place_action = 'none';
-        $this->show_select = false;
-
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
-
-        $this->responder_type = 's';
-
-        return parent::printGenerator();
     }
 
     public function getPrint()
     {
 
-        $this->fields = Config::get('jex.default_heads');
+        $this->print = true;
 
-        //print $this->model->where('docFormat','picture')->get()->toJSON();
+        $tables = $this->getIndex();
 
-        $this->title = 'Incoming Order';
+        $this->table_raw = $tables;
 
-        Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
 
-        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl/static')->render();
-
-        //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
-
-        $this->product_info_url = strtolower($this->controller_name).'/info';
-
-        $this->printlink = strtolower($this->controller_name).'/print';
-
-        //table generator part
-
-        $this->fields = Config::get('jex.default_fields');
-
-        $db = Config::get('jayon.main_db');
-
-        $this->def_order_by = 'ordertime';
-        $this->def_order_dir = 'desc';
-        $this->place_action = 'none';
-        $this->show_select = false;
-
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
-
-        $this->responder_type = 's';
-
-        return parent::printPage();
+        return parent::printReport();
     }
 
     public function SQL_make_join($model)
@@ -230,10 +521,9 @@ class IncomingController extends AdminController {
         //$model->with('coa');
 
         //PERIOD',TRANS_DATETIME,VCHR_NUM,ACC_DESCR,DESCRIPTN',TREFERENCE',CONV_CODE,AMOUNT',AMOUNT',DESCRIPTN'
-        /*
+
         $model = $model->select('j10_a_salfldg.*','j10_acnt.DESCR as ACC_DESCR')
             ->leftJoin('j10_acnt', 'j10_a_salfldg.ACCNT_CODE', '=', 'j10_acnt.ACNT_CODE' );
-            */
         return $model;
     }
 
@@ -248,33 +538,33 @@ class IncomingController extends AdminController {
 
         $company = Input::get('acc-company');
 
+        $afe = Input::get('acc-afe');
+
         $company = strtolower($company);
 
-        $txtab = Config::get('jayon.incoming_delivery_table');
+        if($company == ''){
+            $company = Config::get('lundin.default_company');
+        }
 
-        $model = $model->where(function($query){
+        $company = strtolower($company);
 
-                    $query->where('bucket','=',Config::get('jayon.bucket_incoming'))
-                    ->where(function($qs){
-                        $qs->where(function($q){
-                                $q->where('pending_count','=',0)
-                                    ->where('status','=', Config::get('jayon.trans_status_new') );
-                            })
-                            ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
-                            ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') )
-                            ->where('status','not regexp','/*assigned/');
-                    });
 
-            })
-            ->orderBy('created_at','desc');
+        if($period_from == ''){
+            $model = $model->select($company.'_a_salfldg.*',$company.'_acnt.DESCR as ACC_DESCR')
+                ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' );
+        }else{
+            $model = $model->select($company.'_a_salfldg.*',$company.'_acnt.DESCR as ACC_DESCR')
+                ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
+                ->where('ANAL_T1','=', $afe)
+                ->where('PERIOD','>=', Input::get('acc-period-from') )
+                ->where('PERIOD','<=', Input::get('acc-period-to') )
+                ->where('ACCNT_CODE','>=', Input::get('acc-code-from') )
+                ->where('ACCNT_CODE','<=', Input::get('acc-code-to') )
+                ->orderBy('PERIOD','DESC')
+                ->orderBy('ACCNT_CODE','ASC')
+                ->orderBy('TRANS_DATETIME','DESC');
+        }
 
-            /*
-            ->where($this->config->item('incoming_delivery_table').'.pending_count < ',1)
-            ->where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_new'))
-            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_confirmed'))
-            ->or_where($this->config->item('incoming_delivery_table').'.status',$this->config->item('trans_status_tobeconfirmed'))
-            ->not_like($this->config->item('incoming_delivery_table').'.status','assigned','before')
-            */
 
         //print_r($in);
 
@@ -287,16 +577,14 @@ class IncomingController extends AdminController {
 
     public function SQL_before_paging($model)
     {
-        /*
         $m_original_amount = clone($model);
         $m_base_amount = clone($model);
 
         $aux['total_data_base'] = $m_base_amount->sum('OTHER_AMT');
         $aux['total_data_converted'] = $m_original_amount->sum('AMOUNT');
-        */
+
         //$this->aux_data = $aux;
 
-        $aux = array();
         return $aux;
         //print_r($this->aux_data);
 
@@ -305,7 +593,7 @@ class IncomingController extends AdminController {
     public function rows_post_process($rows, $aux = null){
 
         //print_r($this->aux_data);
-        /*
+
         $total_base = 0;
         $total_converted = 0;
         $end = 0;
@@ -414,11 +702,10 @@ class IncomingController extends AdminController {
             return $rows;
 
         }
-        */
+
 
         // show total queried
 
-        return $rows;
 
     }
 
@@ -591,181 +878,91 @@ class IncomingController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = Config::get('jex.default_export_heads');
-
-        $this->fields = Config::get('jex.default_export_fields');
-
-        $db = Config::get('jayon.main_db');
-
-        $this->def_order_by = 'ordertime';
-        $this->def_order_dir = 'desc';
-        $this->place_action = 'first';
-        $this->show_select = true;
-
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
-
-        return parent::postDlxl();
-    }
-
-
-    public function postAwbdlxl()
-    {
-
         $this->heads = null;
-        $this->fields = Config::get('jex.default_fields');
 
-        $this->export_output_fields = Config::get('jex.default_awb_fields');
+        $this->fields = array(
+            array('PERIOD',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('TRANS_DATETIME',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('TREFERENCE',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('ACCNT_CODE',array('kind'=>'text', 'callback'=>'accDesc' ,'query'=>'like','pos'=>'both','show'=>true)),
+            array('DESCRIPTN',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('TREFERENCE',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('CONV_CODE',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('AMOUNT',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('AMOUNT',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('DESCRIPTN',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
+        );
 
-        $db = Config::get('jayon.main_db');
-
-        $this->def_order_by = 'pick_up_date';
-        $this->def_order_dir = 'desc';
-        $this->place_action = 'first';
-        $this->show_select = true;
-
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
+        $this->def_order_dir = 'DESC';
+        $this->def_order_by = 'TRANS_DATETIME';
 
         return parent::postDlxl();
     }
-
-    public function getImportawb(){
-
-        $this->importkey = '_id';
-
-        //$this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
-
-        return parent::getImport();
-    }
-
 
     public function getImport(){
 
-        $this->importkey = '_id';
-
-        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
+        $this->importkey = 'SKU';
 
         return parent::getImport();
     }
 
     public function postUploadimport()
     {
-        $this->importkey = 'consignee_olshop_orderid';
+        $this->importkey = 'SKU';
 
         return parent::postUploadimport();
     }
 
-    public function processImportAuxForm()
-    {
-
-        return array('position'=>Input::get('position') );
-    }
-
-    public function prepImportItem($field, $v){
-
-        return $v;
-    }
-
     public function beforeImportCommit($data)
     {
-        date_default_timezone_set('Asia/Jakarta');
+        $defaults = array();
 
-        /*
-        unset($data['createdDate']);
-        unset($data['lastUpdate']);
+        $files = array();
 
-        $data['created'] = $data['created_at'];
-
-        unset($data['created_at']);
-        unset($data['updated_at']);
-        */
-
-        $trav = $this->traverseFields(Config::get('jex.default_export_fields'));
-
-        foreach ($data as $key=>$value){
-            if(array_key_exists($key, $trav)){
-                if($trav[$key]['kind'] == 'text'){
-                    $data[$key] = strval($value);
-                }
+        // set new sequential ID
 
 
-                if($trav[$key]['kind'] == 'daterange' ||
-                    $trav[$key]['kind'] == 'datetimerange'||
-                    $trav[$key]['kind'] == 'date'||
-                    $trav[$key]['kind'] == 'datetime'
+        $data['priceRegular'] = new MongoInt32($data['priceRegular']);
 
-                    ){
+        $data['thumbnail_url'] = array();
+        $data['large_url'] = array();
+        $data['medium_url'] = array();
+        $data['full_url'] = array();
+        $data['delete_type'] = array();
+        $data['delete_url'] = array();
+        $data['filename'] = array();
+        $data['filesize'] = array();
+        $data['temp_dir'] = array();
+        $data['filetype'] = array();
+        $data['fileurl'] = array();
+        $data['file_id'] = array();
+        $data['caption'] = array();
 
-                    if($key != 'createdDate' && $key != 'lastUpdate'){
-                        $data[$key] = new MongoDate( strtotime($data[$key]) );
-                    }
+        $data['defaultpic'] = '';
+        $data['brchead'] = '';
+        $data['brc1'] = '';
+        $data['brc2'] = '';
+        $data['brc3'] = '';
 
-                }
 
-            }
-        }
-        /*
-        $data['CONSIGNEE_OLSHOP_CUST'] = strval($data['CONSIGNEE_OLSHOP_CUST']);
-        $data['CONSIGNEE_OLSHOP_ORDERID'] = strval($data['CONSIGNEE_OLSHOP_ORDERID']);
-        $data['CONSIGNEE_OLSHOP_PHONE'] = strval($data['CONSIGNEE_OLSHOP_PHONE']);
-        $data['CONSIGNEE_OLSHOP_ZIP'] = strval($data['CONSIGNEE_OLSHOP_ZIP']);
-        $data['NO_SALES_ORDER'] = strval($data['NO_SALES_ORDER']);
-        */
-
-        //$data['PICK_UP_DATE'] = new MongoDate( strtotime($data['PICK_UP_DATE']) );
-
-        if(isset($data['consignee_olshop_cust'])){
-            $logistic = Logistic::where('consignee_olshop_cust', '=', $data['consignee_olshop_cust'])->first();
-
-            if($logistic){
-                $data['logistic'] = $logistic->logistic_code;
-                $data['logistic_type'] = $logistic->type;
-            }else{
-                $data['logistic'] = 'BRIDER001';
-                $data['logistic_type'] = 'internal';
-            }
-
-        }
-
-        if(isset($data['cod'])){
-            print 'cod set = '.$data['cod'];
-            if($data['cod'] == '' || is_null($data['cod'])){
-                print 'cod is null';
-                $data['cod'] = 0;
-            }
-            $data['cod'] = doubleval($data['cod']);
-        }
-
-        $data['bucket'] = Config::get('jayon.bucket_incoming');
-
-        $data['delivery_id'] = Prefs::getDeliveryId();
-        $data['order_id'] = $data['no_sales_order'];
-        $data['fulfillment_code'] = $data['consignee_olshop_orderid'];
-
-        $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package']);
-
-        $data['status'] = Config::get('jayon.trans_status_confirmed');
-        $data['logistic_status'] = '';
-        $data['pending_count'] = 0;
-        $data['courier_status'] = Config::get('jayon.trans_cr_atmerchant');
-        $data['warehouse_status'] = Config::get('jayon.trans_wh_atmerchant');
-        $data['pickup_status'] = Config::get('jayon.trans_status_tobepickup');
-
-        $data['device_key'] = '';
-        $data['device_name'] = '';
-        $data['device_id'] = '';
-
-        $data['courier_name'] = '';
-        $data['courier_id'] = '';
-
-        unset($data['volume']);
-        unset($data['sessId']);
-        unset($data['isHead']);
+        $data['defaultpictures'] = array();
+        $data['files'] = array();
 
         return $data;
+    }
+
+    public function postRack()
+    {
+        $locationId = Input::get('loc');
+        if($locationId == ''){
+            $racks = Assets::getRack()->RackToSelection('_id','SKU',true);
+        }else{
+            $racks = Assets::getRack(array('locationId'=>$locationId))->RackToSelection('_id','SKU',true);
+        }
+
+        $options = Assets::getRack(array('locationId'=>$locationId));
+
+        return Response::json(array('result'=>'OK','html'=>$racks, 'options'=>$options ));
     }
 
     public function makeActions($data)
@@ -791,13 +988,7 @@ class IncomingController extends AdminController {
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
         */
-        $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
-        $edit = '<a href="'.URL::to('advertiser/edit/'.$data['delivery_id']).'">Update</a>';
-        $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
-
-        $actions = View::make('shared.action')
-                        ->with('actions',array($dl))
-                        ->render();
+        $actions = '';
         return $actions;
     }
 
@@ -856,11 +1047,6 @@ class IncomingController extends AdminController {
             return '';
         }
 
-    }
-
-    public function merchantInfo($data)
-    {
-        return $data['merchant_name'].'<hr />'.$data['app_name'];
     }
 
     public function catName($data)
@@ -989,58 +1175,12 @@ class IncomingController extends AdminController {
         }
     }
 
-    public function puDisp($data){
-        return $data['pickup_person'].'<br />'.$data['pickup_dev_id'];
-    }
-
-    public function dispFBar($data)
-
-    {
-        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
-        //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
-        return $display.'<br />'. '<a href="'.URL::to('incoming/detail/'.$data['delivery_id']).'" >'.$data['fulfillment_code'].' ('.$data['box_count'].' box)</a>';
-    }
-
     public function dispBar($data)
 
     {
-        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['delivery_id'].'|'.$data['merchant_trans_id'].'|'.$data['fulfillment_code'].'|box:1' ))), $data['merchant_trans_id'], array('id' => $data['delivery_id'], 'style'=>'width:100px;height:auto;' ));
+        $display = HTML::image(URL::to('qr/'.urlencode(base64_encode($data['SKU']))), $data['SKU'], array('id' => $data['_id'], 'style'=>'width:100px;height:auto;' ));
         //$display = '<a href="'.URL::to('barcode/dl/'.urlencode($data['SKU'])).'">'.$display.'</a>';
-        return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['delivery_id']).'" >'.$data['merchant_trans_id'].'</a>';
-    }
-
-    public function internalCod($data){
-        if($data['logistic_type'] == 'internal'){
-            if( ($data['cod'] == 0 || $data['cod'] == '')){
-                return $data['cod'];
-            }else{
-                return '<span class="red">'.$data['cod'].'</span>';
-            }
-        }else{
-            return $data['cod'];
-        }
-    }
-
-    public function statusList($data)
-    {
-        $slist = array(
-            Prefs::colorizestatus($data['status'],'delivery'),
-            Prefs::colorizestatus($data['courier_status'],'courier'),
-            //Prefs::colorizestatus($data['pickup_status'],'pickup'),
-            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
-        );
-
-
-        //return Prefs::colorizestatus($data['status'],'delivery');
-
-        return implode('<br />', $slist);
-        //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
-    }
-
-
-    public function colorizetype($data)
-    {
-        return Prefs::colorizetype($data['delivery_type']);
+        return $display.'<br />'. '<a href="'.URL::to('asset/detail/'.$data['_id']).'" >'.$data['SKU'].'</a>';
     }
 
 
@@ -1053,44 +1193,6 @@ class IncomingController extends AdminController {
         }else{
             return $name;
         }
-    }
-
-    public function postAssigndate(){
-        $in = Input::get();
-        $results = Shipment::whereIn('_id', $in['ids'])->get();
-
-        //print_r($results->toArray());
-
-        //if($results){
-            $res = false;
-        //}else{
-            foreach($results as $r){
-                $r->pick_up_date = new MongoDate(strtotime($in['date'])) ;
-
-                if($r->logistic_type == 'internal'){
-                    if($r->cod == 0 || $r->cod == ''){
-                        $r->awb = $r->delivery_id;
-                        $r->bucket = Config::get('jayon.bucket_dispatcher');
-                        $r->status = Config::get('jayon.trans_status_admin_dated');
-                    }
-                }else{
-                    if($r->awb != ''){
-                        $r->bucket = Config::get('jayon.bucket_tracker');
-                        $r->status = Config::get('jayon.trans_status_admin_dated');
-                    }
-                }
-
-                $r->save();
-            }
-            $res = true;
-        //}
-
-        if($res){
-            return Response::json(array('result'=>'OK:MOVED' ));
-        }else{
-            return Response::json(array('result'=>'ERR:MOVEFAILED' ));
-        }
-
     }
 
     public function getPrintlabel($sessionname, $printparam, $format = 'html' )
@@ -1109,23 +1211,23 @@ class IncomingController extends AdminController {
         $top_offset = $pr[9];
 
         $session = Printsession::find($sessionname)->toArray();
-        $labels = Shipment::whereIn('_id', $session)->get()->toArray();
+        $labels = Asset::whereIn('_id', $session)->get()->toArray();
 
         $skus = array();
         foreach($labels as $l){
-            $skus[] = $l['_id'];
+            $skus[] = $l['SKU'];
         }
 
         $skus = array_unique($skus);
 
-        $products = Shipment::whereIn('_id',$skus)->get()->toArray();
+        $products = Asset::whereIn('SKU',$skus)->get()->toArray();
 
         $plist = array();
         foreach($products as $product){
-            $plist[$product['_id']] = $product;
+            $plist[$product['SKU']] = $product;
         }
 
-        return View::make('shared.printlabel')
+        return View::make('asset.printlabel')
             ->with('columns',$columns)
             ->with('resolution',$resolution)
             ->with('cell_width',$cell_width)
@@ -1140,17 +1242,6 @@ class IncomingController extends AdminController {
             ->with('labels', $labels);
     }
 
-
-    public function updateBox($delivery_id, $order_id, $fulfillment_code, $box_count){
-        for($n = 0; $n < $box_count; $n++){
-            $box = new Box();
-            $box->delivery_id = $delivery_id;
-            $box->order_id = $order_id;
-            $box->fulfillment_code = $fulfillment_code;
-            $box->box_id = $n + 1;
-            $box->save();
-        }
-    }
 
     public function getViewpics($id)
     {

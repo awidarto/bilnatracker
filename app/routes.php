@@ -74,6 +74,7 @@ Route::controller('returned', 'ReturnedController');
 Route::controller('orderarchive', 'OrderarchiveController');
 Route::controller('deliverylog', 'DeliverylogController');
 
+Route::controller('manifest', 'ManifestController');
 
 Route::controller('approval', 'ApprovalController');
 Route::controller('activity', 'ActivityController');

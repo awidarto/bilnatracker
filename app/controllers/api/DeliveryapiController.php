@@ -99,6 +99,12 @@ class DeliveryapiController extends \BaseController {
                     ->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
                     //->where('logistic_type','=','internal')
                     ->where('device_key', '=', $key)
+                    ->where('logistic_type','=','internal')
+
+                    ->where(function($qi){
+                        $qi->whereNull('cod')
+                            ->orWhere('cod','=',0);
+                    })
 
                     ->where(function($qz) use($key, $deliverydate){
 
@@ -135,6 +141,8 @@ class DeliveryapiController extends \BaseController {
             //print_r($or);
             $or->extId = $or->_id;
             unset($or->_id);
+
+            $or->cod = 0;
 
             $or->deliveryType = (isset($or->cod) && $or->cod > 0)?'COD':'DO';
 
