@@ -342,6 +342,7 @@ class ZoningController extends AdminController {
 
             for($i = 0; $i < count($rows); $i++){
                 if($rows[$i][4] != $date){
+                    $city = '';
                     $date = $rows[$i][4];
                     $rows[$i][4] = '<input type="radio" name="date_select" value="'.$rows[$i][4].'" class="date_select form-control" /> '.$rows[$i][4];
                 }else{
