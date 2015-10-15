@@ -919,7 +919,7 @@ class ZoningController extends AdminController {
             $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
         }
 
-        $devices = Device::where('city','like','%'.$city.'%')->get();
+        $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))->get();
 
         $caps = array();
 

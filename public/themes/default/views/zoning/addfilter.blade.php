@@ -34,7 +34,7 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        <td colspan="3">Loading shipment data...</td>
                     </tbody>
                 </table>
             </div>
@@ -48,7 +48,9 @@
                         </tr>
                     </thead>
                     <tbody>
-
+                        <tr>
+                            <td colspan="3">Loading available devices...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -205,6 +207,13 @@
                         $('table#shipment_list tbody').html('');
                         $('table#device_list tbody').html('');
 
+                        if(shipment_list.length > 0){
+                            $('table#shipment_list tbody').html('');
+                        }
+
+                        if(device_list.length > 0){
+                            $('table#device_list tbody').html('');
+                        }
                         $.each(device_list, function(index, val) {
                             $('table#device_list tbody').prepend('<tr><td><input type="radio" name="dev" class="devselect" value="' + val.key + '" ></td><td>' + val.identifier + '</td><td>' + val.count + '</td></tr>');
                         });
