@@ -171,24 +171,24 @@ $config['pickup_status'] = array(
 );
 
 $config['warehouse_status'] = array(
-    $config['trans_wh_atmerchant'] => 'At Merchant Premise',
+    $config['trans_wh_atmerchant'] => 'At Initial Node',
     $config['trans_wh_pu2wh'] => 'Accepted Warehouse',
     $config['trans_wh_inwh'] => 'In Warehouse',
     $config['trans_wh_wh2ds'] => 'On Delivery',
     $config['trans_wh_ds2wh'] => 'Back to Warehouse',
-    $config['trans_wh_return2merchant'] => 'Return to Merchant',
+    $config['trans_wh_return2merchant'] => 'Return to Initial Node',
     $config['trans_wh_canceled'] => 'Canceled',
 );
 
 
 $config['courier_status'] = array(
-    $config['trans_cr_atmerchant'] => 'At Merchant Premise',
+    $config['trans_cr_atmerchant'] => 'At Initial Node',
     $config['trans_cr_inwh'] => 'In Warehouse',
     $config['trans_cr_offcr'] => 'Off Courier',
     $config['trans_cr_oncr'] => 'On Courier',
     $config['trans_cr_oncr_partial'] => 'On Courier Partial',
     $config['trans_cr_return2wh'] => 'Return to Warehouse',
-    $config['trans_cr_return2merchant'] => 'Return to Merchant',
+    $config['trans_cr_return2merchant'] => 'Return to Initial Node',
     $config['trans_cr_canceled'] => 'Canceled',
 );
 
