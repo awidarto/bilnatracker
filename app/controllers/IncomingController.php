@@ -1059,6 +1059,8 @@ class IncomingController extends AdminController {
         $in = Input::get();
         $results = Shipment::whereIn('_id', $in['ids'])->get();
 
+        date_default_timezone_set('Asia/Jakarta');
+
         //print_r($results->toArray());
 
         //if($results){
