@@ -94,7 +94,7 @@ class ZoningController extends AdminController {
 
         $this->place_action = 'first';
 
-        $this->show_select = true;
+        $this->show_select = false;
 
         Breadcrumbs::addCrumb('Dispatcher',URL::to( strtolower($this->controller_name) ));
 
@@ -136,7 +136,7 @@ class ZoningController extends AdminController {
         $this->def_order_by = 'ordertime';
         $this->def_order_dir = 'desc';
         $this->place_action = 'first';
-        $this->show_select = true;
+        $this->show_select = false;
 
         $this->sql_key = 'delivery_id';
         $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
@@ -341,20 +341,20 @@ class ZoningController extends AdminController {
         if(count($rows) > 0){
 
             for($i = 0; $i < count($rows); $i++){
-                if($rows[$i][4] != $date){
+                if($rows[$i][3] != $date){
                     $city = '';
-                    $date = $rows[$i][4];
-                    $rows[$i][4] = '<input type="radio" name="date_select" value="'.$rows[$i][4].'" class="date_select form-control" /> '.$rows[$i][4];
+                    $date = $rows[$i][3];
+                    $rows[$i][3] = '<input type="radio" name="date_select" value="'.$rows[$i][3].'" class="date_select form-control" /> '.$rows[$i][3];
                 }else{
-                    $rows[$i][4] = '';
+                    $rows[$i][3] = '';
                 }
 
 
-                if($rows[$i][5] != $city){
-                    $city = $rows[$i][5];
-                    $rows[$i][5] = '<input type="radio" name="city_select" value="'.$rows[$i][5].'" class="city_select form-control" /> '.$rows[$i][5];
+                if($rows[$i][4] != $city){
+                    $city = $rows[$i][4];
+                    $rows[$i][4] = '<input type="radio" name="city_select" value="'.$rows[$i][4].'" class="city_select form-control" /> '.$rows[$i][4];
                 }else{
-                    $rows[$i][5] = '';
+                    $rows[$i][4] = '';
                 }
 
             }
@@ -816,6 +816,7 @@ class ZoningController extends AdminController {
         $actions = View::make('shared.action')
                         ->with('actions',array($dl))
                         ->render();
+        $actions = '';
         return $actions;
     }
 
