@@ -511,6 +511,8 @@ class AdminController extends Controller {
 	public function tableResponder()
 	{
 
+        date_default_timezone_set('Asia/Jakarta');
+
 		$fields = $this->fields;
 
         $count_all = 0;
