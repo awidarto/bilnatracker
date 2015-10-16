@@ -112,23 +112,23 @@ $config['trans_status_tobepickup'] = 'to_be_picked_up';
 $config['trans_status_pickup'] = 'picked_up';
 $config['trans_status_pickup_canceled'] = 'canceled';
 
-$config['trans_wh_atmerchant'] = 'at_merchant_premise';
+$config['trans_wh_atmerchant'] = 'at_initial_node';
 $config['trans_wh_pu2wh'] = 'accepted_warehouse';
 $config['trans_wh_inwh'] = 'in_warehouse';
 $config['trans_wh_inwh_partial'] = 'in_warehouse_partial';
 $config['trans_wh_wh2ds'] = 'on_delivery';
 $config['trans_wh_ds2wh'] = 'back_to_warehouse';
-$config['trans_wh_return2merchant'] = 'return_to_merchant';
+$config['trans_wh_return2merchant'] = 'return_to_node';
 $config['trans_wh_canceled'] = 'canceled';
 
 
-$config['trans_cr_atmerchant'] = 'at_merchant_premise';
+$config['trans_cr_atmerchant'] = 'at_initial_node';
 $config['trans_cr_inwh'] = 'in_warehouse';
 $config['trans_cr_offcr'] = 'off_courier';
 $config['trans_cr_oncr'] = 'on_courier';
 $config['trans_cr_oncr_partial'] = 'on_courier_partial';
 $config['trans_cr_return2wh'] = 'return_to_warehouse';
-$config['trans_cr_return2merchant'] = 'return_to_merchant';
+$config['trans_cr_return2merchant'] = 'return_to_node';
 $config['trans_cr_canceled'] = 'canceled';
 
 
