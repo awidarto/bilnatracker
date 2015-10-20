@@ -609,6 +609,10 @@ class AdminController extends Controller {
 
 		$counter = 1 + $pagestart;
 
+
+        $count_display_all = count($result);
+
+
 		foreach ($results as $doc) {
 
 			$extra = $doc;

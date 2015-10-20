@@ -138,58 +138,58 @@ $config['dispatcher_status'] = array(
     $config['trans_status_admin_zoned'] => 'Zone Assigned',
     $config['trans_status_admin_dated'] => 'Date Assigned',
     $config['trans_status_admin_devassigned'] => 'Device Assigned',
-    $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
+    $config['trans_status_admin_courierassigned'] => '',
     $config['trans_status_admin_dispatched'] => 'Dispatched',
 );
 
 
 $config['delivery_status'] = array(
     $config['trans_status_new'] => 'Pending',
-    $config['trans_status_tobeconfirmed'] => 'To be Confirmed',
-    $config['trans_status_purged'] => 'Purged',
-    $config['trans_status_archived'] => 'Archived',
-    $config['trans_status_confirmed'] => 'Confirmed',
-    $config['trans_status_canceled'] => 'Canceled',
-    $config['trans_status_rescheduled'] => 'Rescheduled',
-    $config['trans_status_inprogress'] => 'In Progress',
+    $config['trans_status_tobeconfirmed'] => 'Belum Konfirm',
+    $config['trans_status_purged'] => 'Hapus',
+    $config['trans_status_archived'] => 'Arsipkan',
+    $config['trans_status_confirmed'] => 'Konfirm',
+    $config['trans_status_canceled'] => 'Data Batal',
+    $config['trans_status_rescheduled'] => 'Jadwal Ulang',
+    $config['trans_status_inprogress'] => 'Dalam Proses Pengiriman',
 
     $config['trans_status_mobile_delivered'] => 'Delivered',
-    $config['trans_status_mobile_revoked'] => 'Returned',
-    $config['trans_status_mobile_departure'] => 'Departure',
-    $config['trans_status_admin_zoned'] => 'Zone Assigned',
+    $config['trans_status_mobile_revoked'] => 'Retur',
+    $config['trans_status_mobile_departure'] => 'Berangkat',
+    $config['trans_status_admin_zoned'] => 'Zona Assigned',
     $config['trans_status_admin_dated'] => 'Date Assigned',
     $config['trans_status_admin_devassigned'] => 'Device Assigned',
     $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
-    $config['trans_status_admin_dispatched'] => 'In Progress'
+    $config['trans_status_admin_dispatched'] => 'Dalam Proses Pengiriman'
 
 );
 
 $config['pickup_status'] = array(
-    $config['trans_status_tobepickup'] => 'To Be Picked Up',
-    $config['trans_status_pickup'] => 'Picked Up',
-    $config['trans_status_pickup_canceled'] => 'Canceled',
+    $config['trans_status_tobepickup'] => 'Belum Diambil',
+    $config['trans_status_pickup'] => 'Sudah Diambil',
+    $config['trans_status_pickup_canceled'] => 'Batal',
 );
 
 $config['warehouse_status'] = array(
-    $config['trans_wh_atmerchant'] => 'At Initial Node',
-    $config['trans_wh_pu2wh'] => 'Accepted Warehouse',
-    $config['trans_wh_inwh'] => 'In Warehouse',
-    $config['trans_wh_wh2ds'] => 'On Delivery',
-    $config['trans_wh_ds2wh'] => 'Back to Warehouse',
-    $config['trans_wh_return2merchant'] => 'Return to Initial Node',
-    $config['trans_wh_canceled'] => 'Canceled',
+    $config['trans_wh_atmerchant'] => 'Di Lokasi Awal',
+    $config['trans_wh_pu2wh'] => 'Diterima di Gudang',
+    $config['trans_wh_inwh'] => 'Di Gudang',
+    $config['trans_wh_wh2ds'] => 'Dalam Pengiriman',
+    $config['trans_wh_ds2wh'] => 'Kembali ke Gudang',
+    $config['trans_wh_return2merchant'] => 'Kembali ke Lokasi Awal',
+    $config['trans_wh_canceled'] => 'Batal',
 );
 
 
 $config['courier_status'] = array(
-    $config['trans_cr_atmerchant'] => 'At Initial Node',
-    $config['trans_cr_inwh'] => 'In Warehouse',
-    $config['trans_cr_offcr'] => 'Off Courier',
-    $config['trans_cr_oncr'] => 'On Courier',
-    $config['trans_cr_oncr_partial'] => 'On Courier Partial',
-    $config['trans_cr_return2wh'] => 'Return to Warehouse',
-    $config['trans_cr_return2merchant'] => 'Return to Initial Node',
-    $config['trans_cr_canceled'] => 'Canceled',
+    $config['trans_cr_atmerchant'] => 'di merchant',
+    $config['trans_cr_inwh'] => 'di gudang',
+    $config['trans_cr_offcr'] => 'belum di kurir',
+    $config['trans_cr_oncr'] => 'di kurir',
+    $config['trans_cr_oncr_partial'] => 'di kurir sebagian',
+    $config['trans_cr_return2wh'] => 'kembali ke gudang',
+    $config['trans_cr_return2merchant'] => 'kembali ke merchant',
+    $config['trans_cr_canceled'] => 'batal',
 );
 
 
@@ -198,8 +198,8 @@ $config['courier_status'] = array(
 $config['status_list'] = array(
     'pending'=>'Pending',
     'delivered'=>'Delivered',
-    'canceled'=>'Canceled',
-    'returned'=>'Returned'
+    'canceled'=>'Data Batal',
+    'returned'=>'Retur'
 );
 
 /* status colors */
