@@ -928,6 +928,7 @@ class ZoningController extends AdminController {
         foreach($devices as $d){
             $caps[$d->key]['identifier'] = $d->identifier;
             $caps[$d->key]['key'] = $d->key;
+            $caps[$d->key]['city'] = $d->city;
             $caps[$d->key]['count'] = Shipment::where('device_key',$d->key)->where('pick_up_date',$pick_up_date)->count();
         }
 

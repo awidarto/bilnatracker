@@ -1,9 +1,10 @@
 <style type="text/css">
+    /*
     #device-assign-modal.modal {
         width: 50% !important;
         left:35%;
 
-    }
+    }*/
 
     table{
         width: 100%;
@@ -16,7 +17,7 @@
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
 --}}
 
-<div id="device-assign-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div id="device-assign-modal" class="modal fade large" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
         <h3 id="myModalLabel">Assign Selected</span></h3>
@@ -30,6 +31,7 @@
                             <th><input type="checkbox" id="dev_select_all" /></th>
                             <th>Order ID</th>
                             <th>Fulfillment</th>
+                            <th>City</th>
                             <th>Package Count</th>
                         </tr>
                     </thead>
@@ -38,7 +40,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="scroll:auto;height:100%;">
                 <table id="device_list">
                     <thead>
                         <tr>
@@ -215,12 +217,12 @@
                             $('table#device_list tbody').html('');
                         }
                         $.each(device_list, function(index, val) {
-                            $('table#device_list tbody').prepend('<tr><td><input type="radio" name="dev" class="devselect" value="' + val.key + '" ></td><td>' + val.identifier + '</td><td>' + val.count + '</td></tr>');
+                            $('table#device_list tbody').prepend('<tr><td><input type="radio" name="dev" class="devselect" value="' + val.key + '" ></td><td><b>' + val.identifier + '</b></td><td>' + val.count + '</td></tr>' + '<tr><td>&nbsp;</td><td colspan="2">' + val.city + '</td></tr>');
                         });
 
                         $.each(shipment_list, function(index, val) {
 
-                            $('table#shipment_list tbody').prepend('<tr><td><input type="checkbox" class="shipselect" name="ship" value="' + val.delivery_id + '" ></td><td>' + val.order_id + '</td><td>' + val.fulfillment_code + '</td><td>' + val.number_of_package + '</td></tr>');
+                            $('table#shipment_list tbody').prepend('<tr><td><input type="checkbox" class="shipselect" name="ship" value="' + val.delivery_id + '" ></td><td>' + val.order_id + '</td><td>' + val.fulfillment_code + '</td><td>' + val.consignee_olshop_city + '</td><td>' + val.number_of_package + '</td></tr>');
                         });
 
                     }else{

@@ -182,14 +182,14 @@ $config['warehouse_status'] = array(
 
 
 $config['courier_status'] = array(
-    $config['trans_cr_atmerchant'] => 'di merchant',
-    $config['trans_cr_inwh'] => 'di gudang',
-    $config['trans_cr_offcr'] => 'belum di kurir',
-    $config['trans_cr_oncr'] => 'di kurir',
-    $config['trans_cr_oncr_partial'] => 'di kurir sebagian',
-    $config['trans_cr_return2wh'] => 'kembali ke gudang',
-    $config['trans_cr_return2merchant'] => 'kembali ke merchant',
-    $config['trans_cr_canceled'] => 'batal',
+    $config['trans_cr_atmerchant'] => 'Di Lokasi Awal',
+    $config['trans_cr_inwh'] => 'Di Gudang',
+    $config['trans_cr_offcr'] => 'Belum di Kurir',
+    $config['trans_cr_oncr'] => 'Di Kurir',
+    $config['trans_cr_oncr_partial'] => 'Di Kurir Sebagian',
+    $config['trans_cr_return2wh'] => 'Kembali ke Gudang',
+    $config['trans_cr_return2merchant'] => 'Kembali ke Lokasi Awal',
+    $config['trans_cr_canceled'] => 'Batal',
 );
 
 

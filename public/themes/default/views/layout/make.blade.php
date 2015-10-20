@@ -126,11 +126,11 @@
               <!-- HERE COMES YOUR CONTENT -->
 
               <div class="panel">
-                {{--
+
                 <div class="panel-header panel-controls">
                 </div>
-                --}}
-                <div class="pagination2">
+
+                <div class="panel-content pagination2 table">
 
                   @yield('content')
 
