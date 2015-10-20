@@ -610,7 +610,7 @@ class AdminController extends Controller {
 		$counter = 1 + $pagestart;
 
 
-        $count_display_all = count($result);
+        $count_display_all = count($results);
 
 
 		foreach ($results as $doc) {
