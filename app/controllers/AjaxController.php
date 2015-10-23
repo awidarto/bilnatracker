@@ -43,72 +43,308 @@ class AjaxController extends BaseController {
 
     }
 
-    public function getMenu()
+    public function postShipmentlist()
     {
-        $tree = '[
-                    {"title": "Books & Audible", "expanded": true, "folder": true, "children": [
-                        {"title": "Books", "folder": true, "children": [
-                            {"title": "Books"},
-                            {"title": "Kindle Books"},
-                            {"title": "Books For Study"},
-                            {"title": "Audiobooks"}
-                        ]},
-                        {"title": "Movies, TV, Music, Games", "folder": true, "children": [
-                            {"title": "Music"},
-                            {"title": "MP3 Downloads"},
-                            {"title": "Musical Instruments & DJ"},
-                            {"title": "Film & TV"},
-                            {"title": "Ble-ray"},
-                            {"title": "PC & Video Games"}
-                        ]},
-                        {"title": "Electronics & Computers", "expanded": true, "folder": true, "children": [
-                            {"title": "Electronics", "folder": true, "children": [
-                                {"title": "Camera & Photo"},
-                                {"title": "TV & Home Cinema"},
-                                {"title": "Audio & HiFi"},
-                                {"title": "Sat Nav & Car Electronics"},
-                                {"title": "Phones"},
-                                {"title": "Electronic Accessories"}
-                            ]},
-                            {"title": "Computers", "folder": true, "children": [
-                                {"title": "Laptops"},
-                                {"title": "Tablets"},
-                                {"title": "Computer & Accessories"},
-                                {"title": "Computer Components"},
-                                {"title": "Software"},
-                                {"title": "Printers & Ink"}
-                            ]}
-                        ]}
-                    ]}
-                ]';
+        $in = Input::get();
 
-        $tree = array(
-                    array('title'=>'Computers', 'folder'=>true, 'expanded'=>true,'children'=>array(
-                            array('title'=>'Laptops'),
-                            array('title'=>'Tablets'),
-                            array('title'=>'Computer & Accessories'),
-                            array('title'=>'Computer Components'),
-                            array('title'=>'Software'),
-                            array('title'=>'Printers & Ink')
-                        )
-                    ),
-                    array('title'=>'Electronics', 'folder'=>true, 'expanded'=>true,'children'=>array(
-                            array('title'=>'Camera & Photo'),
-                            array('title'=>'TV & Home Cinema'),
-                            array('title'=>'Audio & HiFi'),
-                            array('title'=>'Sat Nav & Car Electronics', 'folder'=>true, 'expanded'=>true,'children'=>array(
-                                    array('title'=>'Sat Phones'),
-                                    array('title'=>'GPS Navigator')
-                            ) ),
-                            array('title'=>'Phones'),
-                            array('title'=>'Electronic Accessories')
-                        )
-                    ),
-                );
+        $ids = $in['ids'];
 
-        //print $tree;
+        $shipments = Shipment::whereIn('_id', $in['ids'] )->get();
 
-        return Response::json($tree);
+        $shipments = $shipments->toArray();
+
+        $caps = array();
+
+        for($i = 0; $i < count($shipments); $i++){
+
+            $pick_up_date = $shipments[$i]['pick_up_date'];
+
+            $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
+
+            $city = $shipments[$i]['consignee_olshop_city'];
+            $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))->get();
+
+            foreach($devices as $d){
+                $caps[$d->key]['identifier'] = $d->identifier;
+                $caps[$d->key]['key'] = $d->key;
+                $caps[$d->key]['city'] = $d->city;
+                $caps[$d->key]['count'] = Shipment::where('device_key',$d->key)->where('pick_up_date',$pick_up_date)->count();
+            }
+
+        }
+
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments, 'device'=>$caps ) );
+        //print_r($caps);
+
+    }
+
+    public function postReassigncourier()
+    {
+        //courier_name:Shia Le Beouf
+        //courier_id:5605512bccae5b64010041b6
+        //device_key:0f56deadbc6df60740ef5e2c576876b0e3310f7d
+        //device_name:JY-002
+        //pickup_date:28-09-2
+
+        $in = Input::get();
+
+        $ids = $in['ids'];
+
+        $shipments = Shipment::whereIn('_id', $ids )
+                        ->get();
+
+
+        //print_r($shipments->toArray());
+
+        foreach($shipments as $sh){
+
+            $dev = Shipment::where('courier_id','=', $in['courier_id'])
+                        ->where('pick_up_date','=',$sh->pick_up_date)
+                        ->orderBy('pick_up_date','desc')
+                        ->first();
+
+            //print_r($dev);
+
+            $ts = new MongoDate();
+
+            if($dev){
+                $sh->device_name = $dev->device_name;
+                $sh->device_key = $dev->device_key;
+                $sh->device_id = $dev->device_id;
+            }
+
+            $sh->courier_id = $in['courier_id'];
+            $sh->courier_name = $in['courier_name'];
+            $sh->last_action_ts = $ts;
+            $sh->last_action = 'Change Courier';
+            $sh->last_reason = $in['reason'];
+            $sh->save();
+
+            //print_r(Auth::user());
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = $ts;
+            $hdata['historyAction'] = 'change_courier';
+            $hdata['historySequence'] = 1;
+            $hdata['historyObjectType'] = 'shipment';
+            $hdata['historyObject'] = $sh->toArray();
+            $hdata['actor'] = Auth::user()->fullname;
+            $hdata['actor_id'] = Auth::user()->_id;
+
+            //print_r($hdata);
+
+            History::insert($hdata);
+
+            $sdata = array();
+            $sdata['timestamp'] = $ts;
+            $sdata['action'] = 'change_courier';
+            $sdata['reason'] = $in['reason'];
+            $sdata['objectType'] = 'shipment';
+            $sdata['object'] = $sh->toArray();
+            $sdata['actor'] = Auth::user()->fullname;
+            $sdata['actor_id'] = Auth::user()->_id;
+            Shipmentlog::insert($sdata);
+            //print_r($sh);
+        }
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments ) );
+
+    }
+
+    public function postReassigndevice()
+    {
+        //courier_name:Shia Le Beouf
+        //courier_id:5605512bccae5b64010041b6
+        //device_key:0f56deadbc6df60740ef5e2c576876b0e3310f7d
+        //device_name:JY-002
+        //pickup_date:28-09-2
+
+        $in = Input::get();
+
+        $shipments = Shipment::whereIn('delivery_id', $in['ship_ids'] )->get();
+
+
+        $device = Device::where('key','=',$in['device'])->first()->toArray();
+
+        //print_r($shipments->toArray());
+
+
+        foreach($shipments as $sh){
+
+            $cr = Shipment::where('device_key','=', $in['device'])
+                    ->where('pick_up_date','=',$sh->pick_up_date)
+                    ->orderBy('pick_up_date','desc')
+                    ->first();
+
+            //print_r($dev);
+
+
+
+            $ts = new MongoDate();
+
+            if($cr){
+                $sh->courier_name = $cr->courier_name;
+                $sh->courier_id = $cr->courier_id;
+            }
+
+            $sh->device_key = $device['key'];
+            $sh->device_id = $device['_id'];
+            $sh->device_name = $device['identifier'];
+            $sh->last_action_ts = $ts;
+            $sh->last_action = 'Change Device';
+            $sh->last_reason = $in['reason'];
+            $sh->save();
+
+            //print_r(Auth::user());
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = $ts;
+            $hdata['historyAction'] = 'change_device';
+            $hdata['historySequence'] = 1;
+            $hdata['historyObjectType'] = 'shipment';
+            $hdata['historyObject'] = $sh->toArray();
+            $hdata['actor'] = Auth::user()->fullname;
+            $hdata['actor_id'] = Auth::user()->_id;
+
+            //print_r($hdata);
+
+            History::insert($hdata);
+
+            $sdata = array();
+            $sdata['timestamp'] = $ts;
+            $sdata['action'] = 'change_device';
+            $sdata['reason'] = $in['reason'];
+            $sdata['objectType'] = 'shipment';
+            $sdata['object'] = $sh->toArray();
+            $sdata['actor'] = Auth::user()->fullname;
+            $sdata['actor_id'] = Auth::user()->_id;
+            Shipmentlog::insert($sdata);
+            //print_r($sh);
+        }
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments ) );
+
+    }
+
+    public function postReschedule(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            foreach($results as $sh){
+                $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+
+                $sh->last_action_ts = $ts;
+                $sh->last_action = 'Reschedule';
+                $sh->last_reason = $in['reason'];
+                $sh->save();
+
+                //print_r(Auth::user());
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'change_delivery_date';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $sh->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                //print_r($hdata);
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'change_delivery_date';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $sh->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:RESCHED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:RESCHEDFAILED' ));
+        }
+
+    }
+
+    public function postCanceldata(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            foreach($results as $sh){
+                $sh->status = Config::get('jayon.trans_status_canceled') ;
+
+                $sh->last_action_ts = $ts;
+                $sh->last_action = 'Cancel Data';
+                $sh->last_reason = $in['reason'];
+                $sh->save();
+
+                //print_r(Auth::user());
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'cancel_data';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $sh->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                //print_r($hdata);
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'cancel_data';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $sh->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:RESCHED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:RESCHEDFAILED' ));
+        }
+
     }
 
     public function postMoveorder(){

@@ -207,7 +207,7 @@ th ul.select2-results li{
         <table class="table table-condensed dataTable">--}}
 <div class="container" style="padding-top:40px;">
     <div class="row">
-        <div class="col-md-6 command-bar">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 command-bar">
 
             @if(isset($can_add) && $can_add == true)
                 <a href="{{ URL::to($addurl) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-plus"></i> Add</a>
@@ -244,11 +244,11 @@ th ul.select2-results li{
             <a href="{{ URL::to($print_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-print"></i> Print Preview</a>
 
          </div>
-         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 command-bar">
-
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             {{ $additional_filter }}
-
-         </div>
+        </div>
     </div>
 </div>
         <table class="table table-striped mg-t dataTable">

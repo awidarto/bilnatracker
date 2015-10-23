@@ -905,11 +905,11 @@ class CourierassignController extends AdminController {
 
     public function postAssigncourier()
     {
-//courier_name:Shia Le Beouf
-//courier_id:5605512bccae5b64010041b6
-//device_key:0f56deadbc6df60740ef5e2c576876b0e3310f7d
-//device_name:JY-002
-//pickup_date:28-09-2
+        //courier_name:Shia Le Beouf
+        //courier_id:5605512bccae5b64010041b6
+        //device_key:0f56deadbc6df60740ef5e2c576876b0e3310f7d
+        //device_name:JY-002
+        //pickup_date:28-09-2
 
         $in = Input::get();
 

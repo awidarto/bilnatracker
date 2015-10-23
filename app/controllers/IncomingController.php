@@ -1037,6 +1037,16 @@ class IncomingController extends AdminController {
         //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
+    public function dupeFF($data){
+        $count = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
+                        ->where('status','!=', Config::get('jayon.trans_status_canceled') )
+                        ->count();
+        if($count > 1){
+            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.'</div>';
+        }else{
+            return $data['consignee_olshop_orderid'];
+        }
+    }
 
     public function colorizetype($data)
     {

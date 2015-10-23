@@ -144,7 +144,7 @@ $config['dispatcher_status'] = array(
 
 
 $config['delivery_status'] = array(
-    $config['trans_status_new'] => 'Pending',
+    $config['trans_status_new'] => 'Siap Kirim',
     $config['trans_status_tobeconfirmed'] => 'Belum Konfirm',
     $config['trans_status_purged'] => 'Hapus',
     $config['trans_status_archived'] => 'Arsipkan',
@@ -171,7 +171,7 @@ $config['pickup_status'] = array(
 );
 
 $config['warehouse_status'] = array(
-    $config['trans_wh_atmerchant'] => 'Di Lokasi Awal',
+    $config['trans_wh_atmerchant'] => 'In Transit',
     $config['trans_wh_pu2wh'] => 'Diterima di Gudang',
     $config['trans_wh_inwh'] => 'Di Gudang',
     $config['trans_wh_wh2ds'] => 'Dalam Pengiriman',
@@ -182,7 +182,7 @@ $config['warehouse_status'] = array(
 
 
 $config['courier_status'] = array(
-    $config['trans_cr_atmerchant'] => 'Di Lokasi Awal',
+    $config['trans_cr_atmerchant'] => 'In Transit',
     $config['trans_cr_inwh'] => 'Di Gudang',
     $config['trans_cr_offcr'] => 'Belum di Kurir',
     $config['trans_cr_oncr'] => 'Di Kurir',

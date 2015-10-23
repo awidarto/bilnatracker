@@ -98,7 +98,7 @@ class CanceledController extends AdminController {
 
         Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
+        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
@@ -250,8 +250,7 @@ class CanceledController extends AdminController {
         $txtab = Config::get('jayon.incoming_delivery_table');
 
         $model = $model->where(function($query){
-                    $query->where('bucket','=',Config::get('jayon.bucket_tracker'))
-                        ->where('status','=',Config::get('jayon.trans_status_canceled'));
+                    $query->where('status','=',Config::get('jayon.trans_status_canceled'));
                 /*
                 $query->where(function($q){
                     $q->where('pending_count','=',0)
@@ -814,6 +813,29 @@ class CanceledController extends AdminController {
     public function catName($data)
     {
         return $data['shopcategory'];
+    }
+
+    public function internalCod($data){
+        if($data['logistic_type'] == 'internal'){
+            if( ($data['cod'] == 0 || $data['cod'] == '')){
+                return $data['cod'];
+            }else{
+                return '<span class="red">'.$data['cod'].'</span>';
+            }
+        }else{
+            return $data['cod'];
+        }
+    }
+
+    public function dupeFF($data){
+        $count = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
+                        ->where('status','!=', Config::get('jayon.trans_status_canceled') )
+                        ->count();
+        if($count > 1){
+            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>';
+        }else{
+            return $data['consignee_olshop_orderid'];
+        }
     }
 
     public function rackName($data){
