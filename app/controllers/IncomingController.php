@@ -730,8 +730,9 @@ class IncomingController extends AdminController {
 
         }
 
+        $data['delivery_type'] = (isset($data['delivery_type']))?$data['delivery_type']:'REG';
+
         if(isset($data['cod'])){
-            print 'cod set = '.$data['cod'];
             if($data['cod'] == '' || is_null($data['cod'])){
                 print 'cod is null';
                 $data['cod'] = 0;
