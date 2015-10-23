@@ -3,6 +3,10 @@
 @section('content')
 
 <style type="text/css">
+h2{
+    text-align: center;
+}
+
 .act{
     cursor: pointer;
 }
@@ -28,6 +32,7 @@ th{
     border-right:thin solid #eee;
     border-top: thin solid #eee;
     vertical-align: top;
+    font-size: 12px;
 }
 
 th:first-child{
@@ -70,6 +75,13 @@ td{
     padding: 4px 6px 6px 4px !important;
     hyphens:none !important;
     border: none !important;
+    vertical-align: top;
+}
+
+td.box{
+    height:100%;
+    min-height:75px;
+    text-align: center;
 }
 
 select.input-sm {
@@ -129,6 +141,9 @@ tr.row-doubleunderline td.column-amt{
     background-color: transparent;
 }
 
+table{
+    width: 100%;
+}
 </style>
 
 

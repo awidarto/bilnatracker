@@ -34,22 +34,27 @@
 
       }
 
+      body{
+        color: black;
+        background-color: white;
+      }
+
+      h2{
+        text-align: center;
+      }
+
     </style>
 
   </head>
-  <body class="sidebar-top fixed-topbar fixed-sidebar theme-sdtl color-default">
+  <body>
     <!--[if lt IE 7]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <div class="main-content">
-        <div class="header">
-          <h2>{{ boldfirst($title) }}</h2>
-        </div>
-        <div class="row">
-          <div class="col-lg-12 portlets">
-            @yield('content')
-          </div>
-        </div>
+    <h2>{{ $title }}</h2>
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        @yield('content')
+      </div>
     </div>
 
   </body>

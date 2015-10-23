@@ -107,6 +107,10 @@ class ManifestController extends AdminController {
 
         $this->show_select = false;
 
+        $this->can_add = false;
+
+        $this->is_report = true;
+
         Breadcrumbs::addCrumb('Manifest',URL::to( strtolower($this->controller_name) ));
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','afelvltwo')->render();
@@ -127,314 +131,102 @@ class ManifestController extends AdminController {
             $period_to = date('Y0m',time());
         }
 
-        $company = strtolower($company);
-
-        if($company == ''){
-            $company = Config::get('lundin.default_company');
-        }
-
-        $afe = Input::get('acc-afe');
-
-        if($afe == '' || is_null($afe) ){
-            //$afes  = Prefs::getAfe($company)->AfeToArray();
-            //$afe = $afes[0]->ANL_CODE;
-        }
-
-
-        $company = strtolower($company);
-
         $this->def_order_by = 'TRANS_DATETIME';
         $this->def_order_dir = 'DESC';
         $this->place_action = 'none';
         $this->show_select = false;
 
-        $this->sql_key = 'TRANS_DATETIME';
-        $this->sql_table_name = $company.'_a_salfldg';
-        $this->sql_connection = 'mysql2';
-
         /* Start custom queries */
-        $model = DB::connection($this->sql_connection)->table($this->sql_table_name);
 
-        $tables = array();
+        $model = $this->model;
 
-        $actualresult = $model
-            ->select(DB::raw(
-                    $company.'_a_salfldg.ACCNT_CODE,'.
-                    $company.'_acnt.DESCR AS ADESCR,'.
-                    'SUM('.$company.'_a_salfldg.AMOUNT) as AMT'
-                ))
-            ->where($company.'_a_salfldg.ACCNT_CODE','like','2%')
-            ->where($company.'_a_salfldg.ANAL_T1','=',$afe)
-            ->where($company.'_a_salfldg.PERIOD','>=', $period_from )
-            ->where($company.'_a_salfldg.PERIOD','<=', $period_to )
-            ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-            ->groupBy($company.'_a_salfldg.ACCNT_CODE')
-            ->get();
-
-
-        $model = DB::connection($this->sql_connection)->table($company.'_a_salfldg');
-
-        $prioritdresult = $model
-            ->select(DB::raw(
-                    $company.'_a_salfldg.ACCNT_CODE,'.
-                    $company.'_acnt.DESCR AS ADESCR,'.
-                    'SUM('.$company.'_a_salfldg.AMOUNT) as AMT'
-                ))
-            ->where($company.'_a_salfldg.ACCNT_CODE','like','2%')
-            ->where($company.'_a_salfldg.ANAL_T1','=',$afe)
-            ->where($company.'_a_salfldg.PERIOD','<', $period_from )
-            ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-            ->groupBy($company.'_a_salfldg.ACCNT_CODE')
-            ->get();
-
-        $model = DB::connection($this->sql_connection)->table($company.'_a_salfldg');
-
-        $currentitdresult = $model
-            ->select(DB::raw(
-                    $company.'_a_salfldg.ACCNT_CODE,'.
-                    $company.'_acnt.DESCR AS ADESCR,'.
-                    'SUM('.$company.'_a_salfldg.AMOUNT) as AMT'
-                ))
-            ->where($company.'_a_salfldg.ACCNT_CODE','like','2%')
-            ->where($company.'_a_salfldg.ANAL_T1','=',$afe)
-            ->where($company.'_a_salfldg.PERIOD','<=', $period_to )
-            ->leftJoin($company.'_acnt', $company.'_a_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-            ->groupBy($company.'_a_salfldg.ACCNT_CODE')
-            ->get();
-
-        $model = DB::connection($this->sql_connection)->table($company.'_b_salfldg');
-
-
-        $budgetresult = $model
-            ->select(DB::raw(
-                    $company.'_b_salfldg.ACCNT_CODE,'.
-                    $company.'_acnt.DESCR AS ADESCR,'.
-                    'SUM('.$company.'_b_salfldg.AMOUNT) as AMT'
-                ))
-            ->where($company.'_b_salfldg.ACCNT_CODE','like','2%')
-            ->where($company.'_b_salfldg.ANAL_T1','=',$afe)
-            ->where($company.'_b_salfldg.PERIOD','>=', $period_from )
-            ->where($company.'_b_salfldg.PERIOD','<=', $period_to )
-            ->leftJoin($company.'_acnt', $company.'_b_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-            ->groupBy($company.'_b_salfldg.ACCNT_CODE')
-            ->get();
-
-
-        $model = DB::connection($this->sql_connection)->table($company.'_d_salfldg');
-
-        $revbudgetresult = $model
-            ->select(DB::raw(
-                    $company.'_d_salfldg.ACCNT_CODE,'.
-                    $company.'_acnt.DESCR AS ADESCR,'.
-                    'SUM('.$company.'_d_salfldg.AMOUNT) as AMT'
-                ))
-            ->where($company.'_d_salfldg.ACCNT_CODE','like','2%')
-            ->where($company.'_d_salfldg.ANAL_T1','=',$afe)
-            ->where($company.'_d_salfldg.PERIOD','>=', $period_from )
-            ->where($company.'_d_salfldg.PERIOD','<=', $period_to )
-            ->leftJoin($company.'_acnt', $company.'_d_salfldg.ACCNT_CODE', '=', $company.'_acnt.ACNT_CODE' )
-            ->groupBy($company.'_d_salfldg.ACCNT_CODE')
-            ->get();
-
-        $tabdata = array();
-
-        foreach($actualresult as $a){
-            $tabdata[$a->ACCNT_CODE] = $a;
-            $tabdata[$a->ACCNT_CODE]->BAMT = 0;
-            $tabdata[$a->ACCNT_CODE]->DAMT = 0;
-            $tabdata[$a->ACCNT_CODE]->PITDAMT = 0;
-            $tabdata[$a->ACCNT_CODE]->CITDAMT = 0;
-        }
-
-        foreach($prioritdresult as $p){
-            if(isset($tabdata[$p->ACCNT_CODE])){
-                $tabdata[$p->ACCNT_CODE]->PITDAMT = $p->AMT;
-            }
-        }
-
-        foreach($currentitdresult as $c){
-            if(isset($tabdata[$c->ACCNT_CODE])){
-                $tabdata[$c->ACCNT_CODE]->CITDAMT = $c->AMT;
-            }
-        }
-
-        foreach($budgetresult as $b){
-            if(isset($tabdata[$b->ACCNT_CODE])){
-                $tabdata[$b->ACCNT_CODE]->BAMT = $b->AMT;
-            }else{
-                $tabdata[$b->ACCNT_CODE] = $b;
-                $tabdata[$b->ACCNT_CODE]->BAMT = $b->AMT;
-                $tabdata[$b->ACCNT_CODE]->AMT = 0;
-                $tabdata[$b->ACCNT_CODE]->DAMT = 0;
-                $tabdata[$b->ACCNT_CODE]->PITDAMT = 0;
-                $tabdata[$b->ACCNT_CODE]->CITDAMT = 0;
-            }
-        }
-
-
-        foreach($revbudgetresult as $d){
-            if(isset($tabdata[$d->ACCNT_CODE])){
-                $tabdata[$d->ACCNT_CODE]->DAMT = $d->AMT;
-            }else{
-                $tabdata[$d->ACCNT_CODE] = $d;
-                $tabdata[$d->ACCNT_CODE]->DAMT = $d->AMT;
-                $tabdata[$d->ACCNT_CODE]->AMT = 0;
-                $tabdata[$d->ACCNT_CODE]->BAMT = 0;
-                $tabdata[$d->ACCNT_CODE]->PITDAMT = 0;
-                $tabdata[$d->ACCNT_CODE]->CITDAMT = 0;
-            }
-        }
-
-        ksort($tabdata);
+        $actualresult = $model->get();
 
         $tattrs = array('width'=>'100%','class'=>'table table-bordered');
 
         $thead = array();
-        $tdataclr = array();
-        $tdataexp = array();
+
+//No. Kota Type Status  KEPADA  ALAMAT  Phone   Order ID Fulfillment ID Jumlah Box PENERIMA PAKET
+//TANDA TANGAN    NAMA
+
 
         $thead[] = array(
                 array('value'=>'#','attr'=>'rowspan=2'),
-                array('value'=>'Account','attr'=>'colspan=2 rowspan=2 class="center"'),
-                array('value'=>'Budget','attr'=>'colspan=3'),
-                array('value'=>'Actual','attr'=>'colspan=3'),
-                array('value'=>'Variance','attr'=>'colspan=2')
+                array('value'=>'Kota','attr'=>'class="center"'),
+                array('value'=>'Type','attr'=>''),
+                array('value'=>'Status','attr'=>''),
+                array('value'=>'KEPADA','attr'=>''),
+                array('value'=>'ALAMAT','attr'=>'style="min-width:200px;"'),
+                array('value'=>'Telepon','attr'=>''),
+                array('value'=>'Order ID','attr'=>''),
+                array('value'=>'Fulfillment ID','attr'=>''),
+                array('value'=>'Jumlah Paket','attr'=>''),
+                array('value'=>'PENERIMA','attr'=>'colspan="3"'),
             );
 
         $thead[] = array(
-                array('value'=>'Original'),
-                array('value'=>'Revised'),
-                array('value'=>'Current Year'),
-                array('value'=>'Prior ITD'),
-                array('value'=>'Period To Date'),
-                array('value'=>'Current ITD'),
-                array('value'=>'$'),
-                array('value'=>'%')
+                array('value'=>'','attr'=>'colspan="9"'),
+                array('value'=>'JUMLAH DITERIMA','attr'=>''),
+                array('value'=>'TANDA TANGAN','attr'=>''),
+                array('value'=>'NAMA','attr'=>'class="bold center" style="width:50px" '),
             );
 
         $seq = 1;
 
-        $sumexp = new stdClass();
-        $sumclr = new stdClass();
+    /*
+        $tabdata = array();
 
-        $sumexp->BAMT = 0;
-        $sumexp->DAMT = 0;
-        $sumexp->BREV = 0;
-        $sumexp->PITDAMT = 0;
-        $sumexp->AMT = 0;
-        $sumexp->CITDAMT = 0;
-        $sumexp->VARIANCE = 0;
-        $sumexp->PCT = 0;
+            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','courier_status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_service',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('logistic_type',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consig',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('awb',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_cust',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('delivery_id',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('no_sales_order',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_orderid',array('kind'=>'text' , 'callback'=>'dupeFF' ,'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('number_of_package',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('cod',array('kind'=>'currency','callback'=>'internalCod', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('email',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_addr',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('district',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_region',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_zip',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_phone',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('contact',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_desc',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('w_V',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_inst_amt',array('kind'=>'currency' , 'query'=>'like', 'pos'=>'both','show'=>true))
+        */
 
-        $sumclr->BAMT = 0;
-        $sumclr->DAMT = 0;
-        $sumclr->BREV = 0;
-        $sumclr->PITDAMT = 0;
-        $sumclr->AMT = 0;
-        $sumclr->CITDAMT = 0;
-        $sumclr->VARIANCE = 0;
-        $sumclr->PCT = 0;
+        foreach ($actualresult as $m) {
 
-        foreach ($tabdata as $m) {
-
-
-            if($m->DAMT > 0){
-                $variance = $m->CITDAMT - $m->DAMT;
-                $pct = $variance / $m->DAMT * 100;
-
-                $brev = $m->DAMT - $m->BAMT;
-            }else{
-                $variance = 0;
-                $pct = 0;
-                $brev = 0;
-            }
-
-
-
-            if(preg_match('/^2009.*/', $m->ACCNT_CODE)){
-                $tdataclr[] = array(
-                        array('value'=>$seq),
-                        array('value'=>$m->ACCNT_CODE ),
-                        array('value'=>$m->ADESCR ),
-                        array('value'=>'', 'attr'=>'class="column-amt"' ),
-                        array('value'=>'', 'attr'=>'class="column-amt"' ),
-                        array('value'=>'' , 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->PITDAMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->AMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->CITDAMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>'' , 'attr'=>'class="column-amt"' ),
-                        array('value'=>'', 'attr'=>'class="column-amt"' )
-                    );
-
-
-
-                    $sumclr->BAMT = '';
-                    $sumclr->DAMT = '';
-                    $sumclr->BREV = '';
-                    $sumclr->PITDAMT += $m->PITDAMT;
-                    $sumclr->AMT += $m->AMT;
-                    $sumclr->CITDAMT += $m->CITDAMT;
-                    $sumclr->VARIANCE = '';
-                    $sumclr->PCT = '';
-
-
-            }else{
-                $tdataexp[] = array(
-                        array('value'=>$seq),
-                        array('value'=>$m->ACCNT_CODE ),
-                        array('value'=>$m->ADESCR ),
-                        array('value'=>$m->BAMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->DAMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$brev , 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->PITDAMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->AMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$m->CITDAMT, 'attr'=>'class="column-amt"' ),
-                        array('value'=>$variance , 'attr'=>'class="column-amt"' ),
-                        array('value'=>$pct, 'attr'=>'class="column-amt"' )
-                    );
-
-                    $sumexp->BAMT += $m->BAMT;
-                    $sumexp->DAMT += $m->DAMT;
-                    $sumexp->BREV += $brev;
-                    $sumexp->PITDAMT += $m->PITDAMT;
-                    $sumexp->AMT += $m->AMT;
-                    $sumexp->CITDAMT += $m->CITDAMT;
-                    $sumexp->VARIANCE += $variance;
-                    $sumexp->PCT += $pct;
-
-            }
+            $tabdata[] = array(
+                    array('value'=>$seq,'attr'=>''),
+                    array('value'=>$m->consignee_olshop_city,'attr'=>''),
+                    array('value'=>'REG','attr'=>''),
+                    array('value'=>$m->status,'attr'=>''),
+                    array('value'=>$m->consignee_olshop_name,'attr'=>''),
+                    array('value'=>$m->consignee_olshop_addr,'attr'=>''),
+                    array('value'=>$m->consignee_olshop_phone,'attr'=>''),
+                    array('value'=>$m->no_sales_order,'attr'=>''),
+                    array('value'=>$m->consignee_olshop_orderid,'attr'=>''),
+                    array('value'=>$m->number_of_package,'attr'=>''),
+                    array('value'=>'','attr'=>''),
+                    array('value'=>'','attr'=>''),
+                    array('value'=>'','attr'=>'')
+                );
 
             $seq++;
         }
 
-        $tdataclr[] = array(
-                array('value'=>'Total After Clearing', 'attr'=>'colspan=3 style="text-align:center;font-weight:bold;" ' ),
-                array('value'=>$sumclr->BAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->DAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->BREV , 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->PITDAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->AMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->CITDAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->VARIANCE , 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumclr->PCT, 'attr'=>'class="column-amt"' )
-            );
-
-        $tdataexp[] = array(
-                array('value'=>'Total Expenditure', 'attr'=>'colspan=3 style="text-align:center;font-weight:bold;" ' ),
-                array('value'=>$sumexp->BAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->DAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->BREV , 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->PITDAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->AMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->CITDAMT, 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->VARIANCE , 'attr'=>'class="column-amt"' ),
-                array('value'=>$sumexp->PCT, 'attr'=>'class="column-amt"' )
-            );
-
-        $tdata = array_merge($tdataexp,$tdataclr);
-
-
-        $mtable = new HtmlTable($tdata,$tattrs,$thead);
+        $mtable = new HtmlTable($tabdata,$tattrs,$thead);
 
         $tables[] = $mtable->build();
 
@@ -512,6 +304,8 @@ class ManifestController extends AdminController {
         $this->table_raw = $tables;
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
+
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN';
 
         return parent::printReport();
     }

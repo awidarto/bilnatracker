@@ -1,77 +1,84 @@
-<?php
-    $cm = date('0m', time());
-    $cy = date('Y',time());
-    $dperiod = $cy.$cm;
-?>
+<style type="text/css">
 
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <div class="row">
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                <h5>Company</h5>
-            </div>
-            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-                <?php
-                    $c = Input::get('acc-company');
-                    if($c == ''){
-                        $c = Config::get('lundin.default_company');
-                    }
+td.box{
+    height:50px !important;
+    min-height:50px !important;
+    text-align: center;
+}
 
-                    $companies = Prefs::getCompany()->CompanyToArray();
+</style>
+<table class="" style="width:100%;">
+    <tr>
+        <td style="vertical-align:top;">
+            <img src="{{ URL::to('/') }}/images/logo_bilna_2015_2.jpg" alt="logo" />
+        </td>
+        <td style="vertical-align:top;">
+            <table class="table table-bordered">
+                <tr>
+                    <td>MANIFEST DATE</td>
+                    <td style="min-width:100px;"></td>
+                </tr>
+                <tr>
+                    <td>DELIVERY DATE</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>DEVICE</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>COURIER</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>REG</th>
+                        <th>PR</th>
+                        <th>PS</th>
+                        <th>Pending</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="box" ></td>
+                        <td class="box" ></td>
+                        <td class="box" ></td>
+                        <td class="box" ></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td style="vertical-align:top;">
+            <table class="table table-bordered" style="height:100%;min-height:75px;">
+                <thead>
+                    <tr>
+                        <th>Dibuat Oleh</th>
+                        <th>Laporan</th>
+                        <th>Keuangan</th>
+                        <th>Staff Dispatch</th>
+                        <th>Staff Delivery</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="box" >&nbsp;</td>
+                        <td class="box" >&nbsp;</td>
+                        <td class="box" >&nbsp;</td>
+                        <td class="box" >&nbsp;</td>
+                        <td class="box" >&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
 
-                    $cname = '';
-
-                    foreach ($companies as $com) {
-                        if($com->DB_CODE == $c){
-                            $cname = $com->DESCR;
-                        }
-                    }
-                ?>
-                <h5>{{ $cname }}</h5>
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                <h5>AFE</h5>
-            </div>
-            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
-
-                <?php
-                    $c = Input::get('acc-company');
-                    if($c == ''){
-                        $c = Config::get('lundin.default_company');
-                    }
-
-                    $afes = Prefs::getAfe($c)->AfeToArray();
-
-                    $afename = '';
-
-                    $f = Input::get('acc-afe');
-
-                    foreach ($afes as $afe) {
-                        if($afe->ANL_CODE == $f){
-                            $afename = $afe->NAME;
-                        }
-                    }
-                ?>
-                <h5>{{ $afename }}</h5>
-
-            </div>
-        </div>
-
-    </div>
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <div class="row">
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-                <h5>Period</h5>
-            </div>
-            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                <h5>{{ Input::get('acc-period-from',$dperiod) }}</h5>
-            </div>
-            <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                <h5>{{ Input::get('acc-period-to',$dperiod) }}</h5>
-            </div>
-        </div>
-    </div>
-
-
+</table>

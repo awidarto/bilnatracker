@@ -354,8 +354,9 @@
             console.log(ids);
 
             if(ids.length > 0){
+                reg = /[^A-Za-z0-9 ]/;
+                if(reason == '' || reg.test(reg) ){
 
-                if(reason == ''){
                     alert('Please specify reason for cancelation');
                 }else{
                     $.post('{{ URL::to('ajax/canceldata')}}',
