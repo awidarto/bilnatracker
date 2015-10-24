@@ -142,7 +142,7 @@ tr.row-doubleunderline td.column-amt{
     background-color: transparent;
 }
 
-thead, tfoot { display: table-row-group !important }
+thead, tfoot { display: table-header-group !important; }
 
 </style>
 
