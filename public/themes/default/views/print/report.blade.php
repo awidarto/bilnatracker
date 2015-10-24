@@ -39,6 +39,12 @@ th:first-child{
 .table th{
     padding: 4px 2px !important;
     font-size: 12px !important;
+    background-color: white !important;
+}
+
+.table td{
+    background-color: white !important;
+    border-bottom: thin solid #eee !important;
 }
 
 .del,.upload,.upinv,.outlet,.action{

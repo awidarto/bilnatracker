@@ -9,6 +9,8 @@ class Prefs {
     public static $productcategory;
     public static $role;
     public static $logistic;
+    public static $device;
+    public static $courier;
     public static $position;
     public static $node;
 
@@ -154,6 +156,79 @@ class Prefs {
         return self::$shopcategory;
     }
 
+    //Courier
+    public static function getCourier($key = null, $val=null){
+        if(is_null($key)){
+            $c = Courier::get();
+            self::$courier = $c;
+            return new self;
+        }else{
+            if($key == '_id'){
+                $val = new MongoId($val);
+            }
+            $c = Courier::where($key,'=',$val)->first();
+            self::$courier = $c;
+            return $c;
+        }
+    }
+
+    public function courierToSelection($value, $label, $all = true)
+    {
+        if($all){
+            $ret = array(''=>'All');
+        }else{
+            $ret = array();
+        }
+
+        foreach (self::$courier as $c) {
+            $ret[$c->{$value}] = $c->{$label};
+        }
+
+
+        return $ret;
+    }
+
+    public function CourierToArray()
+    {
+        return self::$courier;
+    }
+
+
+    //Device
+    public static function getDevice($key = null, $val=null){
+        if(is_null($key)){
+            $c = Device::get();
+            self::$device = $c;
+            return new self;
+        }else{
+            $c = Device::where($key,'=',$val)->first();
+            self::$device = $c;
+            return $c;
+        }
+    }
+
+    public function DeviceToSelection($value, $label, $all = true)
+    {
+        if($all){
+            $ret = array(''=>'All');
+        }else{
+            $ret = array();
+        }
+
+        foreach (self::$device as $c) {
+            $ret[$c->{$value}] = $c->{$label};
+        }
+
+
+        return $ret;
+    }
+
+    public function DeviceToArray()
+    {
+        return self::$device;
+    }
+
+
     //Logistics
     public static function getLogistic(){
         $c = Logistic::get();
@@ -165,7 +240,7 @@ class Prefs {
     public function LogisticToSelection($value, $label, $all = true)
     {
         if($all){
-            $ret = array(''=>'Select Logistic');
+            $ret = array(''=>'All');
         }else{
             $ret = array();
         }

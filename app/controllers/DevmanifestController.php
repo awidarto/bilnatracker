@@ -1,6 +1,6 @@
 <?php
 
-class ManifestController extends AdminController {
+class DevmanifestController extends AdminController {
 
     public function __construct()
     {
@@ -14,7 +14,7 @@ class ManifestController extends AdminController {
 
         $this->model = new Shipment();
         //$this->model = DB::collection('documents');
-        $this->title = 'Manifest';
+        $this->title = 'Device Manifest';
 
     }
 
@@ -85,7 +85,7 @@ class ManifestController extends AdminController {
     public function getIndex()
     {
 
-        $this->title = 'Manifest Pengiriman Harian - To Hub';
+        $this->title = 'Manifest Pengiriman Harian - To Device';
 
         $this->place_action = 'none';
 
@@ -97,7 +97,7 @@ class ManifestController extends AdminController {
 
         Breadcrumbs::addCrumb('Manifest',URL::to( strtolower($this->controller_name) ));
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','manifest')->render();
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','devmanifest')->render();
 
 
         $db = Config::get('lundin.main_db');
@@ -293,7 +293,7 @@ class ManifestController extends AdminController {
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
 
-        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE';
 
         return parent::printReport();
     }
@@ -309,7 +309,7 @@ class ManifestController extends AdminController {
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
 
-        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE';
 
         return parent::printReport();
     }

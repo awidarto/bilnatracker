@@ -195,11 +195,11 @@ return array(
         'Excel'           => 'Maatwebsite\Excel\Facades\Excel',
         'Theme'           => 'AlexWhitman\ViewThemes\ThemeFacade',
         'Carbon'          => 'Carbon\Carbon',
-        'PDF'             => 'Barryvdh\DomPDF\Facade',
+        'PDF'             => 'Barryvdh\Snappy\Facades\SnappyPdf',
         'DbView'          => 'Flynsarmy\DbBladeCompiler\Facades\DbView',
         'Code1D'          => 'Dinesh\Barcode\Facades\DNS1DFacade',
         'Code2D'          => 'Dinesh\Barcode\Facades\DNS2DFacade',
-        'QRCode'              => 'SimpleSoftwareIO\QrCode\Facades\QrCode'
+        'QRCode'          => 'SimpleSoftwareIO\QrCode\Facades\QrCode'
 	),
 
 );

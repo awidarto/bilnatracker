@@ -3,6 +3,11 @@
 @section('content')
 
 <style type="text/css">
+body{
+    color: black;
+    background-color: white;
+}
+
 .act{
     cursor: pointer;
 }
@@ -69,10 +74,12 @@ td{
     font-size: 11px;
     padding: 4px 6px 6px 4px !important;
     hyphens:none !important;
+    border-bottom: thin solid #eee !important;
 }
 
 th{
     text-align: center;
+    background-color: white !important;
 }
 
 select.input-sm {
@@ -145,11 +152,15 @@ a.btn, input.btn {
                             $get[] = $k.'='.$v;
                         }
                         $print_url = $printlink.'?'.implode('&', $get);
+                        $pdf_url = $pdflink.'?'.implode('&', $get);
                     }else{
                         $print_url = $printlink;
+                        $pdf_url = $pdflink;
                     }
                 ?>
                 <a target="_blank" href="{{ URL::to($print_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-print"></i> Print</a>
+
+                <a target="_blank" href="{{ URL::to($pdf_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-print"></i> PDF</a>
 
             @endif
             @if(isset($is_additional_action) && $is_additional_action == true)

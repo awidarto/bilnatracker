@@ -65,7 +65,8 @@
             <li class="nav-parent {{ hsa( array('gl','coa') ) }} ">
               <a href=""><i class="fa fa-table"></i><span>Reports</span><span class="fa arrow"></span></a>
               <ul class="children collapse">
-                <li class="{{ sa('manifest') }}" ><a href="{{ URL::to('manifest') }}"> Manifest</a></li>
+                <li class="{{ sa('manifest') }}" ><a href="{{ URL::to('manifest') }}"> Manifest To Hub</a></li>
+                <li class="{{ sa('devmanifest') }}" ><a href="{{ URL::to('devmanifest') }}"> Manifest To Device</a></li>
                 {{--
                 <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
                 --}}
