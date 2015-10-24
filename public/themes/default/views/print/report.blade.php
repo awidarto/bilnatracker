@@ -142,6 +142,8 @@ tr.row-doubleunderline td.column-amt{
     background-color: transparent;
 }
 
+thead, tfoot { display: table-row-group !important }
+
 </style>
 
 @if(@additional_filter != '')
