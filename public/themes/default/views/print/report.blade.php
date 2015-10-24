@@ -154,6 +154,7 @@ tr.row-doubleunderline td.column-amt{
 
 @endforeach
 
+@if($pdf == false)
 
 <script type="text/javascript">
 
@@ -161,6 +162,8 @@ tr.row-doubleunderline td.column-amt{
         window.print();
     });
   </script>
+
+@endif
 
 @stop
 
