@@ -144,6 +144,8 @@ tr.row-doubleunderline td.column-amt{
 
 thead, tfoot { display: table-header-group !important; }
 
+tr{page-break-inside: avoid !important; }
+
 </style>
 
 @if(@additional_filter != '')
