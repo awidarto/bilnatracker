@@ -298,7 +298,7 @@ class ManifestController extends AdminController {
         return parent::printReport();
     }
 
-    public function getPdf()
+    public function getGenpdf()
     {
 
         $this->pdf = true;

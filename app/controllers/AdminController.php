@@ -465,7 +465,7 @@ class AdminController extends Controller {
 
         $this->printlink = (is_null($this->printlink) || $this->printlink == '')? strtolower($this->controller_name).'/print': $this->printlink;
 
-        $this->pdflink = (is_null($this->pdflink) || $this->pdflink == '')? strtolower($this->controller_name).'/pdf': $this->printlink;
+        $this->pdflink = (is_null($this->pdflink) || $this->pdflink == '')? strtolower($this->controller_name).'/genpdf': $this->printlink;
 
         if($this->pdf == true){
             $html = View::make($this->report_view)
