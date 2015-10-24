@@ -431,9 +431,8 @@ Route::get('pdf',function(){
         de <a href='http://html2pdf.fr/'>HTML2PDF</a>.<br>
     </page>";
 
-    $html2pdf = new HTML2PDF();
-    $html2pdf->WriteHTML($content);
-    $html2pdf->Output('exemple.pdf','D');
+    return PDF::loadHTML($content)->setPaper('a4')
+             ->setOrientation('landscape')->setOption('margin-bottom', 0)->stream('myfile.pdf');
 });
 
 
