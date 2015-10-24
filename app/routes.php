@@ -422,19 +422,6 @@ Route::get('regeneratepic/{obj?}',function($obj = null){
 
 });
 
-Route::get('pdf',function(){
-    $content = "
-    <page>
-        <h1>Exemple d'utilisation</h1>
-        <br>
-        Ceci est un <b>exemple d'utilisation</b>
-        de <a href='http://html2pdf.fr/'>HTML2PDF</a>.<br>
-    </page>";
-
-    $html2pdf = new HTML2PDF();
-    $html2pdf->WriteHTML($content);
-    $html2pdf->Output('exemple.pdf','D');
-});
 
 
 Route::get('smerchant',function(){
