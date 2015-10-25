@@ -20,7 +20,7 @@
         <td style="vertical-align:top;">
             <table class="table table-bordered">
                 <tr>
-                    <td>MANIFEST DATE</td>
+                    <td>MANIFEST DATE / TGL TERBIT</td>
                     <td style="min-width:100px;">
                         @if(is_null(Input::get('manifest-date')) || Input::get('manifest-date') == '')
                             {{ date('d-m-Y', time() ) }}
@@ -54,6 +54,17 @@
                             All
                         @else
                             {{  Prefs::getCourier('_id',Input::get('courier'))->name
+                            }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
+                    <td>LOGISTIC</td>
+                    <td>
+                        @if(is_null(Input::get('logistic')) || Input::get('logistic') == '')
+                            All
+                        @else
+                            {{  Prefs::getLogistic('logistic_code',Input::get('logistic'))->name
                             }}
                         @endif
                     </td>

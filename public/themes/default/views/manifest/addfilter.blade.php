@@ -29,7 +29,7 @@
             }}
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-            {{ Former::text('manifest-date', 'Manifest Date')
+            {{ Former::text('manifest-date', 'Manifest Publish Date')
                     ->value(Input::get('manifest-date',$dperiod))
                     ->class('form-control input-sm p-datepicker')
                     ->id('manifest-date');

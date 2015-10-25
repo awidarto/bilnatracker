@@ -85,7 +85,7 @@ class DevmanifestController extends AdminController {
     public function getIndex()
     {
 
-        $this->title = 'Manifest Pengiriman Harian - To Device';
+        $this->title = 'Manifest Pengiriman Harian - To Device / Logistic';
 
         $this->place_action = 'none';
 
@@ -176,6 +176,7 @@ class DevmanifestController extends AdminController {
                 array('value'=>'Telepon','attr'=>'rowspan="2" '),
                 array('value'=>'Order ID','attr'=>'rowspan="2" '),
                 array('value'=>'Fulfillment ID','attr'=>'rowspan="2" '),
+                array('value'=>'Nilai COD','attr'=>'rowspan="2" '),
                 array('value'=>'Jumlah Paket','attr'=>'rowspan="2" '),
                 array('value'=>'PENERIMA','attr'=>'colspan="3"'),
             );
@@ -199,12 +200,13 @@ class DevmanifestController extends AdminController {
                     array('value'=>$m->delivery_type,'attr'=>''),
                     array('value'=>$m->logistic,'attr'=>''),
                     array('value'=>$m->device_name,'attr'=>''),
-                    array('value'=>$m->status,'attr'=>''),
+                    array('value'=>Prefs::translatestatus($m->status,'delivery'),'attr'=>''),
                     array('value'=>$m->consignee_olshop_name,'attr'=>''),
                     array('value'=>$m->consignee_olshop_addr,'attr'=>''),
                     array('value'=>$m->consignee_olshop_phone,'attr'=>''),
                     array('value'=>$m->no_sales_order,'attr'=>''),
                     array('value'=>$m->consignee_olshop_orderid,'attr'=>''),
+                    array('value'=>Ks::idr($m->cod),'attr'=>'style="text-align:right;"'),
                     array('value'=>$m->number_of_package,'attr'=>''),
                     array('value'=>'','attr'=>''),
                     array('value'=>'','attr'=>''),
@@ -293,7 +295,7 @@ class DevmanifestController extends AdminController {
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
 
-        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE';
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE / LOGISTIC';
 
         return parent::printReport();
     }
@@ -309,7 +311,7 @@ class DevmanifestController extends AdminController {
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
 
-        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE';
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE / LOGISTIC';
 
         return parent::printReport();
     }
