@@ -178,11 +178,12 @@ class ManifestController extends AdminController {
                 array('value'=>'Fulfillment ID','attr'=>'rowspan="2" '),
                 array('value'=>'Nilai COD','attr'=>'rowspan="2" '),
                 array('value'=>'Jumlah Paket','attr'=>'rowspan="2" '),
-                array('value'=>'PENERIMA','attr'=>'colspan="3"'),
+                array('value'=>'PENERIMA','attr'=>'colspan="4"'),
             );
 
         $thead[] = array(
-                array('value'=>'JUMLAH DITERIMA','attr'=>''),
+                array('value'=>'JUMLAH DITERIMA DI HUB','attr'=>''),
+                array('value'=>'TANGGAL / JAM TERIMA','attr'=>''),
                 array('value'=>'TANDA TANGAN','attr'=>''),
                 array('value'=>'NAMA','attr'=>'class="bold center" style="width:50px" '),
             );
@@ -208,6 +209,7 @@ class ManifestController extends AdminController {
                     array('value'=>$m->consignee_olshop_orderid,'attr'=>''),
                     array('value'=>Ks::idr($m->cod),'attr'=>'style="text-align:right;"'),
                     array('value'=>$m->number_of_package,'attr'=>''),
+                    array('value'=>'','attr'=>''),
                     array('value'=>'','attr'=>''),
                     array('value'=>'','attr'=>''),
                     array('value'=>'','attr'=>'')
@@ -293,7 +295,16 @@ class ManifestController extends AdminController {
 
         $this->table_raw = $tables;
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
+        $this->report_entity = false;
+        $sequencer = new Sequence();
+        $doc_number = $sequencer->getNewId('manifest');
+
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')
+                                            ->with('doc_number',$doc_number)
+                                            ->render();
+
+        $this->report_file_name = 'HUB-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_path = realpath('storage/docs').'/manifest/';
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
 
@@ -309,9 +320,19 @@ class ManifestController extends AdminController {
 
         $this->table_raw = $tables;
 
-        $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')->render();
+        $this->report_entity = false;
+        $sequencer = new Sequence();
+        $doc_number = $sequencer->getNewId('manifest');
+
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')
+                                            ->with('doc_number',$doc_number)
+                                            ->render();
+
+        $this->report_file_name = 'HUB-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_path = realpath('storage/docs').'/manifest/';
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
+
 
         return parent::printReport();
     }

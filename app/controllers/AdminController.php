@@ -112,6 +112,16 @@ class AdminController extends Controller {
 
     public $report_data = null;
 
+    public $report_file_path = null;
+
+    public $report_file_name = null;
+
+    public $report_type = false;
+
+    public $report_entity = false;
+
+    public $doc_number = false;
+
     public $additional_table_param = array();
     //public $product_info_url = 'ajax/productinfo';
 
@@ -465,9 +475,21 @@ class AdminController extends Controller {
 
         $this->printlink = (is_null($this->printlink) || $this->printlink == '')? strtolower($this->controller_name).'/print': $this->printlink;
 
-        $this->pdflink = (is_null($this->pdflink) || $this->pdflink == '')? strtolower($this->controller_name).'/genpdf': $this->printlink;
+        $this->pdflink = (is_null($this->pdflink) || $this->pdflink == '')? strtolower($this->controller_name).'/genpdf': $this->pdflink;
 
-        if($this->pdf == true){
+        /*
+        if($this->report_entity == false){
+
+        }else{
+            $this->report_entity = (is_null($this->report_entity) || $this->report_entity == '')? strtolower($this->controller_name): $this->report_entity;
+
+            if($this->doc_number == false){
+                $sequencer = new Sequence();
+                $this->doc_number = $sequencer->getNewId($this->report_entity);
+            }
+        }
+        */
+
             $html = View::make($this->report_view)
                 ->with('title',$this->title )
                 ->with('report_data', $this->report_data)
@@ -484,61 +506,7 @@ class AdminController extends Controller {
                 ->with('can_add', $this->can_add )
                 ->with('is_report',$this->is_report)
                 ->with('report_action',$this->report_action)
-                ->with('is_additional_action',$this->is_additional_action)
-                ->with('additional_action',$this->additional_action)
-                ->with('additional_filter',$this->additional_filter)
-                ->with('js_additional_param', $this->js_additional_param)
-                ->with('modal_sets', $this->modal_sets)
-                ->with('tables',$this->table_raw)
-                ->with('table_dnd', $this->table_dnd)
-                ->with('table_dnd_url', $this->table_dnd_url)
-                ->with('table_dnd_idx', $this->table_dnd_idx)
-                ->with('table_group', $this->table_group)
-                ->with('table_group_field', $this->table_group_field)
-                ->with('table_group_idx', $this->table_group_idx)
-                ->with('table_group_collapsible', $this->table_group_collapsible)
-                ->with('js_table_event', $this->js_table_event)
-                ->with('column_styles', $this->column_styles)
-                ->with('additional_page_data',$this->additional_page_data)
-                ->with('additional_table_param',$this->additional_table_param)
-                ->with('product_info_url',$this->product_info_url)
-                ->with('prefix',$this->prefix)
-                ->with('heads',$heads )
-                ->with('fields',$fields)
-                ->with('start_index',$start_index)
-                ->with('row',$this->rowdetail )
-                ->with('pdf',$this->pdf)
-                ->render();
-
-                $snappy = App::make('snappy.pdf');
-                //To file
-                //$snappy->generateFromHtml($html);
-                //$snappy->generate('http://www.github.com', '/tmp/github.pdf');
-                //Or output:\
-
-                return PDF::loadHTML($html)->setPaper('a4')
-                         ->setOrientation('landscape')->setOption('margin-bottom', 0)->stream('myfile.pdf');
-
-
-                //return PDF::loadHTML($html)->stream('manifest.pdf');
-
-        }else{
-            return View::make($this->report_view)
-                ->with('title',$this->title )
-                ->with('report_data', $this->report_data)
-                ->with('newbutton', $this->newbutton )
-                ->with('disablesort',$disablesort )
-                ->with('addurl',$this->addurl )
-                ->with('importurl',$this->importurl )
-                ->with('ajaxsource',URL::to($this->ajaxsource) )
-                ->with('ajaxdel',URL::to($this->delurl) )
-                ->with('ajaxdlxl',URL::to($this->dlxl) )
-                ->with('crumb',$this->crumb )
-                ->with('printlink', $this->printlink )
-                ->with('pdflink', $this->pdflink )
-                ->with('can_add', $this->can_add )
-                ->with('is_report',$this->is_report)
-                ->with('report_action',$this->report_action)
+                ->with('doc_number',$this->doc_number)
                 ->with('is_additional_action',$this->is_additional_action)
                 ->with('additional_action',$this->additional_action)
                 ->with('additional_filter',$this->additional_filter)
@@ -564,6 +532,29 @@ class AdminController extends Controller {
                 ->with('row',$this->rowdetail )
                 ->with('pdf',$this->pdf);
 
+        /*
+        PDF::loadHTML($html->render())->setPaper('a4')
+                 ->setOrientation('landscape')
+                 ->setOption('margin-bottom', 0)
+                 ->save($this->report_file_path.$this->report_file_name);
+        */
+        if($this->report_file_name){
+            file_put_contents($this->report_file_path.$this->report_file_name, $html);
+        }
+
+
+        if($this->pdf == true){
+
+                $html->render();
+
+                $snappy = App::make('snappy.pdf');
+
+                return PDF::loadHTML($html)->setPaper('a4')
+                         ->setOrientation('landscape')->setOption('margin-bottom', 0)->stream($this->report_file_name);
+
+        }else{
+
+            return $html;
         }
 
 

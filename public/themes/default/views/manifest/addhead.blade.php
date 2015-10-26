@@ -20,6 +20,9 @@
         <td style="vertical-align:top;">
             <table class="table table-bordered">
                 <tr>
+                    <td colspan="2" style="font-weight:bold;font-size:18px;">HUB-{{ str_pad($doc_number, 5, '0', STR_PAD_LEFT) }}</td>
+                </tr>
+                <tr>
                     <td>MANIFEST DATE / TGL TERBIT</td>
                     <td style="min-width:100px;">
                         @if(is_null(Input::get('manifest-date')) || Input::get('manifest-date') == '')
