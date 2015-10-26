@@ -342,6 +342,8 @@ class ManifestController extends AdminController {
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
 
+        $this->report_type = 'manifest';
+
         return parent::printReport();
     }
 
@@ -367,6 +369,7 @@ class ManifestController extends AdminController {
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
 
+        $this->report_type = 'manifest';
 
         return parent::printReport();
     }

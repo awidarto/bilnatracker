@@ -79,6 +79,19 @@
               </ul>
             </li>
             @endif
+            @if(Ks::can('view','reports'))
+            <li class="nav-parent {{ hsa( array('docs') ) }} ">
+              <a href=""><i class="fa fa-table"></i><span>Released Documents</span><span class="fa arrow"></span></a>
+              <ul class="children collapse">
+                <li class="{{ sa('docs') }}" ><a href="{{ URL::to('docs') }}"> Manifests</a></li>
+                {{--
+                <li class="{{ sa('devmanifest') }}" ><a href="{{ URL::to('devmanifest') }}"> Manifest To Device</a></li>
+                <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
+                --}}
+              </ul>
+            </li>
+            @endif
+
             @if(Ks::can('view','system'))
 
             <li class="nav-parent {{ hsa( array('user','usergroup','courier','coverage','logistics','position','option' ) ) }} ">

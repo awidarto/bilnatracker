@@ -46,6 +46,7 @@ Route::controller('parsedevice', 'ParsedeviceController');
 
 Route::controller('coverage', 'CoverageController');
 
+Route::controller('docs', 'DocsController');
 
 Route::controller('logistics', 'LogisticsController');
 Route::controller('courier', 'CourierController');

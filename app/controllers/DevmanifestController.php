@@ -349,6 +349,8 @@ class DevmanifestController extends AdminController {
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE / LOGISTIC';
 
+        $this->report_type = 'devmanifest';
+
         return parent::printReport();
     }
 
@@ -373,6 +375,8 @@ class DevmanifestController extends AdminController {
         $this->report_file_path = realpath('storage/docs').'/devmanifest/';
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE / LOGISTIC';
+
+        $this->report_type = 'devmanifest';
 
         return parent::printReport();
     }
