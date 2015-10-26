@@ -901,6 +901,74 @@ class ZoningController extends AdminController {
 
     }
 
+    public function postReschedule()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        $in = Input::get();
+
+        $city = $in['city'];
+
+        $currentdate = $in['currentdate'];
+
+        $pick_up_date = new MongoDate(strtotime($currentdate));
+
+        $shipments = Shipment::where('pick_up_date','=', $pick_up_date )
+                        ->where('status','=', Config::get('jayon.trans_status_admin_dated'))
+                        ->where('consignee_olshop_city','=',$city)->get();
+
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            foreach($shipments as $sh){
+                $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+
+                $sh->last_action_ts = $ts;
+                $sh->last_action = 'Reschedule';
+                $sh->last_reason = $in['reason'];
+                $sh->save();
+
+                //print_r(Auth::user());
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'change_delivery_date';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $sh->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                //print_r($hdata);
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'change_delivery_date';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $sh->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:RESCHED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:RESCHEDFAILED' ));
+        }
+
+    }
+
+
     public function postShipmentlist()
     {
         $in = Input::get();

@@ -13,6 +13,8 @@
 
 <a class="btn btn-transparent btn-info btn-sm" id="print_barcodes"><i class="fa fa-print"></i> Print QR Label</a>
 <a class="btn btn-transparent btn-info btn-sm" id="assign_to_device"><i class="fa fa-phone-square"></i> Assign to Device</a>
+<a class="btn btn-transparent btn-info btn-sm" id="reschedule_pickup"><i class="fa fa-calendar"></i> Reschedule</a>
+
 {{--
 <a class="btn btn-transparent btn-info btn-sm" id="move_orders"><i class="fa fa-arrows"></i> Move Selected to</a>
 --}}
@@ -61,6 +63,22 @@
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
         <button class="btn btn-primary" id="do-assign">Assign</button>
+    </div>
+</div>
+
+<div id="reset-pickup-date-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="myModalLabel">Reschedule Delivery Date</span></h3>
+    </div>
+    <div class="modal-body" >
+        {{ Former::text('pickup_date', 'Set Delivery Date' )->id('reschedule-pickup-date')->class('form-control d-datepicker') }}
+        {{ Former::textarea('reason','Reason')->id('re-reschedule-reason') }}
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        <button class="btn btn-primary" id="do-reschedule">Reschedule</button>
     </div>
 </div>
 
@@ -410,36 +428,38 @@
 
         });
 
-        $('#unassign-prop').on('click',function(){
-            var props = $('.selector:checked');
-            var ids = [];
-            $.each(props, function(index){
-                ids.push( $(this).val() );
-            });
+        $('#reschedule_pickup').on('click',function(e){
+            $('#reset-pickup-date-modal').modal();
+            e.preventDefault();
+        });
 
-            console.log(ids);
+        $('#do-reschedule').on('click',function(){
+            var currentdate = $('input[name=date_select]:checked').val();
+            var city = $('input[name=city_select]:checked').val();
 
-            var answer = confirm('Are you sure you want to un-assign these Properties ?');
+            var reason = $('#re-reschedule-reason').val();
 
-            console.log(answer);
-
-            if (answer == true){
-
-                $.post('{{ URL::to('ajax/unassign')}}',
-                {
-                    user_id : $('#assigned-agent-filter').val(),
-                    prop_ids : ids
-                },
-                function(data){
-                    oTable.draw();
-                }
-                ,'json');
+            if(currentdate != '' && city != ''){
+                $.post('{{ URL::to('zoning/reschedule')}}',
+                    {
+                        currentdate : currentdate,
+                        date : $('#reschedule-pickup-date').val(),
+                        reason : reason,
+                        city : city
+                    },
+                    function(data){
+                        $('#reset-pickup-date-modal').modal('hide');
+                        oTable.draw();
+                    }
+                    ,'json');
 
             }else{
-                alert("Unassignment cancelled");
+                alert('No item selected.');
+                $('#assign-modal').modal('hide');
             }
 
         });
+
 
     });
 </script>

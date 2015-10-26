@@ -82,6 +82,192 @@ class CourierassignController extends AdminController {
                     ->with('table',$itemtable);
     }
 
+
+    public function postReschedule()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+
+        $in = Input::get();
+
+        $currentdate = $in['currentdate'];
+
+        $pick_up_date = new MongoDate(strtotime($currentdate));
+
+        $shipments = Shipment::where('device_key','=', $in['device'] )
+                        ->where('pick_up_date','=', $pick_up_date )
+                        ->get();
+
+
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            foreach($shipments as $sh){
+                $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+
+                $sh->last_action_ts = $ts;
+                $sh->last_action = 'Reschedule';
+                $sh->last_reason = $in['reason'];
+                $sh->save();
+
+                //print_r(Auth::user());
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'change_delivery_date';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $sh->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                //print_r($hdata);
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'change_delivery_date';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $sh->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:RESCHED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:RESCHEDFAILED' ));
+        }
+
+    }
+
+    public function postReassigndevice()
+    {
+        //courier_name:Shia Le Beouf
+        //courier_id:5605512bccae5b64010041b6
+        //device_key:0f56deadbc6df60740ef5e2c576876b0e3310f7d
+        //device_name:JY-002
+        //pickup_date:28-09-2
+
+
+
+        $in = Input::get();
+
+        $shipments = Shipment::whereIn('delivery_id', $in['ship_ids'] )->get();
+
+
+        $device = Device::where('key','=',$in['device'])->first()->toArray();
+
+        //print_r($shipments->toArray());
+
+
+        foreach($shipments as $sh){
+
+            $cr = Shipment::where('device_key','=', $in['device'])
+                    ->where('pick_up_date','=',$sh->pick_up_date)
+                    ->orderBy('pick_up_date','desc')
+                    ->first();
+
+            //print_r($dev);
+
+
+
+            $ts = new MongoDate();
+            /*
+            if($cr){
+                $sh->courier_name = $cr->courier_name;
+                $sh->courier_id = $cr->courier_id;
+            }
+            */
+
+            $sh->device_key = $device['key'];
+            $sh->device_id = $device['_id'];
+            $sh->device_name = $device['identifier'];
+            $sh->last_action_ts = $ts;
+            $sh->last_action = 'Change Device';
+            $sh->last_reason = $in['reason'];
+            $sh->save();
+
+            //print_r(Auth::user());
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = $ts;
+            $hdata['historyAction'] = 'change_device';
+            $hdata['historySequence'] = 1;
+            $hdata['historyObjectType'] = 'shipment';
+            $hdata['historyObject'] = $sh->toArray();
+            $hdata['actor'] = Auth::user()->fullname;
+            $hdata['actor_id'] = Auth::user()->_id;
+
+            //print_r($hdata);
+
+            History::insert($hdata);
+
+            $sdata = array();
+            $sdata['timestamp'] = $ts;
+            $sdata['action'] = 'change_device';
+            $sdata['reason'] = $in['reason'];
+            $sdata['objectType'] = 'shipment';
+            $sdata['object'] = $sh->toArray();
+            $sdata['actor'] = Auth::user()->fullname;
+            $sdata['actor_id'] = Auth::user()->_id;
+            Shipmentlog::insert($sdata);
+            //print_r($sh);
+        }
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments ) );
+
+    }
+
+    public function postShipmentlist()
+    {
+        $in = Input::get();
+
+        $currentdate = $in['currentdate'];
+
+        $pick_up_date = new MongoDate(strtotime($currentdate));
+
+        $shipments = Shipment::where('device_key','=', $in['device'] )
+                        ->where('pick_up_date','=', $pick_up_date )
+                        ->get();
+
+        $shipments = $shipments->toArray();
+
+        $caps = array();
+
+        for($i = 0; $i < count($shipments); $i++){
+
+            $pick_up_date = $shipments[$i]['pick_up_date'];
+
+            $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
+
+            $city = $shipments[$i]['consignee_olshop_city'];
+            $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))->get();
+
+            foreach($devices as $d){
+                $caps[$d->key]['identifier'] = $d->identifier;
+                $caps[$d->key]['key'] = $d->key;
+                $caps[$d->key]['city'] = $d->city;
+                $caps[$d->key]['count'] = Shipment::where('device_key',$d->key)->where('pick_up_date',$pick_up_date)->count();
+            }
+
+        }
+
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments, 'device'=>$caps ) );
+        //print_r($caps);
+
+    }
+
+
     public function getIndex()
     {
 

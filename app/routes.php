@@ -657,13 +657,17 @@ function sa($item){
 
 function hsa($item){
     if(is_array($item)){
+        $urls = array();
         foreach ($item as $it) {
-            if(URL::to($it) == URL::full() ){
-                return  'nav-active active';
-            }else{
-                return '';
-            }
+            $urls[] = URL::to($it);
         }
+
+        if(in_array(URL::full(), $urls)){
+            return  'nav-active active';
+        }else{
+            return '';
+        }
+
     }else{
         if(URL::to($item) == URL::full() ){
             return  'nav-active active';

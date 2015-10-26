@@ -1,3 +1,9 @@
+<style type="text/css">
+  li.active a.active{
+    background-color: ##0097a7 !important;
+  }
+</style>
+
       <div class="sidebar">
         <div class="logopanel" style="padding:6px;padding-left:15px;padding-top:10px;">
           <h1>
@@ -20,20 +26,20 @@
               </ul>
             </li>
             --}}
-            <li><a href="{{ URL::to('incoming') }}"><i class="fa fa-arrow-circle-down"></i> Incoming</a></li>
+            <li class="{{ hsa('incoming') }}" ><a href="{{ URL::to('incoming') }}"><i class="fa fa-arrow-circle-down"></i> Incoming</a></li>
             @endif
 
             @if(Ks::can('view','dispatcher'))
-            <li class="nav-parent">
+            <li class="nav-parent {{ hsa('zoning') }} {{ hsa('courierassign') }}">
               <a href="{{ URL::to('employee') }}"><i class="fa fa-arrows-alt"></i><span>Dispatcher</span> <span class="fa arrow"></span></a>
               <ul class="children collapse">
-                <li><a href="{{ URL::to('zoning') }}"><i class="fa fa-bullseye"></i> Device Zone Assignment</a></li>
-                <li><a href="{{ URL::to('courierassign') }}"><i class="fa fa-user-plus"></i> Courier Assignment</a></li>
+                <li class="{{ sa('zoning') }}"><a href="{{ URL::to('zoning') }}"><i class="fa fa-bullseye"></i> Device Zone Assignment</a></li>
+                <li class="{{ sa('courierassign') }}"><a href="{{ URL::to('courierassign') }}"><i class="fa fa-user-plus"></i> Courier Assignment</a></li>
               </ul>
             </li>
             @endif
             @if(Ks::can('view','tracker'))
-            <li class="nav-parent">
+            <li class="nav-parent {{ hsa(array('dispatched','delivered','deliverylog') ) }}">
               <a href="{{ URL::to('employee') }}"><i class="icon-users"></i><span>Tracker</span> <span class="fa arrow"></span></a>
               <ul class="children collapse">
                 <li><a href="{{ URL::to('dispatched') }}"><i class="fa fa-paper-plane-o"></i> In Progress</a></li>
@@ -44,7 +50,7 @@
               </ul>
             </li>
             @endif
-            <li class="nav-parent">
+            <li class="nav-parent {{ hsa( array('canceled','returned','orderarchive') ) }}">
               <a href="{{ URL::to('employee') }}"><i class="icon-users"></i><span>Archive</span> <span class="fa arrow"></span></a>
               <ul class="children collapse">
                 <li><a href="{{ URL::to('canceled') }}"><i class="fa fa-times"></i> Canceled Data</a></li>
@@ -53,7 +59,7 @@
               </ul>
             </li>
             @if(Ks::can('view','assets'))
-            <li class="nav-parent">
+            <li class="nav-parent {{ hsa( array('device','parsedevice') ) }}">
               <a href="#"><i class="fa fa-cog"></i><span>Assets</span> <span class="fa arrow"></span></a>
               <ul class="children collapse">
                 <li><a href="{{ URL::to('device') }}"><i class="fa fa-mobile-phone"></i> Devices</a></li>
@@ -62,7 +68,7 @@
             </li>
             @endif
             @if(Ks::can('view','reports'))
-            <li class="nav-parent {{ hsa( array('gl','coa') ) }} ">
+            <li class="nav-parent {{ hsa( array('manifest','devmanifest') ) }} ">
               <a href=""><i class="fa fa-table"></i><span>Reports</span><span class="fa arrow"></span></a>
               <ul class="children collapse">
                 <li class="{{ sa('manifest') }}" ><a href="{{ URL::to('manifest') }}"> Manifest To Hub</a></li>
@@ -75,7 +81,7 @@
             @endif
             @if(Ks::can('view','system'))
 
-            <li class="nav-parent">
+            <li class="nav-parent {{ hsa( array('user','usergroup','courier','coverage','logistics','position','option' ) ) }} ">
               <a href=""><i class="fa fa-cogs"></i><span>System </span><span class="fa arrow"></span></a>
 
                 <ul class="children collapse">

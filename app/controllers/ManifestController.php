@@ -171,7 +171,7 @@ class ManifestController extends AdminController {
                 array('value'=>'Logistic','attr'=>'rowspan="2" '),
                 array('value'=>'Device','attr'=>'rowspan="2" '),
                 array('value'=>'Status','attr'=>'rowspan="2" '),
-                array('value'=>'KEPADA','attr'=>'rowspan="2" '),
+                array('value'=>'KEPADA / CUSTOMER','attr'=>'rowspan="2" '),
                 array('value'=>'ALAMAT','attr'=>'rowspan="2" style="min-width:200px;"'),
                 array('value'=>'Telepon','attr'=>'rowspan="2" '),
                 array('value'=>'Order ID','attr'=>'rowspan="2" '),
