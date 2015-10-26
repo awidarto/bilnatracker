@@ -137,7 +137,7 @@ class ManifestController extends AdminController {
         }
 
         if(empty($status)){
-            $exstatus = Config::get('jayon.devmanifest_default_excl_status');
+            $exstatus = Config::get('jayon.manifest_default_excl_status');
 
             if(!empty($exstatus)){
                 $model = $model->whereNotIn('status', $exstatus);
@@ -152,7 +152,13 @@ class ManifestController extends AdminController {
             $courierstatus = explode(',', $courierstatus);
         }
 
-        if(!empty($courierstatus)){
+        if(empty($courierstatus)){
+            $excrstatus = Config::get('jayon.manifest_default_excl_courier_status');
+
+            if(!empty($excrstatus)){
+                $model = $model->whereNotIn('courier_status', $excrstatus);
+            }
+        }else{
             $model = $model->whereIn('courier_status', $courierstatus);
         }
 
