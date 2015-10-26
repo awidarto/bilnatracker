@@ -222,6 +222,12 @@ $config['manifest_default_excl_courier_status'] = array(
 
 //dev manifest default status
 $config['devmanifest_default_status'] = array(
+    $config['trans_status_new'],
+    $config['trans_status_confirmed'],
+    $config['trans_status_admin_zoned'],
+    $config['trans_status_admin_dated'],
+    $config['trans_status_admin_devassigned'],
+    $config['trans_status_admin_courierassigned']
 );
 
 $config['devmanifest_default_courier_status'] = array(
