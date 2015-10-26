@@ -539,7 +539,19 @@ class AdminController extends Controller {
                  ->save($this->report_file_path.$this->report_file_name);
         */
         if($this->report_file_name){
+
+
             file_put_contents($this->report_file_path.$this->report_file_name, $html);
+
+            $sd = new Document();
+            $sd->timestamp = new MongoDate();
+            $sd->type = $this->report_type;
+            $sd->fullpath = $this->report_file_path.$this->report_file_name;
+            $sd->filename = $this->report_file_name;
+            $sd->creator_id = Auth::user()->_id;
+            $sd->creator_name = Auth::user()->fullname;
+            $sd->save();
+
         }
 
 
