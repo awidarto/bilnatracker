@@ -1,5 +1,6 @@
 <?php
     $dperiod = date('Y-m-d', time());
+
 ?>
 {{Former::open_for_files_vertical(URL::to($submit_url),'GET',array('class'=>''))}}
     <div class="row">
@@ -49,11 +50,15 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-            <h5></h5>
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            {{ Former::text('status','Delivery Status')
+                    ->value(Input::get('status', implode(',', Config::get('jayon.manifest_default_status') ) ))
+                    ->class('form-control tag_status') }}
         </div>
-        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            {{ Former::text('courier-status','Courier Status')
+                    ->value(Input::get('courier-status', implode(',', Config::get('jayon.manifest_default_courier_status') ) ))
+                    ->class('form-control tag_courier_status') }}
         </div>
     </div>
 

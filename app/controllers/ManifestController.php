@@ -113,6 +113,8 @@ class ManifestController extends AdminController {
         $courier = Input::get('courier');
         $logistic = Input::get('logistic');
 
+        $status = Input::get('status');
+        $courierstatus = Input::get('courier-status');
 
         if($period_to == '' || is_null($period_to) ){
             $period_to = date('Y0m',time());
@@ -127,6 +129,32 @@ class ManifestController extends AdminController {
         /* Start custom queries */
 
         $model = $this->model;
+
+        if($status == '' || is_null($status) ){
+            $status = Config::get('jayon.manifest_default_status');
+        }else{
+            $status = explode(',', $status);
+        }
+
+        if(!empty($status)){
+            $model = $model->whereIn('status', $status);
+        }
+
+        $exstatus = Config::get('jayon.manifest_default_excl_status');
+
+        if(!empty($exstatus)){
+            $model = $model->whereNotIn('status', $exstatus);
+        }
+
+        if($courierstatus == '' || is_null($courierstatus) ){
+            $courierstatus = Config::get('jayon.manifest_default_courier_status');
+        }else{
+            $courierstatus = explode(',', $courierstatus);
+        }
+
+        if(!empty($courierstatus)){
+            $model = $model->whereIn('courier_status', $courierstatus);
+        }
 
         if($period_from == '' || is_null($period_from) ){
 

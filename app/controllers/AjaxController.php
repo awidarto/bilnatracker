@@ -1229,6 +1229,42 @@ class AjaxController extends BaseController {
         return Response::json($result);
     }
 
+    public function getStatus()
+    {
+
+        $q = Input::get('term');
+
+        $status = Config::get('jayon.delivery_status');
+
+        $result = array();
+
+        foreach($status as $k=>$v) {
+            if(preg_match('/'.$q.'/i', $v)) {
+                $result[] = array('id'=>$k,'value'=>$k,'label'=>$v);
+            }
+        }
+
+        return Response::json($result);
+    }
+
+    public function getCourierstatus()
+    {
+
+        $q = Input::get('term');
+
+        $status = Config::get('jayon.courier_status');
+
+        $result = array();
+
+        foreach($status as $k=>$v) {
+            if(preg_match('/'.$q.'/i', $v)) {
+                $result[] = array('id'=>$k,'value'=>$k,'label'=>$v);
+            }
+        }
+
+        return Response::json( $result );
+    }
+
     public function getDistrict()
     {
         $q = Input::get('term');

@@ -156,7 +156,7 @@ $config['delivery_status'] = array(
     $config['trans_status_mobile_delivered'] => 'Delivered',
     $config['trans_status_mobile_revoked'] => 'Retur',
     $config['trans_status_mobile_departure'] => 'Berangkat',
-    $config['trans_status_admin_zoned'] => 'Zona Assigned',
+    $config['trans_status_admin_zoned'] => 'Zone Assigned',
     $config['trans_status_admin_dated'] => 'Date Assigned',
     $config['trans_status_admin_devassigned'] => 'Device Assigned',
     $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
@@ -192,7 +192,60 @@ $config['courier_status'] = array(
     $config['trans_cr_canceled'] => 'Batal',
 );
 
+// manifest default status
+$config['manifest_default_status'] = array(
+    $config['trans_status_new'],
+    $config['trans_status_confirmed'],
+    $config['trans_status_admin_zoned'],
+    $config['trans_status_admin_dated'],
+    $config['trans_status_admin_devassigned'],
+    $config['trans_status_admin_courierassigned']
+);
 
+$config['manifest_default_courier_status'] = array(
+);
+
+$config['manifest_default_excl_status'] = array(
+    $config['trans_status_tobeconfirmed'],
+    $config['trans_status_purged'],
+    $config['trans_status_archived'],
+    $config['trans_status_canceled'],
+    $config['trans_status_rescheduled'],
+    $config['trans_status_inprogress'],
+    $config['trans_status_mobile_delivered'],
+    $config['trans_status_mobile_revoked'],
+    $config['trans_status_mobile_departure']
+);
+
+$config['manifest_default_excl_courier_status'] = array(
+);
+
+//dev manifest default status
+$config['devmanifest_default_status'] = array(
+);
+
+$config['devmanifest_default_courier_status'] = array(
+    $config['trans_cr_atmerchant'],
+    $config['trans_cr_inwh'],
+    $config['trans_cr_offcr'],
+    $config['trans_cr_oncr'],
+    $config['trans_cr_oncr_partial']
+);
+
+$config['devmanifest_default_excl_status'] = array(
+    $config['trans_status_tobeconfirmed'],
+    $config['trans_status_purged'],
+    $config['trans_status_archived'],
+    $config['trans_status_canceled'],
+    $config['trans_status_rescheduled'],
+    $config['trans_status_inprogress'],
+    $config['trans_status_mobile_delivered'],
+    $config['trans_status_mobile_revoked'],
+    $config['trans_status_mobile_departure']
+);
+
+$config['devmanifest_default_excl_courier_status'] = array(
+);
 
 
 $config['status_list'] = array(
