@@ -12,6 +12,8 @@
 }
 
 </style>
+<h2>HUB-{{ str_pad($doc_number, 5, '0', STR_PAD_LEFT) }}</h2>
+
 <table class="" style="width:100%;">
     <tr>
         <td style="vertical-align:top;">
@@ -73,24 +75,6 @@
                     </td>
                 </tr>
             </table>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>REG</th>
-                        <th>PR</th>
-                        <th>PS</th>
-                        <th>Pending</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="box" ></td>
-                        <td class="box" ></td>
-                        <td class="box" ></td>
-                        <td class="box" ></td>
-                    </tr>
-                </tbody>
-            </table>
         </td>
         <td style="vertical-align:top;">
             <table class="table table-bordered" style="height:100%;min-height:75px;">
@@ -117,6 +101,24 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>REG</th>
+                        <th>PR</th>
+                        <th>PS</th>
+                        <th>Pending</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="box" ></td>
+                        <td class="box" ></td>
+                        <td class="box" ></td>
+                        <td class="box" ></td>
                     </tr>
                 </tbody>
             </table>
