@@ -265,7 +265,10 @@ class DeliveryapiController extends \BaseController {
 
     public function boxList($field,$val){
 
-        $boxes = \Box::where($field,'=',$val)->get();
+        $boxes = \Box::where($field,'=',$val)
+                        ->where('deliveryStatus','!=','delivered')
+                        ->where('deliveryStatus','!=','returned')
+                        ->get();
 
         $bx = array();
 

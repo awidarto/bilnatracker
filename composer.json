@@ -24,7 +24,9 @@
         "xethron/migrations-generator": "dev-master",
         "dayed/auth2": "dev-master",
         "sleeping-owl/with-join": "1.*",
-        "parse/php-sdk" : "1.1.*"
+        "parse/php-sdk" : "1.1.*",
+        "passioncoder/simplecurl": "dev-master",
+        "guzzlehttp/guzzle": "6.1.0"
 	},
 	"autoload": {
 		"classmap": [

@@ -1161,8 +1161,14 @@ class IncomingController extends AdminController {
             $box->order_id = $order_id;
             $box->fulfillment_code = $fulfillment_code;
             $box->box_id = $n + 1;
+            $box->deliveryStatus = Config::get('jayon.trans_status_confirmed');
+            $box->courierStatus = Config::get('jayon.trans_cr_atmerchant');
+            $box->warehouseStatus = Config::get('jayon.trans_wh_atmerchant');
+            $box->pickupStatus = Config::get('jayon.trans_status_tobepickup');
             $box->save();
         }
+
+
     }
 
     public function getViewpics($id)
