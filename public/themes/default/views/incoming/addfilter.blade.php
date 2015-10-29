@@ -354,8 +354,7 @@
             console.log(ids);
 
             if(ids.length > 0){
-                reg = /[^A-Za-z0-9 ]/;
-                if(reason == '' || reg.test(reg) ){
+                if(reason == '' ){
 
                     alert('Please specify reason for cancelation');
                 }else{
@@ -365,6 +364,7 @@
                             reason : reason
                         },
                         function(data){
+                            $('#cancel-data-modal').modal('hide');
                             oTable.draw();
                         }
                         ,'json');
@@ -398,6 +398,7 @@
                 },
                 function(data){
                     oTable.draw();
+                    $('#cancel-data-modal').hide();
                 }
                 ,'json');
 

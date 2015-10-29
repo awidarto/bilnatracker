@@ -147,6 +147,7 @@ class DeliveryapiController extends \BaseController {
             $or->deliveryType = (isset($or->cod) && $or->cod > 0)?'COD':'DO';
 
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
+            $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, true);
             $or->boxCount = $or->numberOfPackage;
 
             $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec);
@@ -263,23 +264,32 @@ class DeliveryapiController extends \BaseController {
 
     }
 
-    public function boxList($field,$val){
+    public function boxList($field,$val, $obj = false){
 
         $boxes = \Box::where($field,'=',$val)
-                        ->where('deliveryStatus','!=','delivered')
-                        ->where('deliveryStatus','!=','returned')
+                        //->where('deliveryStatus','!=','delivered')
+                        //->where('deliveryStatus','!=','returned')
                         ->get();
 
         $bx = array();
 
-        foreach($boxes as $b){
-            $bx[] = $b->box_id;
-        }
+        if($obj == true){
+            foreach($boxes as $b){
+                $bx[] = $b->toArray();
+            }
 
-        if(count($bx) > 0){
-            return implode(',',$bx);
+            return $bx;
+
         }else{
-            return '1';
+            foreach($boxes as $b){
+                $bx[] = $b->box_id;
+            }
+
+            if(count($bx) > 0){
+                return implode(',',$bx);
+            }else{
+                return '1';
+            }
         }
 
     }
