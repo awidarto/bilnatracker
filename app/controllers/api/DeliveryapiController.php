@@ -144,7 +144,7 @@ class DeliveryapiController extends \BaseController {
 
             $or->cod = 0;
 
-            $or->deliveryType = (isset($or->cod) && $or->cod > 0)?'COD':'DO';
+            $or->deliveryType = (isset($or->deliveryType) && $or->deliveryType > 0)? $or->deliveryType :'REG';
 
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
             $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, true);
@@ -274,11 +274,32 @@ class DeliveryapiController extends \BaseController {
         $bx = array();
 
         if($obj == true){
-            foreach($boxes as $b){
-                $bx[] = $b->toArray();
+
+            $boxes = $boxes->toArray();
+
+            for($n = 0; $n < count($boxes);$n++){
+
+
+                $ob = new \stdClass();
+
+                foreach( $boxes[$n] as $k=>$v ){
+                    if($k != '_id' && $k != 'id'){
+                        $nk = $this->underscoreToCamelCase($k);
+                    }else{
+                        $nk = $k;
+                    }
+
+                    $ob->$nk = (is_null($v))?'':$v;
+                }
+
+                //print_r($ob);
+                $ob->extId = $ob->_id;
+                unset($ob->_id);
+
+                $boxes[$n] = $ob;
             }
 
-            return $bx;
+            return $boxes;
 
         }else{
             foreach($boxes as $b){
