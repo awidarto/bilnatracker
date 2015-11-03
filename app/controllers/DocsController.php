@@ -200,45 +200,6 @@ class DocsController extends AdminController {
         return parent::printGenerator();
     }
 
-    public function getPrint()
-    {
-
-        $this->fields = $this->default_heads;
-
-        //print $this->model->where('docFormat','picture')->get()->toJSON();
-
-        $this->title = 'Documents';
-
-        Breadcrumbs::addCrumb('Cost Report',URL::to( strtolower($this->controller_name) ));
-
-        //$this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl/static')->render();
-
-        //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
-
-        $this->product_info_url = strtolower($this->controller_name).'/info';
-
-        $this->printlink = strtolower($this->controller_name).'/print';
-
-        //table generator part
-
-        $this->fields = $this->default_fields;
-
-        $db = Config::get('jayon.main_db');
-
-        $this->def_order_by = 'ordertime';
-        $this->def_order_dir = 'desc';
-        $this->place_action = 'none';
-        $this->show_select = false;
-
-        $this->sql_key = 'delivery_id';
-        $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
-        $this->sql_connection = 'mysql';
-
-        $this->responder_type = 's';
-
-        return parent::printPage();
-    }
-
     public function SQL_make_join($model)
     {
         //$model->with('coa');
@@ -644,8 +605,14 @@ class DocsController extends AdminController {
 
 //<button data-rel="tooltip" type="button" class="btn btn-primary m-b-10 f-left" data-toggle="tooltip" data-placement="left" title="" data-original-title="Tooltip on left">Left</button>
         $delete = '<span class="del" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" id="'.$data['_id'].'" ><i class="fa fa-trash"></i></span>';
-        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Update" ><i class="fa fa-edit"></i></a>';
-        $actions = $edit.'<br />'.$delete;
+        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="left" title="" data-original-title="Update" ><i class="fa fa-edit"></i></a>';
+
+        $print = '<a href="'.URL::to( strtolower($this->controller_name).'/printfile/'.$data['_id']).'" type"button" target="_blank" data-rel="tooltip" data-toggle="tooltip" data-placement="left" title="" data-original-title="Print" ><i class="fa fa-print"></i></a>';
+
+        $pdf = '<a href="'.URL::to( strtolower($this->controller_name).'/pdffile/'.$data['_id']).'" type"button" target="_blank" data-rel="tooltip" data-toggle="tooltip" data-placement="left" title="" data-original-title="View PDF" >
+        <i class="fa fa-file-pdf-o"></i></a>';
+
+        $actions = $print.'<br />'.$pdf;
 
         /*
         if(!is_array($data)){

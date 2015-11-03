@@ -104,7 +104,12 @@ class CourierassignController extends AdminController {
             $ts = new MongoDate();
 
             foreach($shipments as $sh){
-                $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+                if( is_null($in['date']) || $in['date'] == ''){
+
+                }else{
+                    $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+                }
+                $sh->trip = new MongoInt64($in['trip']) ;
 
                 $sh->last_action_ts = $ts;
                 $sh->last_action = 'Reschedule';

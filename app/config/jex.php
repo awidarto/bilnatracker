@@ -31,6 +31,7 @@ return array(
         'default_heads'=>array(
             array('CREATED DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('PICK UP DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('TRIP',array('search'=>true,'style'=>'max-width:50px;','sort'=>true)),
             array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
             array('CURR POSITION',array('search'=>true,'select'=>Prefs::getPosition()->PositionToSelection('node_code','name') ,'sort'=>true)),
             array('LOGISTIC',array('search'=>true,'sort'=>true)),
@@ -63,6 +64,7 @@ return array(
         'default_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('trip',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','courier_status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -92,7 +94,7 @@ return array(
         ),
 
         'default_export_heads'=>array(
-            array('Created DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('Created Date',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('Status',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:250px;','sort'=>true)),
             array('Courier status',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:250px;','sort'=>true)),
             array('Pickup status',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:250px;','sort'=>true)),
@@ -132,6 +134,7 @@ return array(
             array('consig',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('no_sales_order',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('trip',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('consignee_olshop_orderid',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('number_OF_PACKAGE',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('cod',array('kind'=>'currency', 'query'=>'like','pos'=>'both','show'=>true)),
@@ -158,6 +161,7 @@ return array(
             array('PICK UP DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;','daterange'=>true)),
             array('CITY',array('search'=>true,'style'=>'min-width:120px;','sort'=>true)),
             //array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
+            array('TRIP',array('search'=>true,'style'=>'max-width:50px;','sort'=>true)),
             array('CURR POSITION',array('search'=>true,'select'=>Prefs::getPosition()->PositionToSelection('node_code','name') ,'sort'=>true)),
             array('LOGISTIC',array('search'=>true,'sort'=>true)),
             array('SERVICE',array('search'=>true,'sort'=>true)),
@@ -189,6 +193,7 @@ return array(
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('consignee_olshop_city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('trip',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_service',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -219,6 +224,7 @@ return array(
             array('PICK UP DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;','daterange'=>true)),
             array('DEVICE ID',array('search'=>true,'style'=>'min-width:120px;','sort'=>true)),
             //array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
+            array('TRIP',array('search'=>true,'style'=>'max-width:50px;','sort'=>true)),
             array('CURR POSITION',array('search'=>true,'select'=>Prefs::getPosition()->PositionToSelection('node_code','name') ,'sort'=>true)),
             array('LOGISTIC',array('search'=>true,'sort'=>true)),
             array('SERVICE',array('search'=>true,'sort'=>true)),
@@ -250,6 +256,7 @@ return array(
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('trip',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('logistic',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_service',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -278,6 +285,7 @@ return array(
         'default_dispatched_heads'=>array(
             array('CREATED DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
             array('PICK UP DATE',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;','daterange'=>true)),
+            array('TRIP',array('search'=>true,'sort'=>true, 'style'=>'min-width:120px;','daterange'=>true)),
             array('DEVICE NAME',array('search'=>true,'style'=>'min-width:120px;','sort'=>true)),
             array('COURIER NAME',array('search'=>true,'style'=>'min-width:120px;','sort'=>true)),
             array('STATUS',array('search'=>true,'select'=>Ks::statusoptions() ,'style'=>'min-width:175px;','sort'=>true)),
@@ -313,6 +321,7 @@ return array(
         'default_dispatched_fields'=>array(
             array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('trip',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('courier_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),

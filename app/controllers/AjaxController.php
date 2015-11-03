@@ -79,6 +79,47 @@ class AjaxController extends BaseController {
 
     }
 
+    public function postBoxlist()
+    {
+        $in = Input::get();
+
+        $ids = $in['ids'];
+
+        $shipments = Shipment::whereIn('_id', $in['ids'] )->get();
+
+        $shipments = $shipments->toArray();
+
+
+        for($i = 0; $i < count($shipments); $i++){
+
+            $pick_up_date = $shipments[$i]['pick_up_date'];
+
+            $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
+
+            $boxes = Box::where('fulfillment_code','=', $shipments[$i]['fulfillment_code'])
+                        ->where('order_id','=', $shipments[$i]['order_id'])
+                        ->where('delivery_id','=', $shipments[$i]['delivery_id'])
+                        ->get();
+
+            $boxlist = array();
+
+            foreach($boxes as $d){
+                $boxlist[$d->_id]['_id'] = $d->_id;
+                $boxlist[$d->_id]['fulfillment_code'] = $d->fulfillment_code;
+                $boxlist[$d->_id]['deliveryStatus'] = $d->deliveryStatus;
+                $boxlist[$d->_id]['courierStatus'] = $d->courierStatus;
+                $boxlist[$d->_id]['box_id'] = $d->box_id;
+            }
+
+            $shipments[$i]['box_list'] = $boxlist;
+        }
+
+
+        return Response::json( array('result'=>'OK', 'shipment'=>$shipments, 'boxes'=>$boxlist ) );
+        //print_r($caps);
+
+    }
+
     public function postReassigncourier()
     {
         //courier_name:Shia Le Beouf
@@ -242,7 +283,13 @@ class AjaxController extends BaseController {
             $ts = new MongoDate();
 
             foreach($results as $sh){
-                $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+                if( is_null($in['date']) || $in['date'] == ''){
+
+                }else{
+                    $sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+                }
+                $sh->trip = new MongoInt64($in['trip']) ;
+                //$sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
 
                 $sh->last_action_ts = $ts;
                 $sh->last_action = 'Reschedule';
@@ -283,6 +330,178 @@ class AjaxController extends BaseController {
             return Response::json(array('result'=>'OK:RESCHED' ));
         }else{
             return Response::json(array('result'=>'ERR:RESCHEDFAILED' ));
+        }
+
+    }
+
+    public function postChangestatus(){
+        $in = Input::get();
+        $results = Box::whereIn('_id', $in['box_ids'])->get();
+
+        $delivery_status = $in['delivery_status'];
+        $courier_status = $in['courier_status'];
+        $warehouse_status = $in['warehouse_status'];
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        //print_r($results->toArray());
+
+        //die();
+
+        //if($results){
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            foreach($results as $bx){
+
+                $sh = Shipment::where('delivery_id','=',$bx->delivery_id)->first();
+
+                //$sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+                if($sh){
+
+                    if(is_null($delivery_status) || $delivery_status == '' )
+                    {
+
+                    }else{
+                        $sh->status = $delivery_status;
+                    }
+
+                    if(is_null($courier_status) || $courier_status == '' )
+                    {
+
+                    }else{
+                        $sh->courier_status = $courier_status;
+                    }
+
+                    if(is_null($warehouse_status) || $warehouse_status == '' )
+                    {
+
+                    }else{
+                        $sh->warehouse_status = $warehouse_status;
+                    }
+
+                    $sh->last_action_ts = $ts;
+                    $sh->last_action = 'Change Status';
+                    $sh->last_reason = $in['reason'];
+                    $sh->save();
+
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'change_status';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $sh->toArray();
+                    $hdata['actor'] = Auth::user()->fullname;
+                    $hdata['actor_id'] = Auth::user()->_id;
+
+                    History::insert($hdata);
+
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'change_status';
+                    $sdata['reason'] = $in['reason'];
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $sh->toArray();
+                    $sdata['actor'] = Auth::user()->fullname;
+                    $sdata['actor_id'] = Auth::user()->_id;
+                    Shipmentlog::insert($sdata);
+
+                }
+
+                if(is_null($delivery_status) || $delivery_status == '' )
+                {
+
+                }else{
+                    $bx->deliveryStatus = $delivery_status;
+                }
+
+                if(is_null($courier_status) || $courier_status == '' )
+                {
+
+                }else{
+                    $bx->courierStatus = $courier_status;
+                }
+
+                if(is_null($warehouse_status) || $warehouse_status == '' )
+                {
+
+                }else{
+                    $bx->warehouseStatus = $warehouse_status;
+                }
+
+                $bx->save();
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'change_status';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'box';
+                $hdata['historyObject'] = $bx->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'change_status';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'box';
+                $sdata['object'] = $bx->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+
+                Shipmentlog::insert($sdata);
+
+                $bs = array();
+
+                $bs['boxId']= $bx->box_id;
+                $bs['datetimestamp'] = date('Y-m-d H:i:s',$ts->sec);
+                $bs['deliveryId'] = $bx->delivery_id;
+                $bs['dest'] = 'hub';
+                $bs['deviceId'] = Auth::user()->fullname;
+                $bs['deviceKey'] = Auth::user()->_id;
+                $bs['disposition'] = $sh->position;
+                $bs['extId'] = $bx->_id;
+                $bs['fulfillmentCode'] = $bx->fulfillment_code;
+                $bs['logId'] = '';
+                $bs['merchantTransId'] = $bx->order_id;
+                $bs['src'] = 'admin';
+                $bs['status']= $bx->deliveryStatus;
+                $bs['timestamp']= $ts->sec;
+                $bs['uploaded']= 0;
+                $bs['id'] = 0;
+                $bs['tableName']= 'BOX_STATUS';
+                $bs['mtimestamp']= $ts;
+
+                Boxstatus::insert($bs);
+
+                $bl = array();
+
+                $bl['boxId'] = '4';
+                $bl['datetimestamp'] = date('Y-m-d H:i:s',$ts->sec);
+                $bl['deliveryId'] = $bx->delivery_id;
+                $bl['fulfillmentCode'] = $bx->fulfillment_code;
+                $bl['merchantTransId'] = $bx->order_id;
+                $bl['status'] = 'out';
+                $bl['timestamp'] = $ts->sec;
+                $bl['id'] = 0;
+                $bl['tableName'] = 'BOX_ID';
+                $bl['mtimestamp'] = $ts;
+
+                Boxid::insert($bl);
+
+            }
+
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:CHGSTAT' ));
+        }else{
+            return Response::json(array('result'=>'ERR:CHGSTATFAILED' ));
         }
 
     }
@@ -1294,8 +1513,12 @@ class AjaxController extends BaseController {
 
         $result = array();
 
+        $city = '';
         foreach($devices as $d){
-            $result[] = array('id'=>$d,'value'=>$d,'name'=>$d,'label'=>$d);
+            if($city != $d->city){
+                $result[] = array('id'=>$d->id,'value'=>$d->city,'name'=>$d->city,'label'=>$d->city);
+                $city = $d->city;
+            }
         }
 
         return Response::json($result);

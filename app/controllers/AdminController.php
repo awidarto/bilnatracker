@@ -201,6 +201,45 @@ class AdminController extends Controller {
         return $this->pageGenerator();
     }
 
+    public function getPrintfile($_id)
+    {
+        $file = Document::find($_id);
+        if($file){
+            $body = file_get_contents($file->fullpath);
+            $controller_name = strtolower($this->controller_name);
+            $actor = (isset(Auth::user()->email))?Auth::user()->fullname.' - '.Auth::user()->email:'guest';
+            Event::fire('log.a',array($controller_name, 'print file content' ,$actor,'OK'));
+            print $body;
+        }else{
+            return View::make('shared.notfound');
+        }
+
+    }
+
+    public function getPdffile($_id)
+    {
+
+        $file = Document::find($_id);
+        if($file){
+            $body = file_get_contents($file->fullpath);
+            $controller_name = strtolower($this->controller_name);
+            $actor = (isset(Auth::user()->email))?Auth::user()->fullname.' - '.Auth::user()->email:'guest';
+            Event::fire('log.a',array($controller_name, 'print file content' ,$actor,'OK'));
+
+            return PDF::loadHTML($body)->setPaper('a4')
+                     ->setOrientation('landscape')
+                     ->setOption('margin-bottom', 0)
+                     ->stream( str_replace('html', 'pdf', $file->filename ) );
+
+        }else{
+
+        }
+
+
+        //return $this->printPage();
+    }
+
+
     public function getPrint()
     {
 
@@ -277,6 +316,23 @@ class AdminController extends Controller {
         //print_r($table);
 
         return $this->pageGenerator();
+    }
+
+    public function printThrough($_id)
+    {
+
+        $doc = Document::find($_id);
+
+
+        $actor = (isset(Auth::user()->email))?Auth::user()->fullname.' - '.Auth::user()->email:'guest';
+        Event::fire('log.a',array($controller_name, 'print through document' ,$actor,'OK'));
+
+        if($doc){
+            $content = file_get_contents($doc->fullpath);
+            print $content;
+        }else{
+            return View::make('shared.notfound');
+        }
     }
 
     public function printReport()
@@ -2070,8 +2126,8 @@ class AdminController extends Controller {
 	}
 
 	public function makeActions($data){
-        $delete = '<span class="del" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete item" id="'.$data['_id'].'" ><i class="fa fa-trash"></i> Del</span>';
-        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit item" ><i class="fa fa-edit"></i> Edit</a>';
+        $delete = '<span class="del" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="left" title="" data-original-title="Delete item" id="'.$data['_id'].'" ><i class="fa fa-trash"></i> Del</span>';
+        $edit = '<a href="'.URL::to( strtolower($this->controller_name).'/edit/'.$data['_id']).'" type"button" data-rel="tooltip" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit item" ><i class="fa fa-edit"></i> Edit</a>';
         $actions = $edit.'<br />'.$delete;
 
 		return $actions;

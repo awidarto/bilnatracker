@@ -17,6 +17,11 @@ return array(
                 'value'=>'admin@mail.co',
                 'type'=>'text'
             ),
+        'trip_per_day'=>array(
+                'label'=>'Trip per Day',
+                'value'=>'2',
+                'type'=>'numeric'
+            ),
 
         )
     );

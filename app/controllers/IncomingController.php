@@ -732,9 +732,11 @@ class IncomingController extends AdminController {
 
         $data['delivery_type'] = (isset($data['delivery_type']))?$data['delivery_type']:'REG';
 
+        $data['trip'] = (isset($data['trip']))?intval($data['trip']):1;
+
         if(isset($data['cod'])){
             if($data['cod'] == '' || is_null($data['cod'])){
-                print 'cod is null';
+                //print 'cod is null';
                 $data['cod'] = 0;
             }
             $data['cod'] = doubleval($data['cod']);
@@ -1072,13 +1074,26 @@ class IncomingController extends AdminController {
 
         date_default_timezone_set('Asia/Jakarta');
 
+        if(is_null($in['trip']) || $in['trip'] == ''){
+            $trip = 1;
+        }else{
+            $trip =  new MongoInt64($in['trip']);
+        }
+
         //print_r($results->toArray());
 
         //if($results){
             $res = false;
         //}else{
             foreach($results as $r){
-                $r->pick_up_date = new MongoDate(strtotime($in['date'])) ;
+                if(is_null($in['date']) || $in['date'] == ''){
+
+                }else{
+                    $newdate = strtotime($in['date']);
+                    $r->pick_up_date = new MongoDate($newdate) ;
+                }
+
+                $r->trip = $trip;
 
                 if($r->logistic_type == 'internal'){
                     if($r->cod == 0 || $r->cod == ''){

@@ -29,7 +29,7 @@
         {{ Former::select('node_id','Node ID')->options(Prefs::getNode()->nodeToSelection('node_code','name',false) )->class('form-control input-sm') }}
         <h5>Device Coverage</h5>
 
-        {{ Former::text('city','City Coverage')->class('form-control tag_keyword') }}
+        {{ Former::text('city','City Coverage')->class('form-control tag_city') }}
 
         {{ Former::text('district','Area Coverage')->class('form-control tag_district') }}
 

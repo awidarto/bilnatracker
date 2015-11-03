@@ -107,7 +107,6 @@ $config['trans_status_admin_courierassigned'] = 'cr_assigned';
 $config['trans_status_admin_dispatched'] = 'dispatched';
 
 
-
 $config['trans_status_tobepickup'] = 'to_be_picked_up';
 $config['trans_status_pickup'] = 'picked_up';
 $config['trans_status_pickup_canceled'] = 'canceled';
@@ -161,7 +160,6 @@ $config['delivery_status'] = array(
     $config['trans_status_admin_devassigned'] => 'Device Assigned',
     $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
     $config['trans_status_admin_dispatched'] => 'Dalam Proses Pengiriman'
-
 );
 
 $config['pickup_status'] = array(
@@ -191,6 +189,40 @@ $config['courier_status'] = array(
     $config['trans_cr_return2merchant'] => 'Kembali ke Lokasi Awal',
     $config['trans_cr_canceled'] => 'Batal',
 );
+// change status dialog
+$config['dialog_delivery_status'] = array(
+    '' => 'Tidak Ada Perubahan',
+    $config['trans_status_confirmed'] => 'Konfirm',
+    $config['trans_status_canceled'] => 'Data Batal',
+    $config['trans_status_mobile_pending'] => 'Pending',
+    $config['trans_status_mobile_delivered'] => 'Delivered',
+    $config['trans_status_mobile_return'] => 'Return'
+);
+
+$config['dialog_courier_status'] = array(
+    '' => 'Tidak Ada Perubahan',
+    $config['trans_cr_atmerchant'] => 'In Transit',
+    $config['trans_cr_inwh'] => 'Di Gudang',
+    $config['trans_cr_offcr'] => 'Belum di Kurir',
+    $config['trans_cr_oncr'] => 'Di Kurir',
+    $config['trans_cr_oncr_partial'] => 'Di Kurir Sebagian',
+    $config['trans_cr_return2wh'] => 'Kembali ke Gudang',
+    $config['trans_cr_return2merchant'] => 'Kembali ke Lokasi Awal',
+    $config['trans_cr_canceled'] => 'Batal',
+);
+
+$config['dialog_warehouse_status'] = array(
+    '' => 'Tidak Ada Perubahan',
+    $config['trans_wh_atmerchant'] => 'In Transit',
+    $config['trans_wh_pu2wh'] => 'Diterima di Gudang',
+    $config['trans_wh_inwh'] => 'Di Gudang',
+    $config['trans_wh_wh2ds'] => 'Dalam Pengiriman',
+    $config['trans_wh_ds2wh'] => 'Kembali ke Gudang',
+    $config['trans_wh_return2merchant'] => 'Kembali ke Lokasi Awal',
+    $config['trans_wh_canceled'] => 'Batal',
+);
+
+
 
 // manifest default status
 $config['manifest_default_status'] = array(

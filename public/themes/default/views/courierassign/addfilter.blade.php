@@ -36,6 +36,16 @@
     </div>
     <div class="modal-body" >
         {{ Former::text('pickup_date', 'Set Delivery Date' )->id('reschedule-pickup-date')->class('form-control d-datepicker') }}
+        <?php
+            $trip_count = Options::get('trip_per_day',1);
+            $trips = array();
+            for($t = 1; $t<= intval($trip_count);$t++ ){
+                $trips[$t] = 'Trip '.$t;
+            }
+
+        ?>
+        {{ Former::select('trip', 'Trip' )->id('trip')->options( $trips ) }}
+
         {{ Former::textarea('reason','Reason')->id('re-reschedule-reason') }}
 
     </div>
@@ -471,6 +481,7 @@
                     {
                         currentdate : currentdate,
                         date : $('#reschedule-pickup-date').val(),
+                        trip : $('#trip').val(),
                         reason : reason,
                         device : device,
                         device_name : device_name

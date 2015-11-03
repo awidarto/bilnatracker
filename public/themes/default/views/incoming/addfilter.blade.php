@@ -30,6 +30,15 @@
     </div>
     <div class="modal-body" >
         {{ Former::text('pickup_date', 'Set Pick Up Date' )->id('pickup-date')->class('form-control d-datepicker') }}
+        <?php
+            $trip_count = Options::get('trip_per_day',1);
+            $trips = array();
+            for($t = 1; $t<= intval($trip_count);$t++ ){
+                $trips[$t] = 'Trip '.$t;
+            }
+
+        ?>
+        {{ Former::select('trip', 'Trip' )->id('trip')->options( $trips ) }}
     </div>
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
@@ -327,6 +336,7 @@
                 $.post('{{ URL::to('incoming/assigndate')}}',
                     {
                         date : $('#pickup-date').val(),
+                        trip : $('#trip').val(),
                         ids : ids
                     },
                     function(data){
