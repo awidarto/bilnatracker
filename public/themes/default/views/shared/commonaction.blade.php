@@ -351,6 +351,8 @@
 
                             shipment_tab.append('<tr><td><input type="checkbox" class="box_select_order" name="ship" value="'+ val.fulfillment_code +'" ></td><td>' + val.order_id + '</td><td>' + val.fulfillment_code + '</td><td>' + val.consignee_olshop_city + '</td><td>' + val.number_of_package + '</td></tr>');
 
+                            shipment_tab.append('<tr><td>&nbsp;</td><td colspan="6">'+ val.consignee_olshop_name +'</td></tr>');
+
                             shipment_tab.append(
                                 '<tr><td>&nbsp;</td><td>Box ID</td><td>Delivery Status</td><td>Courier Status</td><td>Warehouse Status</td></tr>'
                                 );
