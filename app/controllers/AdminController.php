@@ -211,7 +211,7 @@ class AdminController extends Controller {
             Event::fire('log.a',array($controller_name, 'print file content' ,$actor,'OK'));
             print $body;
         }else{
-            return View::make('shared.notfound');
+            return $this->get_not_found_page();
         }
 
     }
@@ -232,7 +232,7 @@ class AdminController extends Controller {
                      ->stream( str_replace('html', 'pdf', $file->filename ) );
 
         }else{
-
+            return $this->get_not_found_page();
         }
 
 
@@ -3377,6 +3377,18 @@ class AdminController extends Controller {
         }
 
         return $sql['query'];
+    }
+
+    public function get_not_found_page($backlink = null)
+    {
+        if(is_null($backlink)){
+            $backlink = strtolower($this->controller_name);
+        }
+
+        return View::make('shared.notfound')
+            ->with('backlink',$backlink)
+            ->with('title','Not Found');
+
     }
 
 	public function get_action_sample(){

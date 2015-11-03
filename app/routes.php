@@ -77,6 +77,8 @@ Route::controller('deliverylog', 'DeliverylogController');
 
 Route::controller('manifest', 'ManifestController');
 Route::controller('devmanifest', 'DevmanifestController');
+Route::controller('retmanifest', 'RetmanifestController');
+
 
 Route::controller('approval', 'ApprovalController');
 Route::controller('activity', 'ActivityController');

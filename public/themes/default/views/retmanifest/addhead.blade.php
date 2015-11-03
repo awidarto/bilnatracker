@@ -12,7 +12,7 @@
 }
 
 </style>
-<h2>MDL-{{ str_pad($doc_number, 5, '0', STR_PAD_LEFT) }}</h2>
+<h2>RET-{{ str_pad($doc_number, 5, '0', STR_PAD_LEFT) }}</h2>
 
 <table class="" style="width:100%;">
     <tr>
@@ -22,7 +22,7 @@
         <td style="vertical-align:top;">
             <table class="table table-bordered">
                 <tr>
-                    <td colspan="2" style="font-weight:bold;font-size:18px;">MDL-{{ str_pad($doc_number, 5, '0', STR_PAD_LEFT) }}</td>
+                    <td colspan="2" style="font-weight:bold;font-size:18px;">RET-{{ str_pad($doc_number, 5, '0', STR_PAD_LEFT) }}</td>
                 </tr>
                 <tr>
                     <td>MANIFEST DATE / TGL TERBIT</td>

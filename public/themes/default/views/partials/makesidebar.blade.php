@@ -73,6 +73,7 @@
               <ul class="children collapse">
                 <li class="{{ sa('manifest') }}" ><a href="{{ URL::to('manifest') }}"> Manifest To Hub</a></li>
                 <li class="{{ sa('devmanifest') }}" ><a href="{{ URL::to('devmanifest') }}"> Manifest To Device</a></li>
+                <li class="{{ sa('retmanifest') }}" ><a href="{{ URL::to('retmanifest') }}"> Manifest Retur</a></li>
                 {{--
                 <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
                 --}}
