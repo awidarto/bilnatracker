@@ -280,7 +280,7 @@ class DevmanifestController extends AdminController {
 
         $this->table_raw = $tables;
 
-        if($this->print == true || $this->pdf == true){
+        if($this->print == true || $this->pdf == true || $this->xls == true ){
             return $tables;
         }else{
             return parent::reportPageGenerator();
@@ -395,6 +395,34 @@ class DevmanifestController extends AdminController {
 
         return parent::printReport();
     }
+
+    public function getGenxls()
+    {
+
+        $this->xls = true;
+
+        $tables = $this->getIndex();
+
+        $this->table_raw = $tables;
+
+        $this->report_entity = false;
+        $sequencer = new Sequence();
+        $doc_number = $sequencer->getNewId('devmanifest');
+
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addheadxls')
+                                            ->with('doc_number',$doc_number)
+                                            ->render();
+
+        $this->report_file_name = 'HUB-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_path = realpath('storage/docs').'/devmanifest/';
+
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO DEVICE / LOGISTIC';
+
+        $this->report_type = 'devmanifest';
+
+        return parent::printReport();
+    }
+
 
     public function SQL_make_join($model)
     {

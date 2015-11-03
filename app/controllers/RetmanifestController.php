@@ -274,7 +274,7 @@ class RetmanifestController extends AdminController {
 
         $this->table_raw = $tables;
 
-        if($this->print == true || $this->pdf == true){
+        if($this->print == true || $this->pdf == true || $this->xls == true ){
             return $tables;
         }else{
             return parent::reportPageGenerator();
@@ -353,7 +353,7 @@ class RetmanifestController extends AdminController {
                                             ->with('doc_number',$doc_number)
                                             ->render();
 
-        $this->report_file_name = 'HUB-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_name = 'RET-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
         $this->report_file_path = realpath('storage/docs').'/retmanifest/';
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - RETUR';
@@ -380,7 +380,34 @@ class RetmanifestController extends AdminController {
                                             ->with('doc_number',$doc_number)
                                             ->render();
 
-        $this->report_file_name = 'HUB-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_name = 'RET-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_path = realpath('storage/docs').'/retmanifest/';
+
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - RETUR';
+
+        $this->report_type = 'retmanifest';
+
+        return parent::printReport();
+    }
+
+    public function getGenxls()
+    {
+
+        $this->xls = true;
+
+        $tables = $this->getIndex();
+
+        $this->table_raw = $tables;
+
+        $this->report_entity = false;
+        $sequencer = new Sequence();
+        $doc_number = $sequencer->getNewId('retmanifest');
+
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addheadxls')
+                                            ->with('doc_number',$doc_number)
+                                            ->render();
+
+        $this->report_file_name = 'RET-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
         $this->report_file_path = realpath('storage/docs').'/retmanifest/';
 
         $this->title = 'MANIFEST PENGIRIMAN HARIAN - RETUR';

@@ -54,6 +54,8 @@ class AdminController extends Controller {
 
     public $pdflink = '';
 
+    public $xlslink = '';
+
     public $makeActions = 'makeActions';
 
     public $can_add = true;
@@ -146,6 +148,8 @@ class AdminController extends Controller {
     public $print = false;
 
     public $pdf = false;
+
+    public $xls = false;
 
     public $import_main_form = 'shared.importinput';
 
@@ -533,6 +537,7 @@ class AdminController extends Controller {
 
         $this->pdflink = (is_null($this->pdflink) || $this->pdflink == '')? strtolower($this->controller_name).'/genpdf': $this->pdflink;
 
+        $this->xlslink = (is_null($this->xlslink) || $this->xlslink == '')? strtolower($this->controller_name).'/genxls': $this->xlslink;
         /*
         if($this->report_entity == false){
 
@@ -559,6 +564,7 @@ class AdminController extends Controller {
                 ->with('crumb',$this->crumb )
                 ->with('printlink', $this->printlink )
                 ->with('pdflink', $this->pdflink )
+                ->with('xlslink', $this->xlslink )
                 ->with('can_add', $this->can_add )
                 ->with('is_report',$this->is_report)
                 ->with('report_action',$this->report_action)
@@ -613,18 +619,40 @@ class AdminController extends Controller {
 
         if($this->pdf == true){
 
-                $html->render();
+            $html->render();
 
-                $snappy = App::make('snappy.pdf');
+            $snappy = App::make('snappy.pdf');
 
-                return PDF::loadHTML($html)->setPaper('a4')
-                         ->setOrientation('landscape')->setOption('margin-bottom', 0)->stream($this->report_file_name);
+            return PDF::loadHTML($html)->setPaper('a4')
+                     ->setOrientation('landscape')->setOption('margin-bottom', 0)->stream($this->report_file_name);
+
+        }
+
+        if($this->xls == true){
+
+            $tables = $this->table_raw;
+
+            $heads = $this->additional_filter;
+
+            Excel::create($this->report_file_name, function($excel) use($tables, $heads){
+
+                $excel->sheet('New sheet', function($sheet) use($tables, $heads){
+
+                    $xls_view = 'tables.xls';
+
+                    $sheet->loadView($xls_view)
+                        ->with('heads',$heads )
+                        ->with('tables',$tables);
+
+                });
+
+            })->download('xls');
 
         }else{
 
             return $html;
-        }
 
+        }
 
     }
 
@@ -2462,6 +2490,58 @@ class AdminController extends Controller {
             ->with($sdata)
             ->save('xls',public_path().'/storage/dled');
         */
+
+        $path = Excel::create( $fname, function($excel) use ($sdata){
+                $excel->sheet('sheet1', function($sheet) use ($sdata){
+                    $sheet->fromArray($sdata);
+                });
+                    //->with($sdata);
+            })->store('xls',public_path().'/storage/dled',true);
+
+        //print_r($path);
+
+        $fp = fopen(public_path().'/storage/dled/'.$fname.'.csv', 'w');
+
+        foreach ($sdata as $fields) {
+            fputcsv($fp, $fields, ',' , '"');
+        }
+
+        fclose($fp);
+
+
+        $result = array(
+            'status'=>'OK',
+            'filename'=>$fname,
+            'urlxls'=>URL::to(strtolower($this->controller_name).'/dl/'.$path['file']),
+            'urlcsv'=>URL::to(strtolower($this->controller_name).'/csv/'.$fname.'.csv'),
+            'q'=>$lastQuery
+        );
+
+        print json_encode($result);
+
+    }
+
+    public function postReportdlxl()
+    {
+
+
+        $fname =  $this->controller_name.'_'.date('d-m-Y-H-m-s',time());
+
+        if(!is_null($this->export_output_fields) && count($this->export_output_fields) > 0){
+            $tempdata = array();
+            $sfields = $sdata[1];
+            foreach ($sdata as $sd) {
+                $temprow = array();
+                for($i = 0; $i < count($sd); $i++){
+                    if( in_array($sfields[$i], $this->export_output_fields) ){
+                        $temprow[] = $sd[$i];
+                    }
+                }
+                $tempdata[] = $temprow;
+            }
+
+            $sdata = $tempdata;
+        }
 
         $path = Excel::create( $fname, function($excel) use ($sdata){
                 $excel->sheet('sheet1', function($sheet) use ($sdata){

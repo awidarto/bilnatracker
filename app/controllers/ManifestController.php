@@ -272,7 +272,7 @@ class ManifestController extends AdminController {
 
         $this->table_raw = $tables;
 
-        if($this->print == true || $this->pdf == true){
+        if($this->print == true || $this->pdf == true || $this->xls == true ){
             return $tables;
         }else{
             return parent::reportPageGenerator();
@@ -375,6 +375,33 @@ class ManifestController extends AdminController {
         $doc_number = $sequencer->getNewId('manifest');
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addhead')
+                                            ->with('doc_number',$doc_number)
+                                            ->render();
+
+        $this->report_file_name = 'HUB-'.str_pad($doc_number, 5, '0', STR_PAD_LEFT).'.html';
+        $this->report_file_path = realpath('storage/docs').'/manifest/';
+
+        $this->title = 'MANIFEST PENGIRIMAN HARIAN - TO HUB';
+
+        $this->report_type = 'manifest';
+
+        return parent::printReport();
+    }
+
+    public function getGenxls()
+    {
+
+        $this->xls = true;
+
+        $tables = $this->getIndex();
+
+        $this->table_raw = $tables;
+
+        $this->report_entity = false;
+        $sequencer = new Sequence();
+        $doc_number = $sequencer->getNewId('manifest');
+
+        $this->additional_filter = View::make(strtolower($this->controller_name).'.addheadxls')
                                             ->with('doc_number',$doc_number)
                                             ->render();
 
@@ -743,26 +770,7 @@ class ManifestController extends AdminController {
 
     public function postDlxl()
     {
-
-        $this->heads = null;
-
-        $this->fields = array(
-            array('PERIOD',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('TRANS_DATETIME',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('TREFERENCE',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('ACCNT_CODE',array('kind'=>'text', 'callback'=>'accDesc' ,'query'=>'like','pos'=>'both','show'=>true)),
-            array('DESCRIPTN',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('TREFERENCE',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('CONV_CODE',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('AMOUNT',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('AMOUNT',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('DESCRIPTN',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
-        );
-
-        $this->def_order_dir = 'DESC';
-        $this->def_order_by = 'TRANS_DATETIME';
-
-        return parent::postDlxl();
+        return parent::postReportdlxl();
     }
 
     public function getImport(){

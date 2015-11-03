@@ -139,10 +139,6 @@ a.btn, input.btn {
 
 
             @if(isset($is_report) && $is_report == true)
-                <a class="btn btn-sm btn-info btn-transparent" id="download-xls"><i class="fa fa-download"></i> Excel</a>
-                <a class="btn btn-sm btn-info btn-transparent" id="download-csv"><i class="fa fa-download"></i> CSV</a>
-
-                {{ $report_action }}
 
                 <?php
                     $in = Input::get();
@@ -153,14 +149,26 @@ a.btn, input.btn {
                         }
                         $print_url = $printlink.'?'.implode('&', $get);
                         $pdf_url = $pdflink.'?'.implode('&', $get);
+                        $xls_url = $xlslink.'?'.implode('&', $get);
                     }else{
                         $print_url = $printlink;
                         $pdf_url = $pdflink;
+                        $xls_url = $xlslink;
                     }
                 ?>
+
+                {{--
+                    <a class="btn btn-sm btn-info btn-transparent" id="download-xls"><i class="fa fa-download"></i> Excel</a>
+                    <a class="btn btn-sm btn-info btn-transparent" id="download-csv"><i class="fa fa-download"></i> CSV</a>
+                --}}
+
+                {{ $report_action }}
+
                 <a target="_blank" href="{{ URL::to($print_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-print"></i> Print</a>
 
-                <a target="_blank" href="{{ URL::to($pdf_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-print"></i> PDF</a>
+                <a target="_blank" href="{{ URL::to($pdf_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-file-pdf-o"></i> PDF</a>
+
+                <a target="_blank" href="{{ URL::to($xls_url) }}" class="btn btn-sm btn-transparent btn-primary"><i class="fa fa-file-excel-o"></i> Excel</a>
 
             @endif
             @if(isset($is_additional_action) && $is_additional_action == true)
@@ -431,23 +439,10 @@ a.btn, input.btn {
         });
 
         $('#download-xls').on('click',function(){
-            var flt = $('thead td input, thead td select');
-            var dlfilter = [];
-
-            flt.each(function(){
-                if($(this).hasClass('datetimeinput') || $(this).hasClass('dateinput')){
-                    console.log(this.parentNode);
-                    dlfilter[parseInt(this.parentNode.id)] = this.value ;
-                }else{
-                    dlfilter[parseInt(this.id)] = this.value ;
-                }
-            });
-            console.log(dlfilter);
-
-            //var sort = oTable.fnSettings().aaSorting;
-            var sort = oTable.order();
-            console.log(sort);
-            $.post('{{ URL::to($ajaxdlxl) }}',{'filter' : dlfilter, 'sort':sort[0], 'sortdir' : sort[1] }, function(data) {
+            $.post('{{ URL::to($ajaxdlxl) }}',
+                {
+                },
+                function(data) {
                 if(data.status == 'OK'){
 
                     window.location.href = data.urlxls;
@@ -459,29 +454,15 @@ a.btn, input.btn {
         });
 
         $('#download-csv').on('click',function(){
-            var flt = $('thead td input, thead td select');
-            var dlfilter = [];
+            $.post('{{ URL::to($ajaxdlxl) }}',
+                {
+                },
+                function(data) {
+                    if(data.status == 'OK'){
 
-            flt.each(function(){
-                if($(this).hasClass('datetimeinput') || $(this).hasClass('dateinput')){
-                    console.log(this.parentNode);
-                    dlfilter[parseInt(this.parentNode.id)] = this.value ;
-                }else{
-                    dlfilter[parseInt(this.id)] = this.value ;
-                }
-            });
-            console.log(dlfilter);
+                        window.location.href = data.urlcsv;
 
-            //var sort = oTable.fnSettings().aaSorting;
-            var sort = oTable.order();
-
-            console.log(sort);
-            $.post('{{ URL::to($ajaxdlxl) }}',{'filter' : dlfilter, 'sort':sort[0], 'sortdir' : sort[1] }, function(data) {
-                if(data.status == 'OK'){
-
-                    window.location.href = data.urlcsv;
-
-                }
+                    }
             },'json');
 
             return false;
