@@ -19,6 +19,21 @@ class Prefs {
 
     }
 
+    public static function getTrip($all = false)
+    {
+        $trip_count = Options::get('trip_per_day',1);
+        if($all){
+            $trips = array(''=>'All');
+        }else{
+            $trips = array();
+        }
+        for($t = 1; $t<= intval($trip_count);$t++ ){
+            $trips[$t] = 'Trip '.$t;
+        }
+
+        return $trips;
+    }
+
     public static function getTypeselect()
     {
         return Config::get('jex.logistic_type_select');

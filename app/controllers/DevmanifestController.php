@@ -113,6 +113,9 @@ class DevmanifestController extends AdminController {
         $courier = Input::get('courier');
         $logistic = Input::get('logistic');
 
+        $position = Input::get('position');
+        $trip = Input::get('trip');
+
         $status = Input::get('status');
         $courierstatus = Input::get('courier-status');
 
@@ -186,6 +189,18 @@ class DevmanifestController extends AdminController {
 
         }else{
             $model = $model->where('logistic','=', $logistic);
+        }
+
+        if($position == '' || is_null($position) ){
+
+        }else{
+            $model = $model->where('position','=', $position);
+        }
+
+        if($trip == '' || is_null($trip) ){
+
+        }else{
+            $model = $model->where('trip','=', $trip);
         }
 
 

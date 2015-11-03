@@ -9,6 +9,10 @@
                     ->selected(Input::get('device'))
                     ->options(Prefs::getDevice()->deviceToSelection('key','identifier'))
                 }}
+            {{ Former::select('position', 'Current Position' )
+                    ->id('position')
+                    ->options( Prefs::getPosition()->PositionToSelection('node_code','name')  )
+            }}
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
             {{ Former::select('courier','Courier')
@@ -27,6 +31,10 @@
                     ->value(Input::get('date-from',$dperiod))
                     ->class('form-control input-sm p-datepicker')
                     ->id('date-from');
+            }}
+            {{ Former::select('trip', 'Trip' )
+                    ->id('trip')
+                    ->options( Prefs::getTrip(true) )
             }}
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -51,8 +59,12 @@
 
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <?php
+                $def_status = Config::get('jayon.devmanifest_default_status');
+                $def_status[] = Config::get('jayon.trans_status_mobile_return');
+            ?>
             {{ Former::text('status','Delivery Status')
-                    ->value(Input::get('status', implode(',', Config::get('jayon.manifest_default_status') ) ))
+                    ->value(Input::get('status', implode(',', $def_status ) ))
                     ->class('form-control tag_status') }}
         </div>
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">

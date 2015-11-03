@@ -8,6 +8,11 @@
                     ->selected(Input::get('device'))
                     ->options(Prefs::getDevice()->deviceToSelection('key','identifier'))
                 }}
+            {{ Former::select('position', 'Current Position' )
+                    ->id('position')
+                    ->options( Prefs::getPosition()->PositionToSelection('node_code','name')  )
+            }}
+
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
             {{ Former::select('courier','Courier')
@@ -22,10 +27,14 @@
                 }}
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-            {{ Former::text('date-from', 'Delivery Date')
+            {{ Former::text('date-from', 'Delivery Date From')
                     ->value(Input::get('date-from',$dperiod))
                     ->class('form-control input-sm p-datepicker')
                     ->id('date-from');
+            }}
+            {{ Former::select('trip', 'Trip' )
+                    ->id('trip')
+                    ->options( Prefs::getTrip(true) )
             }}
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -34,7 +43,8 @@
                     ->class('form-control input-sm p-datepicker')
                     ->id('manifest-date');
             }}
-            {{-- Former::text('date-to', 'To')
+            {{--
+                Former::text('date-to', 'Delivery Date To')
                     ->value(Input::get('date-to',$dperiod))
                     ->class('form-control input-sm p-datepicker')
                     ->id('date-to');

@@ -153,7 +153,7 @@ $config['delivery_status'] = array(
     $config['trans_status_inprogress'] => 'Dalam Proses Pengiriman',
 
     $config['trans_status_mobile_delivered'] => 'Delivered',
-    $config['trans_status_mobile_revoked'] => 'Retur',
+    $config['trans_status_mobile_return'] => 'Retur',
     $config['trans_status_mobile_departure'] => 'Berangkat',
     $config['trans_status_admin_zoned'] => 'Zone Assigned',
     $config['trans_status_admin_dated'] => 'Date Assigned',

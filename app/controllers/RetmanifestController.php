@@ -107,11 +107,14 @@ class RetmanifestController extends AdminController {
 //device=&courier=&logistic=&date-from=2015-10-24
 
         $period_from = Input::get('date-from');
-        $period_to = Input::get('acc-period-to');
+        $period_to = Input::get('date-to');
 
         $device = Input::get('device');
         $courier = Input::get('courier');
         $logistic = Input::get('logistic');
+
+        $position = Input::get('position');
+        $trip = Input::get('trip');
 
         $status = Input::get('status');
         $courierstatus = Input::get('courier-status');
@@ -132,6 +135,7 @@ class RetmanifestController extends AdminController {
 
         if($status == '' || is_null($status) ){
             $status = Config::get('jayon.manifest_default_status');
+            $status[] = Config::get('jayon.trans_status_mobile_return');
         }else{
             $status = explode(',', $status);
         }
@@ -184,6 +188,18 @@ class RetmanifestController extends AdminController {
 
         }else{
             $model = $model->where('logistic','=', $logistic);
+        }
+
+        if($position == '' || is_null($position) ){
+
+        }else{
+            $model = $model->where('position','=', $position);
+        }
+
+        if($trip == '' || is_null($trip) ){
+
+        }else{
+            $model = $model->where('trip','=', $trip);
         }
 
 

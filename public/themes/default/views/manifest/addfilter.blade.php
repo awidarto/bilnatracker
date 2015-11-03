@@ -9,6 +9,10 @@
                     ->selected(Input::get('device'))
                     ->options(Prefs::getDevice()->deviceToSelection('key','identifier'))
                 }}
+            {{ Former::select('position', 'Current Position' )
+                    ->id('position')
+                    ->options( Prefs::getPosition()->PositionToSelection('node_code','name')  )
+            }}
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
             {{ Former::select('courier','Courier')
@@ -28,6 +32,11 @@
                     ->class('form-control input-sm p-datepicker')
                     ->id('date-from');
             }}
+            {{ Former::select('trip', 'Trip' )
+                    ->id('trip')
+                    ->options( Prefs::getTrip(true) )
+            }}
+
         </div>
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
             {{ Former::text('manifest-date', 'Manifest Publish Date')
