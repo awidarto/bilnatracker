@@ -42,6 +42,16 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>TRIP</td>
+                    <td>
+                        @if(is_null(Input::get('trip')) || Input::get('trip') == '')
+                            All
+                        @else
+                            {{ Input::get('trip') }}
+                        @endif
+                    </td>
+                </tr>
+                <tr>
                     <td>DEVICE</td>
                     <td>
                         @if(is_null(Input::get('device')) || Input::get('device') == '')
@@ -69,7 +79,8 @@
                         @if(is_null(Input::get('logistic')) || Input::get('logistic') == '')
                             All
                         @else
-                            {{  Prefs::getLogistic('logistic_code',Input::get('logistic'))->name
+                            {{
+                                Prefs::getLogistic('logistic_code',Input::get('logistic'))->name
                             }}
                         @endif
                     </td>
