@@ -349,6 +349,8 @@ class AjaxController extends BaseController {
 
             $ts = new MongoDate();
 
+            $setpendingcount = array();
+
             foreach($results as $bx){
 
                 $sh = Shipment::where('delivery_id','=',$bx->delivery_id)->first();
@@ -361,6 +363,17 @@ class AjaxController extends BaseController {
 
                     }else{
                         $sh->status = $delivery_status;
+                        if($delivery_status == Config::get('jayon.trans_status_mobile_pending')){
+
+                            if(in_array($sh->delivery_id, $setpendingcount)){
+
+                            }else{
+                                $sh->pending_count = $sh->pending_count + 1;
+                            }
+
+                            $setpendingcount[] = $sh->delivery_id;
+                            $setpendingcount = array_unique($setpendingcount);
+                        }
                     }
 
                     if(is_null($courier_status) || $courier_status == '' )

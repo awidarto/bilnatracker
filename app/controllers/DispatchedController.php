@@ -960,8 +960,42 @@ class DispatchedController extends AdminController {
 
     public function statusList($data)
     {
+        $boxes = Box::where('delivery_id', $data['delivery_id'])->get();
+
+        $bcount = 0;
+        $dcount = 0;
+        $rcount = 0;
+        $pcount = 0;
+
+        if($data['status'] == Config::get('jayon.trans_status_mobile_delivered_partial') ||
+            $data['status'] == Config::get('jayon.trans_status_mobile_delivered') ||
+            $data['status'] == Config::get('jayon.trans_status_mobile_return') ||
+            $data['status'] == Config::get('jayon.trans_status_mobile_pending')
+            ){
+            foreach($boxes as $box){
+                if($box->deliveryStatus == Config::get('jayon.trans_status_mobile_delivered')){
+                    $dcount++;
+                }
+
+                if($box->deliveryStatus == Config::get('jayon.trans_status_mobile_return')){
+                    $rcount++;
+                }
+
+                if($box->deliveryStatus == Config::get('jayon.trans_status_mobile_pending')){
+                    $pcount++;
+                }
+            }
+
+            $bcount = count($boxes);
+
+            if(count($boxes) > $dcount){
+                $data['status'] = Config::get('jayon.trans_status_mobile_delivered_partial');
+            }
+
+        }
+
         $slist = array(
-            Prefs::colorizestatus($data['status'],'delivery'),
+            Prefs::colorizestatus($data['status'],'delivery').'<br />BOX:'.$bcount.' D:'.$dcount.' R:'.$rcount.' P:'.$pcount,
             Prefs::colorizestatus($data['courier_status'],'courier'),
             Prefs::colorizestatus($data['pickup_status'],'pickup'),
             //Prefs::colorizestatus($data['warehouse_status'],'warehouse')
