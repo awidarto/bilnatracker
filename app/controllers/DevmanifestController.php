@@ -250,9 +250,11 @@ class DevmanifestController extends AdminController {
 
             print_r($m->pick_up_date);
 
+            $pick_up_date = '';
+
             $tabdata[] = array(
                     array('value'=>$seq,'attr'=>''),
-                    array('value'=>date('d-m-Y',$m->pick_up_date->sec),'attr'=>''),
+                    array('value'=>$pick_up_date,'attr'=>''),
                     array('value'=>$m->consignee_olshop_city,'attr'=>''),
                     array('value'=>$m->delivery_type,'attr'=>''),
                     array('value'=>$m->logistic,'attr'=>''),
