@@ -345,13 +345,7 @@ class AjaxController extends BaseController {
 
         date_default_timezone_set('Asia/Jakarta');
 
-        //print_r($results->toArray());
-
-        //die();
-
-        //if($results){
             $res = false;
-        //}else{
 
             $ts = new MongoDate();
 
