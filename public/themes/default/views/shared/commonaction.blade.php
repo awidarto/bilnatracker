@@ -2,7 +2,6 @@
 <a class="btn btn-transparent btn-info btn-sm" id="reassign_to_device"><i class="fa fa-phone-square"></i> Reassign Device</a>
 <a class="btn btn-transparent btn-info btn-sm" id="reassign_to_courier"><i class="fa fa-user"></i> Reassign Courier</a>
 <br />
-<a class="btn btn-transparent btn-info btn-sm" id="change_status"><i class="fa fa-arrows"></i> Change Shipment Status</a>
 
 
 <div id="reassign-courier-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -71,44 +70,6 @@
     <div class="modal-footer">
         <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
         <button class="btn btn-primary" id="do-device-reassign">Reassign Device</button>
-    </div>
-</div>
-
-<div id="change-status-modal" class="modal fade large" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="myModalLabel">Change Status Selected</span></h3>
-    </div>
-    <div class="modal-body" >
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                {{ Former::textarea('reason','Reason')->id('re-status-reason') }}
-                {{ Former::select('Delivery Status','delivery_status')->options(Config::get('jayon.dialog_delivery_status'))->id('delivery_status') }}
-                {{ Former::select('Courier Status','courier_status')->options(Config::get('jayon.dialog_courier_status'))->id('courier_status') }}
-                {{ Former::select('Hub Status','warehouse_status')->options(Config::get('jayon.dialog_warehouse_status'))->id('warehouse_status') }}
-                {{ Former::select('Position','position')->options(Prefs::getPosition()->PositionToSelection('node_code','name',true,'Tidak Ada Perubahan'))->id('chg_position') }}
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                <table id="order_shipment_list">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="box_select_all" /></th>
-                            <th>Order ID</th>
-                            <th>Fulfillment</th>
-                            <th>City</th>
-                            <th>Package Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <td colspan="3">Loading shipment data...</td>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-        <button class="btn btn-primary" id="do-change-status">Set Status</button>
     </div>
 </div>
 
@@ -331,13 +292,13 @@
                         $.each(box_list, function(index, val) {
                             $('table#order_box_list tbody').prepend('<tr><td><input type="checkbox" name="box_' + val.key + '_' + val.box_id + '" class="boxselect" value="' + val.key + '" ></td><td><b>' + val.box_id + '</b></td><td>' + val.deliveryStatus + '</td><td></td></tr>' + '<tr><td>&nbsp;</td><td>' + val.deliveryStatus + '</td><td>' + val.courierStatus + '</td><td>' + val.warehouseStatus + '</td></tr>');
                         });
-*/
+                        */
                         var shipment_tab = $('table#order_shipment_list tbody');
 
                         $.each(shipment_list, function(index, val) {
 
 
-//' + box_tab_list.html() + '</td></tr>
+                        //' + box_tab_list.html() + '</td></tr>
                             var blist = $('<table><thead><tr>'
                                             + '<th></th>'
                                             + '<th>Box Id</th>'
@@ -508,17 +469,6 @@
 
             return ids;
         }
-
-        function getSelectedBox(){
-            var props = $('.boxselect:checked');
-            var ids = [];
-            $.each(props, function(index){
-                ids.push( $(this).val() );
-            });
-
-            return ids;
-        }
-
 
     });
 </script>
