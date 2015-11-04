@@ -748,7 +748,7 @@ class IncomingController extends AdminController {
         $data['order_id'] = $data['no_sales_order'];
         $data['fulfillment_code'] = $data['consignee_olshop_orderid'];
 
-        $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package']);
+        $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package'], $data['position'] );
 
         $data['status'] = Config::get('jayon.trans_status_confirmed');
         $data['logistic_status'] = '';
@@ -769,6 +769,7 @@ class IncomingController extends AdminController {
         unset($data['isHead']);
 
         return $data;
+
     }
 
     public function makeActions($data)
@@ -801,6 +802,7 @@ class IncomingController extends AdminController {
         $actions = View::make('shared.action')
                         ->with('actions',array($dl))
                         ->render();
+        $actions = '';
         return $actions;
     }
 
@@ -1169,13 +1171,14 @@ class IncomingController extends AdminController {
     }
 
 
-    public function updateBox($delivery_id, $order_id, $fulfillment_code, $box_count){
+    public function updateBox($delivery_id, $order_id, $fulfillment_code, $box_count, $position){
         for($n = 0; $n < $box_count; $n++){
             $box = new Box();
             $box->delivery_id = $delivery_id;
             $box->order_id = $order_id;
             $box->fulfillment_code = $fulfillment_code;
             $box->box_id = $n + 1;
+            $box->position = $position;
             $box->deliveryStatus = Config::get('jayon.trans_status_confirmed');
             $box->courierStatus = Config::get('jayon.trans_cr_atmerchant');
             $box->warehouseStatus = Config::get('jayon.trans_wh_atmerchant');

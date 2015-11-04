@@ -3240,7 +3240,10 @@ class AdminController extends Controller {
             $sessobj->sessId = $rstring;
             $sessobj->save();
 
+
             for($i = $firstdata; $i < count($imp);$i++){
+
+                $check = '';
 
                 $rowitem = $imp[$i];
 
@@ -3253,6 +3256,7 @@ class AdminController extends Controller {
                     $hkey = strtolower($headrow[$k]);
                     $sessobj->{ $hkey } = $this->prepImportItem($headrow[$k],$v,$rowitem);
                     $rowtemp[$hkey] = $v;
+                    $check .= $v;
                 }
 
                 if(count($aux_form_data) > 0){
@@ -3266,7 +3270,12 @@ class AdminController extends Controller {
 
                 $sessobj->sessId = $rstring;
                 $sessobj->isHead = 0;
-                $sessobj->save();
+
+                if(trim($check) == ''){
+
+                }else{
+                    $sessobj->save();
+                }
 
             }
 
@@ -3389,7 +3398,9 @@ class AdminController extends Controller {
 
                     $rowitem = $this->beforeImportCommit($rowitem);
 
-                    $this->model->insert($rowitem);
+                    if($rowitem){
+                        $this->model->insert($rowitem);
+                    }
                 }
 
 
@@ -3403,8 +3414,9 @@ class AdminController extends Controller {
 
                 $rowitem = $this->beforeImportCommit($rowitem);
 
-
-                $this->model->insert($rowitem);
+                if($rowitem){
+                    $this->model->insert($rowitem);
+                }
 
             }
 
