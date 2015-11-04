@@ -286,10 +286,10 @@ class Prefs {
         return new self;
     }
 
-    public function PositionToSelection($value, $label, $all = true)
+    public function PositionToSelection($value, $label, $all = true, $all_label = 'Select Position')
     {
         if($all){
-            $ret = array(''=>'Select Position');
+            $ret = array(''=>$all_label);
         }else{
             $ret = array();
         }

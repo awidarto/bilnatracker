@@ -341,6 +341,7 @@ class AjaxController extends BaseController {
         $delivery_status = $in['delivery_status'];
         $courier_status = $in['courier_status'];
         $warehouse_status = $in['warehouse_status'];
+        $position = $in['position'];
 
         date_default_timezone_set('Asia/Jakarta');
 
@@ -380,6 +381,13 @@ class AjaxController extends BaseController {
 
                     }else{
                         $sh->warehouse_status = $warehouse_status;
+                    }
+
+                    if(is_null($position) || $position == '' )
+                    {
+
+                    }else{
+                        $sh->position = $position;
                     }
 
                     $sh->last_action_ts = $ts;
@@ -429,6 +437,13 @@ class AjaxController extends BaseController {
 
                 }else{
                     $bx->warehouseStatus = $warehouse_status;
+                }
+
+                if(is_null($position) || $position == '' )
+                {
+
+                }else{
+                    $bx->position = $position;
                 }
 
                 $bx->save();

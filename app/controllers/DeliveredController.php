@@ -723,7 +723,6 @@ class DeliveredController extends AdminController {
         $history = '<a href="'.URL::to('advertiser/history/'.$data['_id']).'"><i class="fa fa-clock-o"></i> History</a>';
 
         $actions = $stat.'<br />'.$edit.'<br />'.$delete;
-        */
         $delete = '<span class="del action" id="'.$data['delivery_id'].'" >Delete</span>';
         $edit = '<a href="'.URL::to('advertiser/edit/'.$data['delivery_id']).'">Update</a>';
         $dl = '<a href="'.URL::to('brochure/dl/'.$data['delivery_id']).'" target="new">Download</a>';
@@ -731,6 +730,9 @@ class DeliveredController extends AdminController {
         $actions = View::make('shared.action')
                         ->with('actions',array($dl))
                         ->render();
+        */
+
+        $actions = '';
         return $actions;
     }
 
