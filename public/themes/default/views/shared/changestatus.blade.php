@@ -43,7 +43,7 @@
     $(document).ready(function(){
                 /* box status */
         $('#change_status').on('click',function(e){
-            var ids = getSelected();
+            var ids = getSelectedChg();
 
             if(ids.length == 0){
                 alert('Please select item first');
@@ -55,7 +55,7 @@
         });
 
         $('#change-status-modal').on('shown',function(){
-            var ids = getSelected();
+            var ids = getSelectedChg();
 
             $.post('{{ URL::to('ajax/boxlist')}}',
                 {
@@ -200,6 +200,16 @@
 
         $('#box_select_order').on('click',function(){
         });
+
+        function getSelectedChg(){
+            var props = $('.selector:checked');
+            var ids = [];
+            $.each(props, function(index){
+                ids.push( $(this).val() );
+            });
+
+            return ids;
+        }
 
         function getSelectedBox(){
             var props = $('.boxselect:checked');
