@@ -244,9 +244,17 @@ class RetmanifestController extends AdminController {
 
         foreach ($actualresult as $m) {
 
+            if($m->pick_up_date instanceOf MongoDate){
+                $pick_up_date = date('Y-m-d H:i:s', $m->pick_up_date->sec );
+                $dattr = '';
+            }else{
+                $pick_up_date = $m->pick_up_date;
+                $dattr = 'class="red"';
+            }
+
             $tabdata[] = array(
                     array('value'=>$seq,'attr'=>''),
-                    array('value'=>date('d-m-Y',$m->pick_up_date->sec),'attr'=>''),
+                    array('value'=>$pick_up_date,'attr'=>$dattr),
                     array('value'=>$m->consignee_olshop_city,'attr'=>''),
                     array('value'=>$m->delivery_type,'attr'=>''),
                     array('value'=>$m->logistic,'attr'=>''),
