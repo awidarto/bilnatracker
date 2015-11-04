@@ -248,6 +248,8 @@ class DevmanifestController extends AdminController {
 
         foreach ($actualresult as $m) {
 
+            print_r($m->pick_up_date);
+
             $tabdata[] = array(
                     array('value'=>$seq,'attr'=>''),
                     array('value'=>date('d-m-Y',$m->pick_up_date->sec),'attr'=>''),
