@@ -321,9 +321,10 @@ class DeliveryapiController extends \BaseController {
         $last = \Boxstatus::where('deliveryId','=',$delivery_id)
                                 ->where('deviceKey','=',$device_key)
                                 ->where('fulfillmentCode'.'=',$fulfillment_code)
-                                ->where('boxId','=',$box_id)
+                                ->where('boxId','=',strval($box_id))
                                 ->orderBy('mtimestamp', 'desc')
                                 ->first();
+        //print_r($last);
 
         if($last){
             return $last->status;
