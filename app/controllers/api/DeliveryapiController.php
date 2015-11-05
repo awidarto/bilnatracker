@@ -146,8 +146,8 @@ class DeliveryapiController extends \BaseController {
 
             $or->deliveryType = (isset($or->deliveryType) && $or->deliveryType > 0)? $or->deliveryType :'REG';
 
-            $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
-            $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, true);
+            $or->boxList = $this->boxList('delivery_id',$or->deliveryId, $key);
+            $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, $key , true);
             $or->boxCount = $or->numberOfPackage;
 
             $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec);
@@ -264,7 +264,7 @@ class DeliveryapiController extends \BaseController {
 
     }
 
-    public function boxList($field,$val, $obj = false){
+    public function boxList($field,$val, $device_key ,$obj = false){
 
         $boxes = \Box::where($field,'=',$val)
                         //->where('deliveryStatus','!=','delivered')
@@ -296,6 +296,8 @@ class DeliveryapiController extends \BaseController {
                 $ob->extId = $ob->_id;
                 unset($ob->_id);
 
+                $ob->status = $this->lastBoxStatus($device_key, $ob->deliveryId, $ob->fulfillmentCode ,$ob->boxId);
+
                 $boxes[$n] = $ob;
             }
 
@@ -313,6 +315,21 @@ class DeliveryapiController extends \BaseController {
             }
         }
 
+    }
+
+    public function lastBoxStatus($device_key, $delivery_id, $fulfillment_code ,$box_id){
+        $last = \Boxstatus::where('deliveryId','=',$delivery_id)
+                                ->where('deviceKey','=',$device_key)
+                                ->where('fulfillmentCode'.'=',$fulfillment_code)
+                                ->where('boxId','=',$box_id)
+                                ->orderBy('mtimestamp', 'desc')
+                                ->first();
+
+        if($last){
+            return $last->status;
+        }else{
+            return 'out';
+        }
     }
 
 }

@@ -1171,7 +1171,7 @@ class IncomingController extends AdminController {
     }
 
 
-    public function updateBox($delivery_id, $order_id, $fulfillment_code, $box_count, $position){
+    public function be($delivery_id, $order_id, $fulfillment_code, $box_count, $position){
         for($n = 0; $n < $box_count; $n++){
             $box = new Box();
             $box->delivery_id = $delivery_id;
