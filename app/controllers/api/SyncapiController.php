@@ -82,6 +82,7 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
+        $appname = Input::get('app');
         //$user = \Apiauth::user($key);
 
         $user = \Device::where('key','=',$key)->first();
@@ -116,7 +117,7 @@ class SyncapiController extends \Controller {
                     foreach($j as $k=>$v){
                         $bs[$this->camel_to_underscore($k)] = $v;
                     }*/
-
+                    $j['appname'] = $appname;
                     \Boxstatus::insert($j);
                     $result[] = array('status'=>'OK', 'timestamp'=>time(), 'message'=>$j['logId'] );
                 }
@@ -401,6 +402,8 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
+        $appname = Input::get('app');
+
         //$user = \Apiauth::user($key);
 
         $user = \Device::where('key','=',$key)->first();
@@ -428,6 +431,8 @@ class SyncapiController extends \Controller {
                 foreach ($j as $k=>$v) {
                     $blog->{$k} = $v;
                 }
+
+                $blog->appname = $appname;
 
                 $blog->mtimestamp = new \MongoDate(time());
 
