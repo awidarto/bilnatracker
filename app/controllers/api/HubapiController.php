@@ -135,6 +135,7 @@ class HubapiController extends \BaseController {
             $or->deliveryType = (isset($or->cod) && $or->cod > 0)?'COD':'DO';
 
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId);
+            $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, $key , true);
             $or->boxCount = $or->numberOfPackage;
 
             $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec);
@@ -251,22 +252,73 @@ class HubapiController extends \BaseController {
 
     }
 
-    public function boxList($field,$val){
+    public function boxList($field,$val, $device_key ,$obj = false){
 
-        $boxes = \Box::where($field,'=',$val)->get();
+        $boxes = \Box::where($field,'=',$val)
+                        //->where('deliveryStatus','!=','delivered')
+                        //->where('deliveryStatus','!=','returned')
+                        ->get();
 
         $bx = array();
 
-        foreach($boxes as $b){
-            $bx[] = $b->box_id;
-        }
+        if($obj == true){
 
-        if(count($bx) > 0){
-            return implode(',',$bx);
+            $boxes = $boxes->toArray();
+
+            for($n = 0; $n < count($boxes);$n++){
+
+
+                $ob = new \stdClass();
+
+                foreach( $boxes[$n] as $k=>$v ){
+                    if($k != '_id' && $k != 'id'){
+                        $nk = $this->underscoreToCamelCase($k);
+                    }else{
+                        $nk = $k;
+                    }
+
+                    $ob->$nk = (is_null($v))?'':$v;
+                }
+
+                //print_r($ob);
+                $ob->extId = $ob->_id;
+                unset($ob->_id);
+
+                $ob->status = $this->lastBoxStatus($device_key, $ob->deliveryId, $ob->fulfillmentCode ,$ob->boxId);
+
+                $boxes[$n] = $ob;
+            }
+
+            return $boxes;
+
         }else{
-            return '1';
+            foreach($boxes as $b){
+                $bx[] = $b->box_id;
+            }
+
+            if(count($bx) > 0){
+                return implode(',',$bx);
+            }else{
+                return '1';
+            }
         }
 
+    }
+
+    public function lastBoxStatus($device_key, $delivery_id, $fulfillment_code ,$box_id){
+        $last = \Boxstatus::where('deliveryId','=',$delivery_id)
+                                ->where('deviceKey','=',$device_key)
+                                //->where('fulfillmentCode'.'=',$fulfillment_code)
+                                ->where('boxId','=',strval($box_id))
+                                ->orderBy('mtimestamp', 'desc')
+                                ->first();
+        //print_r($last);
+
+        if($last){
+            return $last->status;
+        }else{
+            return 'out';
+        }
     }
 
 }

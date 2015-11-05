@@ -82,7 +82,7 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
-        $appname = Input::get('app');
+        $appname = (\Input::has('app'))?\Input::get('app'):'app.name';
         //$user = \Apiauth::user($key);
 
         $user = \Device::where('key','=',$key)->first();
@@ -402,7 +402,7 @@ class SyncapiController extends \Controller {
 
         $key = \Input::get('key');
 
-        $appname = Input::get('app');
+        $appname = (\Input::has('app'))?\Input::get('app'):'app.name';
 
         //$user = \Apiauth::user($key);
 
