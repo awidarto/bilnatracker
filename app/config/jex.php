@@ -5,6 +5,8 @@
 
 
 return array(
+        'tracker_app'=>'com.kickstartlab.android.mctracker',
+        'hub_app'=>'com.kickstartlab.android.mcwarehouse',
         'buckets'=>array(
                 'incoming'=>'Incoming',
                 'dispatcher'=>'Dispatcher',
