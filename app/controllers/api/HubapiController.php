@@ -132,7 +132,7 @@ class HubapiController extends \BaseController {
             $or->extId = $or->_id;
             unset($or->_id);
 
-            $or->deliveryType = (isset($or->cod) && $or->cod > 0)?'COD':'DO';
+            $or->deliveryType = (isset($or->deliveryType) && $or->deliveryType > 0)? $or->deliveryType :'REG';
 
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId, $key);
             $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, $key , true);
