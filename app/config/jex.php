@@ -422,6 +422,28 @@ return array(
 
         ),
 
+        'default_log_heads'=>array(
+            array('TIMESTAMP',array('search'=>true,'sort'=>true, 'style'=>'min-width:90px;','daterange'=>true)),
+            array('DELIVERY ID',array('search'=>true,'sort'=>true, 'style'=>'')),
+            array('FULFILLMENT ID',array('search'=>true,'sort'=>true, 'style'=>'')),
+            array('TYPE',array('search'=>true,'sort'=>true, 'style'=>'')),
+            array('ACTION',array('search'=>true,'sort'=>true, 'style'=>'')),
+            array('REASON',array('search'=>true,'style'=>'','sort'=>true)),
+            array('ACTOR',array('search'=>true,'style'=>'','sort'=>true)),
+        ),
+
+
+        'default_log_fields'=>array(
+            array('timestamp',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('object.delivery_id',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('object.fulfillment_code',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('objectType',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('action',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('reason',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('actor',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true))
+        ),
+
+
         'default_awb_heads'=>array(
             array('AWB',array('search'=>true,'sort'=>true)),
             array('CONS CUST ID',array('search'=>true,'sort'=>true)),
