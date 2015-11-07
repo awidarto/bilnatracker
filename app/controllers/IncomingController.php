@@ -104,6 +104,7 @@ class IncomingController extends AdminController {
                                         ->with('importawburl','incoming/importawb')
                                         ->render();
         $this->additional_filter .= View::make('shared.cancelaction')->render();
+        $this->additional_filter .= View::make('shared.changelogistic')->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 

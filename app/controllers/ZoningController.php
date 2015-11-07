@@ -103,6 +103,8 @@ class ZoningController extends AdminController {
 
         $this->additional_filter .= View::make('shared.cancelaction')->render();
 
+        $this->additional_filter .= View::make('shared.changelogistic')->render();
+
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
         $this->product_info_url = strtolower($this->controller_name).'/info';
@@ -901,6 +903,9 @@ class ZoningController extends AdminController {
             $ts = new MongoDate();
 
             foreach($shipments as $sh){
+
+                $pre = clone $sh;
+
                 if( is_null($in['date']) || $in['date'] == ''){
 
                 }else{
@@ -935,6 +940,7 @@ class ZoningController extends AdminController {
                 $sdata['reason'] = $in['reason'];
                 $sdata['objectType'] = 'shipment';
                 $sdata['object'] = $sh->toArray();
+                $sdata['preObject'] = $pre->toArray();
                 $sdata['actor'] = Auth::user()->fullname;
                 $sdata['actor_id'] = Auth::user()->_id;
                 Shipmentlog::insert($sdata);

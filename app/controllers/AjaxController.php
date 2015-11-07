@@ -142,6 +142,8 @@ class AjaxController extends BaseController {
 
         foreach($shipments as $sh){
 
+            $pre = clone $sh;
+
             $dev = Shipment::where('courier_id','=', $in['courier_id'])
                         ->where('pick_up_date','=',$sh->pick_up_date)
                         ->orderBy('pick_up_date','desc')
@@ -185,6 +187,7 @@ class AjaxController extends BaseController {
             $sdata['reason'] = $in['reason'];
             $sdata['objectType'] = 'shipment';
             $sdata['object'] = $sh->toArray();
+            $sdata['preObject'] = $pre->toArray();
             $sdata['actor'] = Auth::user()->fullname;
             $sdata['actor_id'] = Auth::user()->_id;
             Shipmentlog::insert($sdata);
@@ -214,6 +217,8 @@ class AjaxController extends BaseController {
 
 
         foreach($shipments as $sh){
+
+            $pre = clone $sh;
 
             $cr = Shipment::where('device_key','=', $in['device'])
                     ->where('pick_up_date','=',$sh->pick_up_date)
@@ -260,6 +265,7 @@ class AjaxController extends BaseController {
             $sdata['reason'] = $in['reason'];
             $sdata['objectType'] = 'shipment';
             $sdata['object'] = $sh->toArray();
+            $sdata['preObject'] = $pre->toArray();
             $sdata['actor'] = Auth::user()->fullname;
             $sdata['actor_id'] = Auth::user()->_id;
             Shipmentlog::insert($sdata);
@@ -285,6 +291,9 @@ class AjaxController extends BaseController {
             $ts = new MongoDate();
 
             foreach($results as $sh){
+
+                $pre = clone $sh;
+
                 if( is_null($in['date']) || $in['date'] == ''){
 
                 }else{
@@ -319,6 +328,7 @@ class AjaxController extends BaseController {
                 $sdata['reason'] = $in['reason'];
                 $sdata['objectType'] = 'shipment';
                 $sdata['object'] = $sh->toArray();
+                $sdata['preObject'] = $pre->toArray();
                 $sdata['actor'] = Auth::user()->fullname;
                 $sdata['actor_id'] = Auth::user()->_id;
                 Shipmentlog::insert($sdata);
@@ -355,10 +365,14 @@ class AjaxController extends BaseController {
 
             foreach($results as $bx){
 
+                $prebx = clone $bx;
+
                 $sh = Shipment::where('delivery_id','=',$bx->delivery_id)->first();
 
                 //$sh->pick_up_date = new MongoDate(strtotime($in['date'])) ;
                 if($sh){
+
+                    $pre = clone $sh;
 
                     if(is_null($delivery_status) || $delivery_status == '' )
                     {
@@ -421,6 +435,7 @@ class AjaxController extends BaseController {
                     $sdata['reason'] = $in['reason'];
                     $sdata['objectType'] = 'shipment';
                     $sdata['object'] = $sh->toArray();
+                    $sdata['preObject'] = $pre->toArray();
                     $sdata['actor'] = Auth::user()->fullname;
                     $sdata['actor_id'] = Auth::user()->_id;
                     Shipmentlog::insert($sdata);
@@ -474,6 +489,7 @@ class AjaxController extends BaseController {
                 $sdata['reason'] = $in['reason'];
                 $sdata['objectType'] = 'box';
                 $sdata['object'] = $bx->toArray();
+                $sdata['preObject'] = $prebx->toArray();
                 $sdata['actor'] = Auth::user()->fullname;
                 $sdata['actor_id'] = Auth::user()->_id;
 
@@ -530,6 +546,134 @@ class AjaxController extends BaseController {
 
     }
 
+    public function postChangelogistic(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        if( is_null($in['logistic']) || $in['logistic'] == ''){
+            $logistic = false;
+        }else{
+            $logistic = Logistic::where('logistic_code','=',$in['logistic'])->first();
+            if($logistic){
+
+            }else{
+                $logistic = false;
+            }
+        }
+
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            if($logistic){
+
+                foreach($results as $sh){
+
+                    $pre = clone $sh;
+
+                    if($sh->logistic == $logistic->logistic_code){
+                        // no changes
+                    }else{
+
+                        if($logistic->type == 'external'){
+                            $sh->awb = '';
+                            $sh->bucket = Config::get('jayon.bucket_incoming');
+
+                            $sh->status = Config::get('jayon.trans_status_confirmed');
+                            $sh->logistic_status = '';
+                            $sh->courier_status = Config::get('jayon.trans_cr_atmerchant');
+                            $sh->warehouse_status = Config::get('jayon.trans_wh_atmerchant');
+                            $sh->pickup_status = Config::get('jayon.trans_status_tobepickup');
+
+                            //'consig' => '001',
+
+                            //$sh->courier_id = '';
+                            //$sh->courier_name = '';
+                            //$sh->courier_status = 'at_initial_node';
+                            //$sh->device_id = '';
+                            //$sh->device_key = '';
+                            //$sh->device_name = '';
+
+                        }else{
+                            $sh->awb = $sh->delivery_id;
+                            $sh->bucket = Config::get('jayon.bucket_dispatcher');
+                            $sh->status = Config::get('jayon.trans_status_admin_dated');
+
+                            $sh->courier_id = '';
+                            $sh->courier_name = '';
+                            $sh->courier_status = 'at_initial_node';
+                            $sh->device_id = '';
+                            $sh->device_key = '';
+                            $sh->device_name = '';
+
+                        }
+
+                        $sh->consignee_olshop_cust = $logistic->consignee_olshop_cust;
+                        //$sh->consignee_olshop_inst_amt = '0';
+                        //$sh->consignee_olshop_service = 'REG';
+
+                        $sh->logistic = $logistic->logistic_code;
+                        $sh->logistic_type = $logistic->type;
+
+                        $sh->last_action_ts = $ts;
+                        $sh->last_action = 'Change Logistic';
+                        $sh->last_reason = $in['reason'];
+                        $sh->save();
+
+                        //print_r(Auth::user());
+
+
+
+                    }
+
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'change_logistic';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $sh->toArray();
+                    $hdata['actor'] = Auth::user()->fullname;
+                    $hdata['actor_id'] = Auth::user()->_id;
+
+                    //print_r($hdata);
+
+                    History::insert($hdata);
+
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'change_logistic';
+                    $sdata['reason'] = $in['reason'];
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $sh->toArray();
+                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['actor'] = Auth::user()->fullname;
+                    $sdata['actor_id'] = Auth::user()->_id;
+                    Shipmentlog::insert($sdata);
+
+                }
+
+                $res = true;
+
+            }
+
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:CHGLOGISTIC' ));
+        }else{
+            return Response::json(array('result'=>'ERR:CHGLOGISTICFAILED' ));
+        }
+
+    }
+
+
     public function postCanceldata(){
         $in = Input::get();
         $results = Shipment::whereIn('_id', $in['ids'])->get();
@@ -545,6 +689,9 @@ class AjaxController extends BaseController {
             $ts = new MongoDate();
 
             foreach($results as $sh){
+
+                $pre = clone $sh;
+
                 $sh->status = Config::get('jayon.trans_status_canceled') ;
 
                 $sh->last_action_ts = $ts;
@@ -573,6 +720,7 @@ class AjaxController extends BaseController {
                 $sdata['reason'] = $in['reason'];
                 $sdata['objectType'] = 'shipment';
                 $sdata['object'] = $sh->toArray();
+                $sdata['preObject'] = $pre->toArray();
                 $sdata['actor'] = Auth::user()->fullname;
                 $sdata['actor_id'] = Auth::user()->_id;
                 Shipmentlog::insert($sdata);
