@@ -198,7 +198,11 @@ class ManifestController extends AdminController {
         if($trip == '' || is_null($trip) ){
 
         }else{
-            $model = $model->where('trip','=', $trip);
+            $model = $model->where(function($t) use($trip){
+                $t->where('trip','=', intval($trip))
+                    ->orWhere('trip','=',strval($trip));
+            });
+
         }
 
         $actualresult = $model->get();

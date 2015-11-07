@@ -222,6 +222,9 @@
             var date = $('input[name=date_select]:checked').val();
             var city = $('input[name=city_select]:checked').val();
 
+            $('table#shipment_list tbody').html('<tr><td colspan="3">Loading shipment data...</td></tr>');
+            $('table#device_list tbody').html('<tr><td colspan="3">Loading available devices...</td></tr>');
+
 
             $.post('{{ URL::to($ajaxdeviceurl)}}',
                 {

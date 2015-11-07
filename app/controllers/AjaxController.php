@@ -62,7 +62,9 @@ class AjaxController extends BaseController {
             $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
 
             $city = $shipments[$i]['consignee_olshop_city'];
-            $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))->get();
+            $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))
+                                ->where('is_on','=',strval(1))
+                                ->get();
 
             foreach($devices as $d){
                 $caps[$d->key]['identifier'] = $d->identifier;
@@ -1553,7 +1555,9 @@ class AjaxController extends BaseController {
 
         $q = '%'.$q.'%';
 
-        $devices = Device::where('identifier','like',$q)->get();
+        $devices = Device::where('identifier','like',$q)
+                        ->where('is_on','=',strval(1))
+                        ->get();
 
         $result = array();
 
@@ -1570,7 +1574,9 @@ class AjaxController extends BaseController {
 
         $q = '%'.$q.'%';
 
-        $couriers = Courier::where('name','like',$q)->get();
+        $couriers = Courier::where('name','like',$q)
+                            ->where('status','=','active')
+                            ->get();
 
         $result = array();
 

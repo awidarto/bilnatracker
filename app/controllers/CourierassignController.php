@@ -285,11 +285,13 @@ class CourierassignController extends AdminController {
 
         $this->place_action = 'first';
 
-        $this->show_select = false;
+        $this->show_select = true;
 
         Breadcrumbs::addCrumb('Shipment Order',URL::to( strtolower($this->controller_name) ));
 
         $this->additional_filter = View::make(strtolower($this->controller_name).'.addfilter')->with('submit_url','gl')->render();
+
+        $this->additional_filter .= View::make('shared.cancelaction')->render();
 
         //$this->js_additional_param = "aoData.push( { 'name':'acc-period-to', 'value': $('#acc-period-to').val() }, { 'name':'acc-period-from', 'value': $('#acc-period-from').val() }, { 'name':'acc-code-from', 'value': $('#acc-code-from').val() }, { 'name':'acc-code-to', 'value': $('#acc-code-to').val() }, { 'name':'acc-company', 'value': $('#acc-company').val() } );";
 
@@ -325,7 +327,7 @@ class CourierassignController extends AdminController {
         $this->def_order_by = 'ordertime';
         $this->def_order_dir = 'desc';
         $this->place_action = 'first';
-        $this->show_select = false;
+        $this->show_select = true;
 
         $this->sql_key = 'delivery_id';
         $this->sql_table_name = Config::get('jayon.incoming_delivery_table');
@@ -533,21 +535,21 @@ class CourierassignController extends AdminController {
 
                 $extra = $rows[$i]['extra']->toArray();
 
-                if($rows[$i][3] != $date){
-                    $date = $rows[$i][3];
-                    $rows[$i][3] = '<input type="radio" name="date_select" value="'.$rows[$i][3].'" class="date_select form-control" /> '.$rows[$i][3];
+                if($rows[$i][4] != $date){
+                    $date = $rows[$i][4];
+                    $rows[$i][4] = '<input type="radio" name="date_select" value="'.$rows[$i][4].'" class="date_select form-control" /> '.$rows[$i][4];
                 }else{
-                    $rows[$i][3] = '';
+                    $rows[$i][4] = '';
                 }
 
 
 
-                if($rows[$i][4] != $device){
-                    $device_key = (isset($extra['device_key']))?$extra['device_key']:$rows[$i][4];
-                    $device = $rows[$i][4];
-                    $rows[$i][4] = '<input type="radio" name="device_select" value="'.$device_key.'" data-name="'.$device.'" class="device_select form-control" /> '.$rows[$i][4];
+                if($rows[$i][5] != $device){
+                    $device_key = (isset($extra['device_key']))?$extra['device_key']:$rows[$i][5];
+                    $device = $rows[$i][5];
+                    $rows[$i][5] = '<input type="radio" name="device_select" value="'.$device_key.'" data-name="'.$device.'" class="device_select form-control" /> '.$rows[$i][5];
                 }else{
-                    $rows[$i][4] = '';
+                    $rows[$i][5] = '';
                 }
 
             }
