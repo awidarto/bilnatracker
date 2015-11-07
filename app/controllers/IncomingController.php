@@ -1090,6 +1090,9 @@ class IncomingController extends AdminController {
             $res = false;
         //}else{
             foreach($results as $r){
+
+                $pre = clone $r;
+
                 if(is_null($in['date']) || $in['date'] == ''){
 
                 }else{
@@ -1113,6 +1116,30 @@ class IncomingController extends AdminController {
                 }
 
                 $r->save();
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'assign_date';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $r->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'assign_date';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $r->toArray();
+                $sdata['preObject'] = $pre->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
             }
             $res = true;
         //}

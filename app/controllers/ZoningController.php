@@ -800,12 +800,6 @@ class ZoningController extends AdminController {
         return $actions;
     }
 
-    public function accountDesc($data)
-    {
-
-        return $data['ACCNT_CODE'];
-    }
-
     public function extractCategory()
     {
         $category = Product::distinct('category')->get()->toArray();
@@ -1010,12 +1004,41 @@ class ZoningController extends AdminController {
 
         //print_r($shipments->toArray());
 
+        $ts = new MongoDate();
+
         foreach($shipments as $sh){
+
+            $pre = clone $sh;
+
             $sh->status = Config::get('jayon.trans_status_admin_zoned');
             $sh->device_key = $device->key;
             $sh->device_name = $device->identifier;
             $sh->device_id = $device->_id;
             $sh->save();
+
+
+            $hdata = array();
+            $hdata['historyTimestamp'] = $ts;
+            $hdata['historyAction'] = 'assign_device';
+            $hdata['historySequence'] = 1;
+            $hdata['historyObjectType'] = 'shipment';
+            $hdata['historyObject'] = $sh->toArray();
+            $hdata['actor'] = Auth::user()->fullname;
+            $hdata['actor_id'] = Auth::user()->_id;
+
+            History::insert($hdata);
+
+            $sdata = array();
+            $sdata['timestamp'] = $ts;
+            $sdata['action'] = 'assign_device';
+            $sdata['reason'] = 'initial';
+            $sdata['objectType'] = 'shipment';
+            $sdata['object'] = $sh->toArray();
+            $sdata['preObject'] = $pre->toArray();
+            $sdata['actor'] = Auth::user()->fullname;
+            $sdata['actor_id'] = Auth::user()->_id;
+            Shipmentlog::insert($sdata);
+
         }
 
         return Response::json( array('result'=>'OK', 'shipment'=>$shipments ) );

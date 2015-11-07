@@ -1124,12 +1124,39 @@ class CourierassignController extends AdminController {
 
         //print_r($shipments->toArray());
 
+        $ts = new MongoDate();
+
         foreach($shipments as $sh){
+            $pre = clone $sh;
+
             $sh->bucket = Config::get('jayon.bucket_tracker');
             $sh->status = Config::get('jayon.trans_status_admin_courierassigned');
             $sh->courier_id = $in['courier_id'];
             $sh->courier_name = $in['courier_name'];
             $sh->save();
+
+
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'assign_courier';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $sh->toArray();
+                    $hdata['actor'] = Auth::user()->fullname;
+                    $hdata['actor_id'] = Auth::user()->_id;
+
+                    History::insert($hdata);
+
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'assign_courier';
+                    $sdata['reason'] = 'initial';
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $sh->toArray();
+                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['actor'] = Auth::user()->fullname;
+                    $sdata['actor_id'] = Auth::user()->_id;
+                    Shipmentlog::insert($sdata);
 
             //print_r($sh);
         }

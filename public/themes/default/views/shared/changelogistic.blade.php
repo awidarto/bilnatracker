@@ -44,7 +44,8 @@
                         {
                             logistic : logistic,
                             ids : ids,
-                            reason : reason
+                            reason : reason,
+                            url : '{{ URL::current() }}'
                         },
                         function(data){
                             $('#change-logistic-modal').modal('hide');

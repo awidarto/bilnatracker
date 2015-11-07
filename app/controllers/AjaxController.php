@@ -603,8 +603,14 @@ class AjaxController extends BaseController {
 
                         }else{
                             $sh->awb = $sh->delivery_id;
-                            $sh->bucket = Config::get('jayon.bucket_dispatcher');
-                            $sh->status = Config::get('jayon.trans_status_admin_dated');
+
+                            if(preg_match('/incoming$/', $in['url'])){
+                                //$sh->status = Config::get('jayon.trans_status_confirmed');
+                            }else{
+                                $sh->bucket = Config::get('jayon.bucket_dispatcher');
+                                $sh->status = Config::get('jayon.trans_status_admin_dated');
+                            }
+
 
                             $sh->courier_id = '';
                             $sh->courier_name = '';
