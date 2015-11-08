@@ -204,7 +204,7 @@ class SyncapiController extends \Controller {
 
                     $hdata = array();
                     $hdata['historyTimestamp'] = $ts;
-                    $hdata['historyAction'] = 'hub_change_status';
+                    $hdata['historyAction'] = 'api_hub_change_status';
                     $hdata['historySequence'] = 1;
                     $hdata['historyObjectType'] = 'shipment';
                     $hdata['historyObject'] = $shipment->toArray();
@@ -215,7 +215,7 @@ class SyncapiController extends \Controller {
 
                     $sdata = array();
                     $sdata['timestamp'] = $ts;
-                    $sdata['action'] = 'hub_change_status';
+                    $sdata['action'] = 'api_hub_change_status';
                     $sdata['reason'] = 'api_update';
                     $sdata['objectType'] = 'shipment';
                     $sdata['object'] = $shipment->toArray();
@@ -323,7 +323,7 @@ class SyncapiController extends \Controller {
 
                     $hdata = array();
                     $hdata['historyTimestamp'] = $ts;
-                    $hdata['historyAction'] = 'shipment_change_status';
+                    $hdata['historyAction'] = 'api_shipment_change_status';
                     $hdata['historySequence'] = 1;
                     $hdata['historyObjectType'] = 'shipment';
                     $hdata['historyObject'] = $shipment->toArray();
@@ -334,7 +334,7 @@ class SyncapiController extends \Controller {
 
                     $sdata = array();
                     $sdata['timestamp'] = $ts;
-                    $sdata['action'] = 'shipment_change_status';
+                    $sdata['action'] = 'api_shipment_change_status';
                     $sdata['reason'] = 'api_update';
                     $sdata['objectType'] = 'shipment';
                     $sdata['object'] = $shipment->toArray();
