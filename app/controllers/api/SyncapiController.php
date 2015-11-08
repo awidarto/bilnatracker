@@ -335,7 +335,7 @@ class SyncapiController extends \Controller {
                     $sdata = array();
                     $sdata['timestamp'] = $ts;
                     $sdata['action'] = 'shipment_change_status';
-                    $sdata['reason'] = 'api update';
+                    $sdata['reason'] = 'api_update';
                     $sdata['objectType'] = 'shipment';
                     $sdata['object'] = $shipment->toArray();
                     $sdata['preObject'] = $pre->toArray();
