@@ -188,6 +188,10 @@ class SyncapiController extends \Controller {
                 $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
 
                 if($shipment){
+
+                    $ts = new MongoDate();
+                    $pre = clone $shipment;
+
                     //$shipment->status = $olog->status;
                     $shipment->warehouse_status = $olog->warehouseStatus;
 
@@ -197,6 +201,30 @@ class SyncapiController extends \Controller {
                     }
 
                     $shipment->save();
+
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'hub_change_status';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $shipment->toArray();
+                    $hdata['actor'] = $user->identifier;
+                    $hdata['actor_id'] = $user->key;
+
+                    \History::insert($hdata);
+
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'hub_change_status';
+                    $sdata['reason'] = 'api_update';
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $shipment->toArray();
+                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['actor'] = $user->identifier;
+                    $sdata['actor_id'] = $user->key;
+                    \Shipmentlog::insert($sdata);
+
+
                 }
 
                 if( $r ){
@@ -275,7 +303,12 @@ class SyncapiController extends \Controller {
 
                 $shipment = \Shipment::where('delivery_id','=',$olog->deliveryId)->first();
 
+
                 if($shipment){
+
+                    $ts = new MongoDate();
+                    $pre = clone $shipment;
+
                     $shipment->status = $olog->status;
                     $shipment->courier_status = $olog->courierStatus;
 
@@ -287,6 +320,30 @@ class SyncapiController extends \Controller {
                     }
 
                     $shipment->save();
+
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'shipment_change_status';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $shipment->toArray();
+                    $hdata['actor'] = $user->identifier;
+                    $hdata['actor_id'] = $user->key;
+
+                    \History::insert($hdata);
+
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'shipment_change_status';
+                    $sdata['reason'] = 'api update';
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $shipment->toArray();
+                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['actor'] = $user->identifier;
+                    $sdata['actor_id'] = $user->key;
+                    \Shipmentlog::insert($sdata);
+
+
                 }
 
                 if( $r ){
