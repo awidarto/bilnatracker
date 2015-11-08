@@ -189,7 +189,7 @@ class SyncapiController extends \Controller {
 
                 if($shipment){
 
-                    $ts = new MongoDate();
+                    $ts = new \MongoDate();
                     $pre = clone $shipment;
 
                     //$shipment->status = $olog->status;
@@ -306,7 +306,7 @@ class SyncapiController extends \Controller {
 
                 if($shipment){
 
-                    $ts = new MongoDate();
+                    $ts = new \MongoDate();
                     $pre = clone $shipment;
 
                     $shipment->status = $olog->status;
