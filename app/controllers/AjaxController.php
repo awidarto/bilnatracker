@@ -62,6 +62,7 @@ class AjaxController extends BaseController {
             $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
 
             $city = $shipments[$i]['consignee_olshop_city'];
+
             $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))
                                 ->where('is_on','=',strval(1))
                                 ->get();

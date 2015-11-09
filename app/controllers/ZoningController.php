@@ -957,9 +957,9 @@ class ZoningController extends AdminController {
     {
         $in = Input::get();
 
-        $city = $in['city'];
+        $city = trim($in['city']);
 
-        $date = $in['date'];
+        $date = trim($in['date']);
 
         $pick_up_date = new MongoDate(strtotime($date));
 
