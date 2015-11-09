@@ -3255,6 +3255,7 @@ class AdminController extends Controller {
                 $rowtemp = array();
                 foreach($rowitem as $k=>$v){
                     $hkey = strtolower($headrow[$k]);
+                    $v = trim($v);
                     $sessobj->{ $hkey } = $this->prepImportItem($headrow[$k],$v,$rowitem);
                     $rowtemp[$hkey] = $v;
                     $check .= $v;
