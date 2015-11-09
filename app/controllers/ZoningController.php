@@ -957,9 +957,9 @@ class ZoningController extends AdminController {
     {
         $in = Input::get();
 
-        $city = trim($in['city']);
+        $city = $in['city'];
 
-        $date = trim($in['date']);
+        $date = $in['date'];
 
         $pick_up_date = new MongoDate(strtotime($date));
 
@@ -972,6 +972,8 @@ class ZoningController extends AdminController {
         for($i = 0; $i < count($shipments); $i++){
             $shipments[$i]['pick_up_date'] = date('Y-m-d', $shipments[$i]['pick_up_date']->sec );
         }
+
+        $city = trim($city);
 
         $devices = Device::where('city','regex', new MongoRegex('/'.$city.'/i'))
                                 ->where(function($on){
