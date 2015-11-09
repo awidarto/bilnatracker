@@ -696,6 +696,8 @@ class AdminController extends Controller {
 
         $model = $this->model;
 
+        $count_all = $this->model->count();
+
         $model = $this->SQL_additional_query($model);
 
         //$model = $this->SQL_make_join($model);
@@ -739,7 +741,6 @@ class AdminController extends Controller {
 
 
 
-        $count_all = $this->model->count();
         $count_display_all = $this->model->count();
 
         $this->aux_data = $this->SQL_before_paging($model);
@@ -759,7 +760,7 @@ class AdminController extends Controller {
 		$counter = 1 + $pagestart;
 
 
-        $count_display_all = count($results);
+        //$count_display_all = count($results);
 
 
 		foreach ($results as $doc) {
