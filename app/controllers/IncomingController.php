@@ -1084,6 +1084,7 @@ class IncomingController extends AdminController {
             $trip =  new MongoInt64($in['trip']);
         }
 
+        $ts = new MongoDate();
         //print_r($results->toArray());
 
         //if($results){
