@@ -1086,7 +1086,7 @@ class IncomingController extends AdminController {
 
         $ts = new MongoDate();
         //print_r($results->toArray());
-
+            $reason = (isset($in['reason']))?$in['reason']:'initial';
         //if($results){
             $res = false;
         //}else{
@@ -1132,7 +1132,7 @@ class IncomingController extends AdminController {
                 $sdata = array();
                 $sdata['timestamp'] = $ts;
                 $sdata['action'] = 'assign_date';
-                $sdata['reason'] = $in['reason'];
+                $sdata['reason'] = $reason;
                 $sdata['objectType'] = 'shipment';
                 $sdata['object'] = $r->toArray();
                 $sdata['preObject'] = $pre->toArray();
