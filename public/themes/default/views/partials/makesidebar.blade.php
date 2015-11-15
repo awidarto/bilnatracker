@@ -14,6 +14,7 @@
         <div class="sidebar-inner">
           <ul class="nav nav-sidebar">
             <li><a href="{{ URL::to('/') }}"><i class="icon-home"></i><span>Dashboard</span></a></li>
+            <li><a href="{{ URL::to('cs') }}"><i class="fa fa-user"></i><span>Customer Care</span></a></li>
 
             @if(Ks::can('view','incoming'))
             {{--

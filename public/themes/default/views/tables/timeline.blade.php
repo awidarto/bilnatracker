@@ -4,41 +4,42 @@
 
 <style type="text/css">
 .act{
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .pending{
-	padding: 4px;
-	background-color: yellow;
+    padding: 4px;
+    background-color: yellow;
 }
 
 .canceled{
-	padding: 4px;
-	background-color: red;
-	color:white;
+    padding: 4px;
+    background-color: red;
+    color:white;
 }
 
 .sold{
-	padding: 4px;
-	background-color: green;
-	color:white;
+    padding: 4px;
+    background-color: green;
+    color:white;
 }
 
 th{
-	border-right:thin solid #eee;
-	border-top: thin solid #eee;
+    border-right:thin solid #eee;
+    border-top: thin solid #eee;
+    vertical-align: top;
 }
 
 th:first-child{
-	border-left:thin solid #eee;
+    border-left:thin solid #eee;
 }
 
 .del,.upload,.upinv,.outlet,.action{
-	cursor:pointer;
+    cursor:pointer;
 }
 
 td.group{
-	background-color: #AAA;
+    background-color: #AAA;
 }
 
 .ingrid.styled-select select{
@@ -48,6 +49,40 @@ td.group{
 .table-responsive{
     overflow-x: auto;
 }
+
+th.action{
+    /*
+    min-width: 150px !important;
+    max-width: 200px !important;
+    width: 175px !important;
+    */
+}
+
+td i.fa{
+    font-size: 18px;
+    line-height: 20px;
+}
+
+td a{
+    line-height: 22px;
+}
+
+td{
+    font-size: 11px;
+    padding: 4px 6px 6px 4px !important;
+    hyphens:none !important;
+    color: black;
+}
+
+td .dropdown-menu{
+    font-size: 11px !important;
+}
+
+td .dropdown-menu .action{
+    padding: 7px 10px;
+    font-size: 11px !important;
+}
+
 
 select.input-sm {
     height: 30px;
@@ -67,8 +102,104 @@ select.input-sm {
     display:inline-block;
 }
 
+.calendar-date thead th{
+    border: none;
+}
+
+.column-amt{
+    text-align: right;
+}
+
+.column-nowrap{
+    white-space: nowrap !important;
+}
+
+.dataTable th{
+    font-size: 10px !important;
+}
+
+.action{
+    cursor: pointer;
+}
+
+.ui-menu .ui-menu-item a {
+  font-size: 12px;
+}
+.ui-autocomplete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1510 !important;
+  float: left;
+  display: none;
+  min-width: 160px;
+  width: 160px;
+  padding: 4px 0;
+  margin: 2px 0 0 0;
+  list-style: none;
+  background-color: #ffffff;
+  border-color: #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  border-style: solid;
+  border-width: 1px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
+  *border-right-width: 2px;
+  *border-bottom-width: 2px;
+}
+.ui-menu-item{
+    padding: 8px 4px;
+}
+
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.ui-state-hover, .ui-state-active {
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #0088cc;
+      border-radius: 0px;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      background-image: none;
+}
+
+.ui-state-hover, .ui-state-focus {
+      color: #ffffff;
+      text-decoration: none;
+      background-color: #0088cc;
+      border-radius: 0px;
+      -webkit-border-radius: 0px;
+      -moz-border-radius: 0px;
+      background-image: none;
+}
+
+th ul.select2-results li{
+    font-size: 10px !important;
+    font-weight: 100 !important;
+}
+
+.statbox{
+    padding: 6px !important;
+}
 
 </style>
+
+{{ HTML::style('css/syscolors.css') }}
 
 
 {{--
@@ -78,6 +209,11 @@ select.input-sm {
 <div class="container">
     <div class="row">
         <div class="col-md-6 command-bar">
+            {{ $additional_filter }}
+
+         </div>
+         <div class="col-md-6 command-bar">
+            {{ $additional_table_param['additional_filter_two'] }}
 
             @if(isset($can_add) && $can_add == true)
                 <a href="{{ URL::to($addurl) }}" class="btn btn-sm btn-primary">Add</a>
@@ -97,282 +233,278 @@ select.input-sm {
             @endif
 
          </div>
-         <div class="col-md-6 command-bar">
-            {{ $additional_filter }}
-
-         </div>
     </div>
 </div>
 <div class="container">
-<div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <h5>{{ $additional_table_param['title_one'] }}</h5>
-        <table class="table table-striped dataTable one">
 
-            <thead>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <h5>{{ $additional_table_param['title_one'] }}</h5>
+            <table class="table table-striped dataTable one">
 
-                <tr>
-                    @foreach($heads as $head)
-                        @if(is_array($head))
-                            <th
-                                @foreach($head[1] as $key=>$val)
-                                    @if(!is_array($val))
-                                        {{ $key }}="{{ $val }}"
-                                    @endif
-                                @endforeach
-                            >
-                            {{ $head[0] }}
-                            </th>
-                        @else
-                        <th>
-                            {{ $head }}
-                        </th>
-                        @endif
-                    @endforeach
-                </tr>
-                @if(isset($secondheads) && !is_null($secondheads))
+                <thead>
+
                     <tr>
-                    @foreach($secondheads as $head)
-                        @if(is_array($head))
-                            <th
-                                @foreach($head[1] as $key=>$val)
-                                    @if($key != 'search')
-                                        {{ $key }}="{{ $val }}"
-                                    @endif
-                                @endforeach
-                            >
-                            {{ $head[0] }}
+                        @foreach($heads as $head)
+                            @if(is_array($head))
+                                <th
+                                    @foreach($head[1] as $key=>$val)
+                                        @if(!is_array($val))
+                                            {{ $key }}="{{ $val }}"
+                                        @endif
+                                    @endforeach
+                                >
+                                {{ $head[0] }}
+                                </th>
+                            @else
+                            <th>
+                                {{ $head }}
                             </th>
-                        @else
-                        <th>
-                            {{ $head }}
-                        </th>
+                            @endif
+                        @endforeach
+                    </tr>
+                    @if(isset($secondheads) && !is_null($secondheads))
+                        <tr>
+                        @foreach($secondheads as $head)
+                            @if(is_array($head))
+                                <th
+                                    @foreach($head[1] as $key=>$val)
+                                        @if($key != 'search')
+                                            {{ $key }}="{{ $val }}"
+                                        @endif
+                                    @endforeach
+                                >
+                                {{ $head[0] }}
+                                </th>
+                            @else
+                            <th>
+                                {{ $head }}
+                            </th>
+                            @endif
+                        @endforeach
+                        </tr>
+                    @endif
+                </thead>
+
+                <?php
+                    $form = new Former();
+                ?>
+
+                @if(isset($additional_table_param['table_search_1']) && $additional_table_param['table_search_1'] == true)
+                <thead id="searchinput">
+                    <tr>
+                    <?php $index = -1 ;?>
+                    @foreach($heads as $in)
+                        @if( $in[0] != 'select_all' && $in[0] != '')
+                            @if(isset($in[1]['search']) && $in[1]['search'] == true)
+                                @if(isset($in[1]['date']) && $in[1]['date'])
+                                    <td>
+                                        <div id="{{ $index }}" class="input-append datepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy" class="search_init form-control input-sm dateinput" type="text" placeholder="{{$in[0]}}" ></input>
+                                            <span class="add-on">
+                                                <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
+                                                </i>
+                                            </span>
+                                        </div>
+
+                                    </td>
+                                @elseif(isset($in[1]['datetime']) && $in[1]['datetime'])
+                                    <td>
+                                        <div id="{{ $index }}" class="input-append datetimepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy hh:mm:ss" class="search_init form-control input-sm datetimeinput" type="text" placeholder="{{$in[0]}}" ></input>
+                                            <span class="add-on">
+                                                <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
+                                                </i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                @elseif(isset($in[1]['daterange']) && $in[1]['daterange'])
+                                    <td>
+                                        <div class="input-append datetimerangepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm daterangespicker" type="text" placeholder="{{$in[0]}}" />
+                                        </div>
+                                    </td>
+                                @elseif(isset($in[1]['datetimerange']) && $in[1]['datetimerange'])
+                                    <td>
+                                        <div class="input-append datetimerangepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm datetimerangepicker" type="text" placeholder="{{$in[0]}}" />
+                                        </div>
+                                    </td>
+                                @elseif(isset($in[1]['select']) && is_array($in[1]['select']))
+                                    <td>
+                                        <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" style="display:none;" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
+                                        <div class="styled-select">
+                                            <?php $select_class = (isset($in[1]['class']))?$in[1]['class']:'filter' ?>
+                                            {{ Form::select('select_'.$in[0],$in[1]['select'],null,array('class'=>'selector form-control input-sm select-'.$select_class,'id'=>$index ))}}
+                                        </div>
+                                    </td>
+                                @else
+                                    <td>
+                                        <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
+                                    </td>
+                                @endif
+                            @else
+                                @if(isset($in[1]['clear']) && $in[1]['clear'] == true)
+                                    <td><span id="clearsearch" style="cursor:pointer;">Clear Search</span></td>
+                                @else
+                                    <td>&nbsp;</td>
+                                @endif
+                            @endif
+
+                            <?php $index++; ?>
+
+                        @elseif($in[0] == 'select_all')
+                            <td>{{ Former::checkbox('select_all') }}</td>
+                        @elseif($in[0] == '')
+                            <td>&nbsp;</td>
                         @endif
+
+
                     @endforeach
                     </tr>
+                </thead>
                 @endif
-            </thead>
+             <tbody>
+                <!-- will be replaced by ajax content -->
+             </tbody>
+            </table>
 
-            <?php
-                $form = new Former();
-            ?>
+        </div>
 
-            @if(isset($table_search_1) && $table_search_1 == true)
-            <thead id="searchinput">
-                <tr>
-                <?php $index = -1 ;?>
-                @foreach($heads as $in)
-                    @if( $in[0] != 'select_all' && $in[0] != '')
-                        @if(isset($in[1]['search']) && $in[1]['search'] == true)
-                            @if(isset($in[1]['date']) && $in[1]['date'])
-                                <td>
-                                    <div id="{{ $index }}" class="input-append datepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy" class="search_init form-control input-sm dateinput" type="text" placeholder="{{$in[0]}}" ></input>
-                                        <span class="add-on">
-                                            <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
-                                            </i>
-                                        </span>
-                                    </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <h5>{{ $additional_table_param['title_two'] }}</h5>
+            <table class="table table-striped dataTable two">
 
-                                </td>
-                            @elseif(isset($in[1]['datetime']) && $in[1]['datetime'])
-                                <td>
-                                    <div id="{{ $index }}" class="input-append datetimepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy hh:mm:ss" class="search_init form-control input-sm datetimeinput" type="text" placeholder="{{$in[0]}}" ></input>
-                                        <span class="add-on">
-                                            <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
-                                            </i>
-                                        </span>
-                                    </div>
-                                </td>
-                            @elseif(isset($in[1]['daterange']) && $in[1]['daterange'])
-                                <td>
-                                    <div class="input-append datetimerangepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm daterangespicker" type="text" placeholder="{{$in[0]}}" />
-                                    </div>
-                                </td>
-                            @elseif(isset($in[1]['datetimerange']) && $in[1]['datetimerange'])
-                                <td>
-                                    <div class="input-append datetimerangepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm datetimerangepicker" type="text" placeholder="{{$in[0]}}" />
-                                    </div>
-                                </td>
-                            @elseif(isset($in[1]['select']) && is_array($in[1]['select']))
-                                <td>
-                                    <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" style="display:none;" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
-                                    <div class="styled-select">
-                                        <?php $select_class = (isset($in[1]['class']))?$in[1]['class']:'filter' ?>
-                                        {{ Form::select('select_'.$in[0],$in[1]['select'],null,array('class'=>'selector form-control input-sm select-'.$select_class,'id'=>$index ))}}
-                                    </div>
-                                </td>
-                            @else
-                                <td>
-                                    <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
-                                </td>
-                            @endif
-                        @else
-                            @if(isset($in[1]['clear']) && $in[1]['clear'] == true)
-                                <td><span id="clearsearch" style="cursor:pointer;">Clear Search</span></td>
-                            @else
-                                <td>&nbsp;</td>
-                            @endif
-                        @endif
+                <thead>
 
-                        <?php $index++; ?>
-
-                    @elseif($in[0] == 'select_all')
-                        <td>{{ Former::checkbox('select_all') }}</td>
-                    @elseif($in[0] == '')
-                        <td>&nbsp;</td>
-                    @endif
-
-
-                @endforeach
-                </tr>
-            </thead>
-            @endif
-         <tbody>
-            <!-- will be replaced by ajax content -->
-         </tbody>
-        </table>
-
-    </div>
-
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <h5>{{ $additional_table_param['title_two'] }}</h5>
-
-        <table class="table table-striped dataTable two">
-
-            <thead>
-
-                <tr>
-                    @foreach($additional_table_param['secondary_heads'] as $head)
-                        @if(is_array($head))
-                            <th
-                                @foreach($head[1] as $key=>$val)
-                                    @if(!is_array($val))
-                                        {{ $key }}="{{ $val }}"
-                                    @endif
-                                @endforeach
-                            >
-                            {{ $head[0] }}
-                            </th>
-                        @else
-                        <th>
-                            {{ $head }}
-                        </th>
-                        @endif
-                    @endforeach
-                </tr>
-                @if(isset($secondheads) && !is_null($secondheads))
                     <tr>
-                    @foreach($secondheads as $head)
-                        @if(is_array($head))
-                            <th
-                                @foreach($head[1] as $key=>$val)
-                                    @if($key != 'search')
-                                        {{ $key }}="{{ $val }}"
-                                    @endif
-                                @endforeach
-                            >
-                            {{ $head[0] }}
+                        @foreach($additional_table_param['secondary_heads'] as $head)
+                            @if(is_array($head))
+                                <th
+                                    @foreach($head[1] as $key=>$val)
+                                        @if(!is_array($val))
+                                            {{ $key }}="{{ $val }}"
+                                        @endif
+                                    @endforeach
+                                >
+                                {{ $head[0] }}
+                                </th>
+                            @else
+                            <th>
+                                {{ $head }}
                             </th>
-                        @else
-                        <th>
-                            {{ $head }}
-                        </th>
+                            @endif
+                        @endforeach
+                    </tr>
+                    @if(isset($secondheads) && !is_null($secondheads))
+                        <tr>
+                        @foreach($secondheads as $head)
+                            @if(is_array($head))
+                                <th
+                                    @foreach($head[1] as $key=>$val)
+                                        @if($key != 'search')
+                                            {{ $key }}="{{ $val }}"
+                                        @endif
+                                    @endforeach
+                                >
+                                {{ $head[0] }}
+                                </th>
+                            @else
+                            <th>
+                                {{ $head }}
+                            </th>
+                            @endif
+                        @endforeach
+                        </tr>
+                    @endif
+                </thead>
+
+                <?php
+                    $form = new Former();
+                ?>
+
+                @if(isset($additional_table_param['table_search_2']) && $additional_table_param['table_search_2'] == true)
+                <thead id="searchinput">
+                    <tr>
+                    <?php $index = -1 ;?>
+                    @foreach($heads as $in)
+                        @if( $in[0] != 'select_all' && $in[0] != '')
+                            @if(isset($in[1]['search']) && $in[1]['search'] == true)
+                                @if(isset($in[1]['date']) && $in[1]['date'])
+                                    <td>
+                                        <div id="{{ $index }}" class="input-append datepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy" class="search_init form-control input-sm dateinput" type="text" placeholder="{{$in[0]}}" ></input>
+                                            <span class="add-on">
+                                                <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
+                                                </i>
+                                            </span>
+                                        </div>
+
+                                    </td>
+                                @elseif(isset($in[1]['datetime']) && $in[1]['datetime'])
+                                    <td>
+                                        <div id="{{ $index }}" class="input-append datetimepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy hh:mm:ss" class="search_init form-control input-sm datetimeinput" type="text" placeholder="{{$in[0]}}" ></input>
+                                            <span class="add-on">
+                                                <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
+                                                </i>
+                                            </span>
+                                        </div>
+                                    </td>
+                                @elseif(isset($in[1]['daterange']) && $in[1]['daterange'])
+                                    <td>
+                                        <div class="input-append datetimerangepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm daterangespicker" type="text" placeholder="{{$in[0]}}" />
+                                        </div>
+                                    </td>
+                                @elseif(isset($in[1]['datetimerange']) && $in[1]['datetimerange'])
+                                    <td>
+                                        <div class="input-append datetimerangepickersearch">
+                                            <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm datetimerangepicker" type="text" placeholder="{{$in[0]}}" />
+                                        </div>
+                                    </td>
+                                @elseif(isset($in[1]['select']) && is_array($in[1]['select']))
+                                    <td>
+                                        <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" style="display:none;" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
+                                        <div class="styled-select">
+                                            <?php $select_class = (isset($in[1]['class']))?$in[1]['class']:'filter' ?>
+                                            {{ Form::select('select_'.$in[0],$in[1]['select'],null,array('class'=>'selector form-control input-sm select-'.$select_class,'id'=>$index ))}}
+                                        </div>
+                                    </td>
+                                @else
+                                    <td>
+                                        <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
+                                    </td>
+                                @endif
+                            @else
+                                @if(isset($in[1]['clear']) && $in[1]['clear'] == true)
+                                    <td><span id="clearsearch" style="cursor:pointer;">Clear Search</span></td>
+                                @else
+                                    <td>&nbsp;</td>
+                                @endif
+                            @endif
+
+                            <?php $index++; ?>
+
+                        @elseif($in[0] == 'select_all')
+                            <td>{{ Former::checkbox('select_all') }}</td>
+                        @elseif($in[0] == '')
+                            <td>&nbsp;</td>
                         @endif
+
+
                     @endforeach
                     </tr>
+                </thead>
                 @endif
-            </thead>
+             <tbody>
+                <!-- will be replaced by ajax content -->
+             </tbody>
+            </table>
 
-            <?php
-                $form = new Former();
-            ?>
-
-            @if(isset($table_search_2) && $table_search_2 == true)
-            <thead id="searchinput">
-                <tr>
-                <?php $index = -1 ;?>
-                @foreach($heads as $in)
-                    @if( $in[0] != 'select_all' && $in[0] != '')
-                        @if(isset($in[1]['search']) && $in[1]['search'] == true)
-                            @if(isset($in[1]['date']) && $in[1]['date'])
-                                <td>
-                                    <div id="{{ $index }}" class="input-append datepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy" class="search_init form-control input-sm dateinput" type="text" placeholder="{{$in[0]}}" ></input>
-                                        <span class="add-on">
-                                            <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
-                                            </i>
-                                        </span>
-                                    </div>
-
-                                </td>
-                            @elseif(isset($in[1]['datetime']) && $in[1]['datetime'])
-                                <td>
-                                    <div id="{{ $index }}" class="input-append datetimepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" data-format="dd-MM-yyyy hh:mm:ss" class="search_init form-control input-sm datetimeinput" type="text" placeholder="{{$in[0]}}" ></input>
-                                        <span class="add-on">
-                                            <i data-time-icon="fa fa-clock" data-date-icon="fa fa-calendar">
-                                            </i>
-                                        </span>
-                                    </div>
-                                </td>
-                            @elseif(isset($in[1]['daterange']) && $in[1]['daterange'])
-                                <td>
-                                    <div class="input-append datetimerangepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm daterangespicker" type="text" placeholder="{{$in[0]}}" />
-                                    </div>
-                                </td>
-                            @elseif(isset($in[1]['datetimerange']) && $in[1]['datetimerange'])
-                                <td>
-                                    <div class="input-append datetimerangepickersearch">
-                                        <input id="{{ $index }}" name="search_{{$in[0]}}" class="search_init form-control input-sm datetimerangepicker" type="text" placeholder="{{$in[0]}}" />
-                                    </div>
-                                </td>
-                            @elseif(isset($in[1]['select']) && is_array($in[1]['select']))
-                                <td>
-                                    <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" style="display:none;" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
-                                    <div class="styled-select">
-                                        <?php $select_class = (isset($in[1]['class']))?$in[1]['class']:'filter' ?>
-                                        {{ Form::select('select_'.$in[0],$in[1]['select'],null,array('class'=>'selector form-control input-sm select-'.$select_class,'id'=>$index ))}}
-                                    </div>
-                                </td>
-                            @else
-                                <td>
-                                    <input id="{{ $index }}" type="text" name="search_{{$in[0]}}" id="search_{{$in[0]}}" placeholder="{{$in[0]}}" value="" class="search_init form-control input-sm {{ (isset($in[1]['class']))?$in[1]['class']:'filter'}}" />
-                                </td>
-                            @endif
-                        @else
-                            @if(isset($in[1]['clear']) && $in[1]['clear'] == true)
-                                <td><span id="clearsearch" style="cursor:pointer;">Clear Search</span></td>
-                            @else
-                                <td>&nbsp;</td>
-                            @endif
-                        @endif
-
-                        <?php $index++; ?>
-
-                    @elseif($in[0] == 'select_all')
-                        <td>{{ Former::checkbox('select_all') }}</td>
-                    @elseif($in[0] == '')
-                        <td>&nbsp;</td>
-                    @endif
-
-
-                @endforeach
-                </tr>
-            </thead>
-            @endif
-         <tbody>
-            <!-- will be replaced by ajax content -->
-         </tbody>
-        </table>
+        </div>
 
     </div>
-
-</div>
 
 </div>
 
@@ -470,7 +602,8 @@ select.input-sm {
 		        "sAjaxSource": "{{$additional_table_param['ajax_url_one']}}",
 				"oLanguage": { "sSearch": "Search "},
 				"sPaginationType": "full_numbers",
-                "sDom": '< <"#paginator" lp>i >rt',
+                {{-- "sDom": '< <"#paginator" lp>i >rt', --}}
+                "sDom": 'rtp',
 				"iDisplayLength":10,
 
 				@if(isset($excludecol) && $excludecol != '')
@@ -507,7 +640,7 @@ select.input-sm {
                 "sAjaxSource": "{{$additional_table_param['ajax_url_two']}}",
                 "oLanguage": { "sSearch": "Search "},
                 "sPaginationType": "full_numbers",
-                "sDom": '< <"#paginator" lp>i >rt',
+                "sDom": 'rtp',
                 "iDisplayLength":10,
 
                 @if(isset($excludecol) && $excludecol != '')

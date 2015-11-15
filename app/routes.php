@@ -79,6 +79,8 @@ Route::controller('manifest', 'ManifestController');
 Route::controller('devmanifest', 'DevmanifestController');
 Route::controller('retmanifest', 'RetmanifestController');
 
+Route::controller('cs', 'CsController');
+
 
 Route::controller('approval', 'ApprovalController');
 Route::controller('activity', 'ActivityController');
