@@ -696,7 +696,7 @@ class AdminController extends Controller {
 
         $model = $this->model;
 
-        $count_all = $this->model->count();
+        $count_all = $model->count();
 
         $model = $this->SQL_additional_query($model);
 
@@ -741,7 +741,7 @@ class AdminController extends Controller {
 
 
 
-        $count_display_all = $this->model->count();
+        $count_display_all = $model->count();
 
         $this->aux_data = $this->SQL_before_paging($model);
 
@@ -872,7 +872,7 @@ class AdminController extends Controller {
 		$result = array(
 			'sEcho'=>  $sEcho,
 			'iTotalRecords'=>$count_all,
-			'iTotalDisplayRecords'=> (is_null($count_display_all))?0:$count_display_all,
+			'iTotalDisplayRecords'=>$count_display_all,
 			'aaData'=>$aadata,
 			'qrs'=>$q,
 			'sort'=>array($sort_col=>$sort_dir)
@@ -1399,6 +1399,8 @@ class AdminController extends Controller {
 
         $model = DB::connection($this->sql_connection)->table($this->sql_table_name);
 
+        $count_all = $model->count();
+
         $model = $this->SQL_additional_query($model);
 
         //$model = $this->SQL_make_join($model);
@@ -1439,9 +1441,8 @@ class AdminController extends Controller {
 
         //$model->where('docFormat','picture');
 
-        $count_all = $model->count();
         //$count_display_all = $model->count();
-        $count_display_all = $count_all;
+        $count_display_all = $model->count();
 
         $this->aux_data = $this->SQL_before_paging($model);
 
