@@ -35,6 +35,10 @@ class Prefs {
                 $list .= $note;
                 $list .= '</li>';
             }
+
+            $list .= '</ul>';
+
+            return $list;
         }
 
     }
