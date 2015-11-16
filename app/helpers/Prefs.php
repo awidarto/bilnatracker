@@ -32,7 +32,7 @@ class Prefs {
             foreach($notes as $note){
                 $list .= '<li>';
                 $list .= '<b>'.$note->status.'</b><br />';
-                $list .= $note;
+                $list .= $note->note;
                 $list .= '</li>';
             }
 
