@@ -9,6 +9,8 @@
     ul.pic_list li{
         list-style-type: none;
         display: inline;
+        float: left;
+        padding-right: 8px;
     }
 
 </style>
