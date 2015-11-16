@@ -632,12 +632,16 @@ class CsController extends AdminController {
 
         if($pics){
             if(count($pics) > 0){
+                $display = '';
                 foreach($pics as $g){
                     $thumbnail_url = $g->thumbnail_url;
-                    $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                    $display .= HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id']));
+                    //$glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
                 }
 
-                $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+                //$display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+
+                $display .= $glinks;
 
                 return $display;
             }else{
