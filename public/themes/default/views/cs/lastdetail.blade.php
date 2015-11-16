@@ -33,7 +33,7 @@
     </tr>
     <tr>
         <td>Posisi Paling Akhir</td>
-        <td>{{ Prefs::getPosition('node_code',$order->position)->name .' '. $order->position }}</td>
+        <td>{{ Prefs::getPosition('node_code',$order->position)->name .' ('. $order->position.')' }}</td>
     </tr>
     <tr>
         <td>POD</td>
