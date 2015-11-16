@@ -13,6 +13,10 @@
         padding-right: 8px;
     }
 
+    .statbox{
+        display:inline-block;
+    }
+
 </style>
 
 <table class="table" >
