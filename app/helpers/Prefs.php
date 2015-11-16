@@ -19,6 +19,27 @@ class Prefs {
 
     }
 
+    public static function getNotes($delivery_id, $as_array = true)
+    {
+        $notes = Deliverynote::where('deliveryId','=',$delivery_id)
+                    ->orderBy('mtimestamp','desc')
+                    ->get();
+
+        if($as_array){
+            return $notes->toArray();
+        }else{
+            $list = '<ul>';
+            foreach($notes as $note){
+                $list .= '<li>';
+                $list .= '<b>'.$note->status.'</b><br />';
+                $list .= $note;
+                $list .= '</li>';
+            }
+        }
+
+    }
+
+
     public static function getTrip($all = false)
     {
         $trip_count = Options::get('trip_per_day',1);

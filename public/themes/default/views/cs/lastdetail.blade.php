@@ -36,6 +36,10 @@
         <td>{{ Prefs::getPosition('node_code',$order->position)->name .' ('. $order->position.')' }}</td>
     </tr>
     <tr>
+        <td>Catatan Pengiriman</td>
+        <td>{{ Prefs::getNotes( $order->delivery_id, false) }}</td>
+    </tr>
+    <tr>
         <td>Proof of Delivery</td>
         <td>
             {{ $order->picList }}
