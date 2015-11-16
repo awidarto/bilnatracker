@@ -182,7 +182,7 @@ class CsController extends AdminController {
 
             $model = $model->where('object.fulfillment_code','=',$orderff)
                             ->where('object.no_sales_order','=',$orderid)
-                            //->groupBy('object.status')
+                            //->groupBy('actor')
                             ->orderBy('timestamp','desc');
 
         }
@@ -190,6 +190,42 @@ class CsController extends AdminController {
         return $model;
 
     }
+
+    public function rows_post_process($rows, $aux = null){
+
+        if($this->model instanceOf Shipmentlog){
+            $status = '';
+
+            $status_idx = 7;
+
+            $rows2 = array();
+            if(count($rows) > 0){
+
+                for($i = 0; $i < count($rows); $i++){
+                    //print $rows[$i][$status_idx];
+                    if($rows[$i][$status_idx] != $status){
+                        $rows2[] = $rows[$i];
+                        $status = $rows[$i][$status_idx];
+                    }
+                }
+            }
+
+            return $rows2;
+
+        }
+
+
+        //print_r($rows);
+
+
+
+
+
+
+        return $rows;
+
+    }
+
 
     public function statusButton($data)
     {
