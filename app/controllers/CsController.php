@@ -182,6 +182,7 @@ class CsController extends AdminController {
 
             $model = $model->where('object.fulfillment_code','=',$orderff)
                             ->where('object.no_sales_order','=',$orderid)
+                            ->groupBy('status')
                             ->orderBy('timestamp','desc');
 
         }
