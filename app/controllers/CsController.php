@@ -192,7 +192,7 @@ class CsController extends AdminController {
     }
 
     public function rows_post_process($rows, $aux = null){
-
+        /*
         if($this->model instanceOf Shipmentlog){
             $status = '';
 
@@ -213,6 +213,7 @@ class CsController extends AdminController {
             return $rows2;
 
         }
+        */
 
 
         //print_r($rows);
