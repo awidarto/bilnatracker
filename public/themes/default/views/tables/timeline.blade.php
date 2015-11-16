@@ -372,6 +372,7 @@ th ul.select2-results li{
         </div>
 
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            {{ $additional_table_param['before_table_layout_2'] }}
             <h5>{{ $additional_table_param['title_two'] }}</h5>
             <table class="table table-striped dataTable two">
 
@@ -604,7 +605,7 @@ th ul.select2-results li{
 				"sPaginationType": "full_numbers",
                 {{-- "sDom": '< <"#paginator" lp>i >rt', --}}
                 "sDom": 'rtp',
-				"iDisplayLength":10,
+				"iDisplayLength":20,
 
 				@if(isset($excludecol) && $excludecol != '')
 				"oColVis": {

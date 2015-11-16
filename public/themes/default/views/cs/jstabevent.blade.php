@@ -8,6 +8,21 @@
 
                 console.log(order_id + ' ' + ff_id);
 
-                oTableTwo.draw();
+                $('#last-order-status').html('Loading data...');
+
+                $.post('{{ URL::to('cs/last')}}',
+                {
+                    orderId : order_id,
+                    orderFf : ff_id
+                },
+                function(data){
+                    $('#last-order-status').html(data);
+                    oTableTwo.draw();
+                }
+                ,'html');
+
+
+
+                //oTableTwo.draw();
                 return false;
             }

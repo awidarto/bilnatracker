@@ -279,11 +279,16 @@ class Prefs {
     }
 
     //Disposition
-    public static function getPosition(){
-        $c = Position::get();
-
-        self::$position = $c;
-        return new self;
+    public static function getPosition($key = null, $val = null){
+        if(is_null($key)){
+            $c = Position::get();
+            self::$position = $c;
+            return new self;
+        }else{
+            $c = Position::where($key,'=',$val)->first();
+            self::$position = $c;
+            return $c;
+        }
     }
 
     public function PositionToSelection($value, $label, $all = true, $all_label = 'Select Position')

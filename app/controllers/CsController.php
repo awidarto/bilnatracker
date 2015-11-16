@@ -34,6 +34,8 @@ class CsController extends AdminController {
             array('Timestamp',array('search'=>false,'sort'=>true,'datetimerange'=>true)),
             array('Order ID',array('search'=>false,'sort'=>false)),
             array('FF ID',array('search'=>false,'sort'=>false)),
+            array('Courier',array('search'=>false,'sort'=>false)),
+            array('Device',array('search'=>false,'sort'=>false)),
             array('Actor',array('search'=>false,'sort'=>false)),
             array('Status',array('search'=>false,'sort'=>true)),
         );
@@ -47,14 +49,15 @@ class CsController extends AdminController {
         $this->is_additional_action = false;
 
         $this->additional_table_param = array(
-                'title_one'=>'Shipment',
+                'title_one'=>'SHIPMENT ORDER',
                 'title_two'=>'Timeline',
                 'ajax_url_one'=>URL::to('cs'),
                 'ajax_url_two'=>URL::to('cs/timeline'),
                 'secondary_heads'=>$heads_two,
                 'table_search_1'=>true,
                 'table_search_2'=>false,
-                'additional_filter_two'=>View::make('cs.addfilter2')->render()
+                'additional_filter_two'=>View::make('cs.addfilter2')->render(),
+                'before_table_layout_2'=>'<h3>Status Order</h3><div id="last-order-status"></div>'
 
             );
 
@@ -107,6 +110,8 @@ class CsController extends AdminController {
             array('timestamp',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),
             array('object.no_sales_order',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('object.fulfillment_code',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('object.courier_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
+            array('object.device_name',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('actor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('object.status',array('kind'=>'text','query'=>'like','pos'=>'both', 'callback'=>'objStatusList' ,'show'=>true)),
         );
@@ -122,6 +127,24 @@ class CsController extends AdminController {
         $this->show_select = false;
 
         return parent::postIndex();
+    }
+
+    public function postLast(){
+
+        $in = Input::get();
+        $orderid = trim($in['orderId']);
+        $orderff = trim($in['orderFf']);
+
+        $order = Shipment::where('fulfillment_code','=',$orderff)
+                        ->where('no_sales_order','=',$orderid)
+                        ->orderBy('pick_up_date','desc')
+                        ->first();
+
+        if($order){
+            $order->picList = $this->picList($order);
+        }
+
+        return View::make('cs.lastdetail')->with('order',$order)->render();
     }
 
     public function SQL_additional_query($model)
@@ -197,9 +220,9 @@ class CsController extends AdminController {
     {
         $slist = array(
             Prefs::colorizestatus($data['object.status'],'delivery'),
-            Prefs::colorizestatus($data['object.courier_status'],'courier'),
+            //Prefs::colorizestatus($data['object.courier_status'],'courier'),
             //Prefs::colorizestatus($data['pickup_status'],'pickup'),
-            Prefs::colorizestatus($data['object.warehouse_status'],'warehouse')
+            //Prefs::colorizestatus($data['object.warehouse_status'],'warehouse')
         );
 
 
@@ -596,6 +619,35 @@ class CsController extends AdminController {
         }
 
     }
+
+    public function picList($data)
+    {
+        $data = $data->toArray();
+
+        $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
+
+        $glinks = '';
+
+        $thumbnail_url = '';
+
+        if($pics){
+            if(count($pics) > 0){
+                foreach($pics as $g){
+                    $thumbnail_url = $g->thumbnail_url;
+                    $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                }
+
+                $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+
+                return $display;
+            }else{
+                return 'No Picture';
+            }
+        }else{
+            return 'No Picture';
+        }
+    }
+
 
     public function namePic($data)
     {
