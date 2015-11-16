@@ -36,7 +36,7 @@
         <td>{{ Prefs::getPosition('node_code',$order->position)->name .' ('. $order->position.')' }}</td>
     </tr>
     <tr>
-        <td>POD</td>
+        <td>Proof of Delivery</td>
         <td>
             {{ $order->picList }}
 
