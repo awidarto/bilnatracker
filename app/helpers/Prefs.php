@@ -28,10 +28,11 @@ class Prefs {
         if($as_array){
             return $notes->toArray();
         }else{
-            $list = '<ul>';
+            $list = '<ul class="note_list">';
             foreach($notes as $note){
                 $list .= '<li>';
                 $list .= '<b>'.$note->status.'</b><br />';
+                $list .= $note->datetimestamp.'<br />';
                 $list .= $note->note;
                 $list .= '</li>';
             }

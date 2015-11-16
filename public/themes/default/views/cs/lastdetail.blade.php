@@ -1,3 +1,12 @@
+<style type="text/css">
+    ul.note_list{
+        list-style-type: none;
+    }
+    ul.note_list li{
+        border-bottom: thin solid #ccc;
+    }
+</style>
+
 <table class="table" >
     <tr>
         <td>No Order</td>
