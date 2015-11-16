@@ -5,6 +5,12 @@
     ul.note_list li{
         border-bottom: thin solid #ccc;
     }
+
+    ul.pic_list{
+        list-style-type: none;
+        display: inline;
+    }
+
 </style>
 
 <table class="table" >
