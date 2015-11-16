@@ -898,7 +898,6 @@ th ul.select2-results li{
 
 		});
 
-
 		$('table.dataTable').click(function(e){
 
 			if ($(e.target).is('.del')) {

@@ -113,6 +113,30 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
+        $('#last-order-status').on('click',function(e){
+            if ($(e.target).is('.thumbnail')) {
+                var _id = e.target.id;
+                var links = [];
+
+                var g = $('.g_' + _id);
+
+                g.each(function(){
+                    links.push({
+                        href:$(this).val(),
+                        title:$(this).data('caption')
+                    });
+                })
+                var options = {
+                    carousel: false
+                };
+
+                blueimp.Gallery(links, options);
+                console.log(links);
+
+            }
+
+        })
+
         $('#search_orders').on('click',function(){
             oTableOne.draw();
         })
