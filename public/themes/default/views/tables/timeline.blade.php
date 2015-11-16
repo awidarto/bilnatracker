@@ -83,6 +83,10 @@ td .dropdown-menu .action{
     font-size: 11px !important;
 }
 
+td h3{
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+}
 
 select.input-sm {
     height: 30px;

@@ -25,7 +25,7 @@ class CsController extends AdminController {
             array('Order ID / Shipping Address',array('search'=>false,'sort'=>false)),
             array('City',array('search'=>false,'sort'=>true)),
             array('Status',array('search'=>false,'sort'=>true)),
-            array('',array('search'=>false, 'attr'=>array( 'style'=>'min-width:35px;width:35px;' ),'sort'=>true)),
+            array('Action',array('search'=>false, 'attr'=>array( 'style'=>'min-width:50px;width:50px;' ),'sort'=>true)),
         );
 
         $heads_two = array(
@@ -57,7 +57,7 @@ class CsController extends AdminController {
                 'table_search_1'=>true,
                 'table_search_2'=>false,
                 'additional_filter_two'=>View::make('cs.addfilter2')->render(),
-                'before_table_layout_2'=>'<h3>Status Order</h3><div id="last-order-status"></div>'
+                'before_table_layout_2'=>'<h3 style="margin-top:10px !important;" >Detail Status Order</h3><div id="last-order-status"></div>'
 
             );
 
@@ -192,21 +192,21 @@ class CsController extends AdminController {
 
     public function statusButton($data)
     {
-        return '<span href="#" class="order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" >View Detail <i class="fa fa-chevron-right"></i></span>';
+        return '<div style="display:inline-block;" class="order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" >View Detail <i class="fa fa-chevron-right pull-right order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" ></i></div>';
     }
 
     public function shipmentOrder($data)
     {
-        return '<h3>'.$data['no_sales_order'].'</h3>'.$data['consignee_olshop_addr'];
+        return '<h3>'.$data['no_sales_order'].'</h3><b>'.$data['consignee_olshop_name'].'</b><br />'.$data['consignee_olshop_addr'];
     }
 
     public function statusList($data)
     {
         $slist = array(
             Prefs::colorizestatus($data['status'],'delivery'),
-            Prefs::colorizestatus($data['courier_status'],'courier'),
+            //Prefs::colorizestatus($data['courier_status'],'courier'),
             //Prefs::colorizestatus($data['pickup_status'],'pickup'),
-            Prefs::colorizestatus($data['warehouse_status'],'warehouse')
+            //Prefs::colorizestatus($data['warehouse_status'],'warehouse')
         );
 
 
