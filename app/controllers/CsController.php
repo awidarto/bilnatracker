@@ -36,7 +36,7 @@ class CsController extends AdminController {
             array('FF ID',array('search'=>false,'sort'=>false)),
             array('Courier',array('search'=>false,'sort'=>false)),
             array('Device',array('search'=>false,'sort'=>false)),
-            array('Update By',array('search'=>false,'sort'=>false)),
+            array('Updated By',array('search'=>false,'sort'=>false)),
             array('Status',array('search'=>false,'sort'=>true)),
         );
 
