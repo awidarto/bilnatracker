@@ -2,6 +2,7 @@
 
 return array(
         'entities'=>array(
+                'cs',
                 'incoming',
                 'dispatcher',
                 'tracker',
