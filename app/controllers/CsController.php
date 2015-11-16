@@ -642,7 +642,7 @@ class CsController extends AdminController {
                 }
 
                 //$display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
-                $display = '</ul>';
+                $display .= '</ul>';
 
                 $display .= $glinks;
 
