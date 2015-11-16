@@ -6,7 +6,7 @@
         border-bottom: thin solid #ccc;
     }
 
-    ul.pic_list{
+    ul.pic_list li{
         list-style-type: none;
         display: inline;
     }
