@@ -10,6 +10,8 @@
             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                 {{ Former::textarea('reason','Reason')->id('re-status-reason') }}
                 {{ Former::select('Delivery Status','delivery_status')->options(Config::get('jayon.dialog_delivery_status'))->id('delivery_status') }}
+                {{ Former::textarea('delivery_note','Note')->id('re-status-note') }}
+
                 {{ Former::select('Courier Status','courier_status')->options(Config::get('jayon.dialog_courier_status'))->id('courier_status') }}
                 {{ Former::select('Hub Status','warehouse_status')->options(Config::get('jayon.dialog_warehouse_status'))->id('warehouse_status') }}
                 {{ Former::select('Position','position')->options(Prefs::getPosition()->PositionToSelection('node_code','name',true,'Tidak Ada Perubahan'))->id('chg_position') }}
@@ -140,6 +142,8 @@
 
             var position = $('#chg_position').val();
 
+            var note = $('#re-status-note').val();
+
             //var props = $('.selector:checked');
             var ids = [];
             $.each(boxes, function(index){
@@ -154,7 +158,8 @@
                         courier_status : courier_status,
                         warehouse_status : warehouse_status,
                         position : position,
-                        reason : reason
+                        reason : reason,
+                        note : note
                     },
                     function(data){
                         $('#change-status-modal').modal('hide');

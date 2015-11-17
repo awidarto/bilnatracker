@@ -355,6 +355,7 @@ class AjaxController extends BaseController {
         $courier_status = $in['courier_status'];
         $warehouse_status = $in['warehouse_status'];
         $position = $in['position'];
+        $note = $in['note'];
 
         date_default_timezone_set('Asia/Jakarta');
 
@@ -380,6 +381,13 @@ class AjaxController extends BaseController {
 
                     }else{
                         $sh->status = $delivery_status;
+
+                        $sh->last_action_ts = $ts;
+                        $sh->last_action = 'Change Status by Admin';
+                        $sh->last_reason = $in['reason'];
+
+                        $this->saveDeliveryNote($delivery_status, $note, $ts, $sh);
+
                         if($delivery_status == Config::get('jayon.trans_status_mobile_pending')){
 
                             if(in_array($sh->delivery_id, $setpendingcount)){
@@ -470,6 +478,8 @@ class AjaxController extends BaseController {
                 }else{
                     $bx->position = $position;
                 }
+
+
 
                 $bx->save();
 
@@ -2070,6 +2080,26 @@ class AjaxController extends BaseController {
             $re = '/(?<=[a-z])(?=[A-Z])/x';
             $a = preg_split($re, $camelCaseString);
             return join($a, " " );
+    }
+
+    public function saveDeliveryNote($status, $note, $timestamp, $order)
+    {
+
+        $d = new Deliverynote();
+
+        $d->datetimestamp = date( 'Y-m-d H:i:s', $timestamp->sec );
+        $d->deliveryId = $order->delivery_id;
+        $d->deviceId = $order->device_id;
+        $d->deviceKey = $order->device_key;
+        $d->extId = $order->_id;
+        $d->logId = '-';
+        $d->note = $note;
+        $d->status = $status;
+        $d->timestamp = $timestamp->sec;
+        $d->mtimestamp = $timestamp;
+
+        $d->save();
+
     }
 
 }
