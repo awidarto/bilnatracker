@@ -49,6 +49,10 @@
         <td>{{ $order->awb }}</td>
     </tr>
     <tr>
+        <td>Total Jumlah Paket / Box</td>
+        <td>{{ $order->number_of_package }}</td>
+    </tr>
+    <tr>
         <td>Status Paling Akhir</td>
         <td>{{ Prefs::colorizestatus( $order->status, 'delivery') }}</td>
     </tr>

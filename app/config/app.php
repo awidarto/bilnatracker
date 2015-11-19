@@ -199,7 +199,8 @@ return array(
         'DbView'          => 'Flynsarmy\DbBladeCompiler\Facades\DbView',
         'Code1D'          => 'Dinesh\Barcode\Facades\DNS1DFacade',
         'Code2D'          => 'Dinesh\Barcode\Facades\DNS2DFacade',
-        'QRCode'          => 'SimpleSoftwareIO\QrCode\Facades\QrCode'
+        'QRCode'          => 'SimpleSoftwareIO\QrCode\Facades\QrCode',
+        'GuzzleClient'    => 'GuzzleHttp\Client',
 	),
 
 );

@@ -12,3 +12,4 @@
 */
 Artisan::add(new RegeneratePic);
 Artisan::add(new JexAwbDaemon);
+Artisan::add(new JexStatusDaemon);

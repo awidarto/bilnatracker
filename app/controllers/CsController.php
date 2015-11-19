@@ -134,9 +134,11 @@ class CsController extends AdminController {
         $in = Input::get();
         $orderid = trim($in['orderId']);
         $orderff = trim($in['orderFf']);
+        $delivery_id = trim($in['delivery_id']);
 
         $order = Shipment::where('fulfillment_code','=',$orderff)
                         ->where('no_sales_order','=',$orderid)
+                        ->where('delivery_id','=',$delivery_id)
                         ->orderBy('pick_up_date','desc')
                         ->first();
 
@@ -192,7 +194,7 @@ class CsController extends AdminController {
     }
 
     public function rows_post_process($rows, $aux = null){
-        /*
+
         if($this->model instanceOf Shipmentlog){
             $status = '';
 
@@ -205,15 +207,15 @@ class CsController extends AdminController {
                     //print $rows[$i][$status_idx];
                     if($rows[$i][$status_idx] != $status){
                         $rows2[] = $rows[$i];
-                        $status = $rows[$i][$status_idx];
                     }
+                    $status = $rows[$i][$status_idx];
                 }
             }
 
             return $rows2;
 
         }
-        */
+
 
 
         //print_r($rows);
@@ -230,7 +232,7 @@ class CsController extends AdminController {
 
     public function statusButton($data)
     {
-        return '<div style="display:inline-block;" class="order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" >View Detail <i class="fa fa-chevron-right pull-right order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" ></i></div>';
+        return '<div style="display:inline-block;" class="order-detail action" data-deliveryid="'.$data['delivery_id'].'" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" >View Detail <i class="fa fa-chevron-right pull-right order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" ></i></div>';
     }
 
     public function shipmentOrder($data)

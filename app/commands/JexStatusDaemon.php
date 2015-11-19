@@ -7,21 +7,21 @@ use Symfony\Component\Console\Input\InputArgument;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
-class JexAwbDaemon extends Command {
+class JexStatusDaemon extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'jex:awb';
+	protected $name = 'jex:status';
 
 	/**
 	 * The console command description.
 	 *
 	 * @var string
 	 */
-	protected $description = 'Jayon Express AWB Retriever Daemon';
+	protected $description = 'Jayon Express Status Retriever Daemon';
 
 	/**
 	 * Create a new command instance.
@@ -40,12 +40,13 @@ class JexAwbDaemon extends Command {
 	 */
 	public function fire()
 	{
-        $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/awb';
+        $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/status';
         $logistic_id = '7735';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
-		$orders = Shipment::where('awb','=','')
+        $orders = Shipment::where('awb','!=','')
+                        ->where('status','!=','delivered')
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->get();
@@ -53,36 +54,17 @@ class JexAwbDaemon extends Command {
         if($orders && count($orders->toArray()) > 0){
             $req = array();
             foreach($orders as $ord){
-                $req[] = array('order_id'=>$ord->no_sales_order, 'ff_id'=>$ord->consignee_olshop_orderid);
+                $req[] = array('awb'=>$ord->awb);
             }
 
             $client = new GuzzleClient();
 
             $response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
-            $awblist = json_decode($response->getBody());
-
-            //print_r($awblist);
-
-            $awbs = array();
-            $ffs = array();
-            foreach ($awblist as $awb) {
-                $ffs[] = $awb->ff_id;
-                $awbs[$awb->ff_id] = $awb->awb;
-            }
-
-            $orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
-
-            foreach($orderlist as $order){
-                $order->awb = $awbs[$order->fulfillment_code];
-                $order->save();
-            }
-
+            print( $response->getBody() );
         }else{
             print 'Empty order list'."\r\n";
         }
-
-
 	}
 
 	/**

@@ -1330,6 +1330,10 @@ class AdminController extends Controller {
 
         $sEcho = (int) Input::get('sEcho');
 
+        if($count_display_all > count($aadata)){
+            $count_display_all = count($aadata);
+        }
+
 
         if($this->print == true){
             $result = array(

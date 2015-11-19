@@ -62,6 +62,14 @@
 
         {{ Former::textarea('logistic_desc','Logistic Description')->rows(10)->columns(20) }}
 
+        <h5>API Parameters</h5>
+        <p>These parameters are needed to access 3rd Party API provider, obtain these parameters from provider's developer panel</p>
+
+        {{ Former::text('api_user','API Username') }}
+
+        {{ Former::text('api_pass','API Password') }}
+
+        {{ Former::text('api_key','API Key') }}
 
 @stop
 
