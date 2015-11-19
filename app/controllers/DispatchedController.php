@@ -260,7 +260,19 @@ class DispatchedController extends AdminController {
         $model = $model->where(function($query){
                             $query->where('bucket','=',Config::get('jayon.bucket_tracker'))
                                 ->where(function($qs){
-                                    $qs->where('logistic_type','=','external')
+                                    $qs->where(function($qe){
+                                            $qe->where('logistic_type','=','external')
+                                                ->where(function($qz){
+                                                    $qz->where('status','!=', Config::get('jayon.trans_status_mobile_delivered') )
+                                                        ->where('status','!=', Config::get('jayon.trans_status_mobile_return') )
+                                                        /*
+                                                        ->orWhere(function($qx){
+                                                            $qx->where('status', Config::get('jayon.trans_status_new'))
+                                                                ->where('pending_count', '>', 0);
+                                                        })*/
+                                                        ;
+                                                });
+                                        })
                                         ->orWhere(function($qx){
                                                 $qx->where('logistic_type','=','internal')
                                                     ->where(function($qz){
@@ -992,7 +1004,7 @@ class DispatchedController extends AdminController {
 
             $bcount = count($boxes);
 
-            if(count($boxes) > ($dcount + $rcount)){
+            if(count($boxes) > ($dcount + $rcount) && $data['logistic_type'] == 'internal'){
                 $data['status'] = Config::get('jayon.trans_status_mobile_delivered_partial');
             }
 

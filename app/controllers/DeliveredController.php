@@ -1005,7 +1005,7 @@ class DeliveredController extends AdminController {
 
             $bcount = count($boxes);
 
-            if(count($boxes) > ( $dcount + $rcount ) ){
+            if(count($boxes) > ($dcount + $rcount) && $data['logistic_type'] == 'internal'){
                 $data['status'] = Config::get('jayon.trans_status_mobile_delivered_partial');
             }
 

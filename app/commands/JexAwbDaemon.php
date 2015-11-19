@@ -74,8 +74,37 @@ class JexAwbDaemon extends Command {
             $orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
 
             foreach($orderlist as $order){
+
+                $pre = clone $order;
+
                 $order->awb = $awbs[$order->fulfillment_code];
+                $order->position = '3PL';
                 $order->save();
+
+                $ts = new MongoDate();
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'api_shipment_change_awb';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $order->toArray();
+                $hdata['actor'] = $this->name;
+                $hdata['actor_id'] = '';
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'api_shipment_change_awb';
+                $sdata['reason'] = 'api_update';
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $order->toArray();
+                $sdata['preObject'] = $pre->toArray();
+                $sdata['actor'] = $this->name;
+                $sdata['actor_id'] = '';
+                Shipmentlog::insert($sdata);
+
             }
 
         }else{

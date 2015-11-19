@@ -42,10 +42,13 @@ class JexStatusDaemon extends Command {
 	{
         $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/status';
         $logistic_id = '7735';
+        $delivery_trigger = 'delivered';
+        $returned_trigger = 'returned';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
         $orders = Shipment::where('awb','!=','')
+                        ->where('bucket','=',Config::get('jayon.bucket_tracker'))
                         ->where('status','!=','delivered')
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
@@ -62,6 +65,63 @@ class JexStatusDaemon extends Command {
             $response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
             print( $response->getBody() );
+
+            $awblist = json_decode($response->getBody());
+
+
+            $awbs = array();
+            $ffs = array();
+            foreach ($awblist as $awb) {
+                $awbarray[] = trim($awb->awb);
+                $awbs[$awb->awb] = $awb;
+            }
+
+            $orderlist = Shipment::whereIn('awb', $awbarray)->get();
+
+            foreach($orderlist as $order){
+
+                $pre = clone $order;
+
+                if( $awbs[$order->awb]->status == $delivery_trigger){
+                    $order->status = Config::get('jayon.trans_status_mobile_delivered');
+                    $order->position = 'CUSTOMER';
+                }
+
+                if($awbs[$order->awb]->status == $returned_trigger){
+                    $order->status = Config::get('jayon.trans_status_mobile_return');
+                }
+
+                $order->logistic_status = $awbs[$order->awb]->status;
+                $order->logistic_status_ts = $awbs[$order->awb]->timestamp;
+                $order->logistic_raw_status = $awbs[$order->awb];
+                $order->save();
+
+                $ts = new MongoDate();
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'api_shipment_change_status';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $order->toArray();
+                $hdata['actor'] = $this->name;
+                $hdata['actor_id'] = '';
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'api_shipment_change_status';
+                $sdata['reason'] = 'api_update';
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $order->toArray();
+                $sdata['preObject'] = $pre->toArray();
+                $sdata['actor'] = $this->name;
+                $sdata['actor_id'] = '';
+                Shipmentlog::insert($sdata);
+
+            }
+
         }else{
             print 'Empty order list'."\r\n";
         }
