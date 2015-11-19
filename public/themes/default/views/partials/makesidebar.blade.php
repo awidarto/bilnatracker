@@ -95,6 +95,20 @@
             @endif
 
             @if(Ks::can('view','system'))
+            <li class="nav-parent {{ hsa( array('manifest','devmanifest') ) }} ">
+              <a href=""><i class="fa fa-table"></i><span>Sys Logs</span><span class="fa arrow"></span></a>
+              <ul class="children collapse">
+                <li class="{{ sa('apiaccess') }}" ><a href="{{ URL::to('apiaccess') }}"> API Access Log</a></li>
+                {{--
+                <li class="{{ sa('devmanifest') }}" ><a href="{{ URL::to('devmanifest') }}"> Manifest To Device</a></li>
+                <li class="{{ sa('retmanifest') }}" ><a href="{{ URL::to('retmanifest') }}"> Manifest Retur</a></li>
+                <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
+                --}}
+              </ul>
+            </li>
+            @endif
+
+            @if(Ks::can('view','system'))
 
             <li class="nav-parent {{ hsa( array('user','usergroup','courier','coverage','logistics','position','option' ) ) }} ">
               <a href=""><i class="fa fa-cogs"></i><span>System </span><span class="fa arrow"></span></a>

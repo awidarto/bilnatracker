@@ -111,6 +111,8 @@ class JexAwbDaemon extends Command {
             print 'Empty order list'."\r\n";
         }
 
+        $actor = $this->name;
+        Event::fire('log.api',array('JexAwbDaemon', 'get' ,$actor,'JEX AWB PULL'));
 
 	}
 

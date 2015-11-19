@@ -125,6 +125,10 @@ class JexStatusDaemon extends Command {
         }else{
             print 'Empty order list'."\r\n";
         }
+
+        $actor = $this->name;
+        Event::fire('log.api',array('JexStatusDaemon', 'get' ,$actor,'JEX STATUS PULL'));
+
 	}
 
 	/**
