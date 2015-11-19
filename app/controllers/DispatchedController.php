@@ -992,7 +992,7 @@ class DispatchedController extends AdminController {
 
             $bcount = count($boxes);
 
-            if(count($boxes) > $dcount){
+            if(count($boxes) > ($dcount + $rcount)){
                 $data['status'] = Config::get('jayon.trans_status_mobile_delivered_partial');
             }
 
