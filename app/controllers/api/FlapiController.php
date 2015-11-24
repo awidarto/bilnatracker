@@ -332,8 +332,10 @@ Indonesia',
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
                 }
 
+                $lts = (isset($awbs[$order->awb]['timestamp']) && $awbs[$order->awb]['timestamp'] != '' )? $awbs[$order->awb]['timestamp'] :$awbs[$order->awb]['delivered_date'].' '.$awbs[$order->awb]['delivered_time'];
+
                 $order->logistic_status = $awbs[$order->awb]['last_status'];
-                $order->logistic_status_ts = $awbs[$order->awb]['delivered_date'].' '.$awbs[$order->awb]['delivered_time'];
+                $order->logistic_status_ts = $lts;
                 $order->logistic_raw_status = $awbs[$order->awb];
                 $order->save();
 
