@@ -103,6 +103,8 @@ Route::group(array('prefix' => 'api/v1' ), function()
 {
 });
 
+
+
 /*
  * @author juntriaji
  * Route for API
@@ -133,6 +135,13 @@ Route::group(array('prefix' => 'api/v1/mobile'), function (){
     Route::resource('delivery', 'Api\DeliveryapiController');
     Route::resource('hub', 'Api\HubapiController');
 });
+
+Route::group(array('prefix' => 'api/v1/service'), function (){
+    Route::resource('awb', 'Api\AwbController');
+    Route::resource('status', 'Api\StatusController');
+    Route::get('fl/order', 'Api\FlapiController@index');
+});
+
 
 Route::get('tolower',function(){
 

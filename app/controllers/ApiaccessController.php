@@ -63,6 +63,10 @@ class ApiaccessController extends AdminController {
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
+        $this->place_action = 'first';
+
+        $this->show_select = false;
+
         $this->title = 'API Access Log';
 
         return parent::getIndex();
@@ -79,6 +83,10 @@ class ApiaccessController extends AdminController {
             array('actor',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true,'attr'=>array('class'=>'expander'))),
             array('result',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
         );
+
+        $this->place_action = 'first';
+
+        $this->show_select = false;
 
         $this->def_order_by = 'timestamp';
         $this->def_order_dir = 'desc';
@@ -149,7 +157,7 @@ class ApiaccessController extends AdminController {
         $delete = '<span class="del" id="'.$data['_id'].'" ><i class="icon-trash"></i>Delete</span>';
         $edit = '<a href="'.URL::to('agent/edit/'.$data['_id']).'"><i class="icon-edit"></i>Update</a>';
 
-        $actions = $edit.'<br />'.$delete;
+        $actions = '';
         return $actions;
     }
 

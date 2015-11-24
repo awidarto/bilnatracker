@@ -732,6 +732,12 @@ class IncomingController extends AdminController {
 
         }
 
+        if(isset($data['consignee_olshop_province'])){
+
+        }else{
+            $data['consignee_olshop_province'] = '';
+        }
+
         $data['delivery_type'] = (isset($data['delivery_type']))?$data['delivery_type']:'REG';
 
         $data['trip'] = (isset($data['trip']))?intval($data['trip']):1;
