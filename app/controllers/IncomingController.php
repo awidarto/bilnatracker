@@ -726,7 +726,7 @@ class IncomingController extends AdminController {
                 $data['logistic'] = $logistic->logistic_code;
                 $data['logistic_type'] = $logistic->type;
             }else{
-                $data['logistic'] = 'BRIDER001';
+                $data['logistic'] = 'BEST001';
                 $data['logistic_type'] = 'internal';
             }
 

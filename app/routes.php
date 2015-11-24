@@ -140,6 +140,7 @@ Route::group(array('prefix' => 'api/v1/service'), function (){
     Route::resource('awb', 'Api\AwbController');
     Route::resource('status', 'Api\StatusController');
     Route::get('fl/order', 'Api\FlapiController@index');
+    Route::post('fl/status', 'Api\FlapiController@postStatus');
 });
 
 

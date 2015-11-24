@@ -64,6 +64,8 @@ class FlapiController extends \BaseController {
 
     public $sql_table_name;
 
+    public $name = "FL Daemon";
+
     public function  __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -110,12 +112,12 @@ class FlapiController extends \BaseController {
                         ->where('status','!=','delivered')
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
+                        ->where('uploaded','=',false)
                         ->get();
 
+        $orderres = clone $orders;
+
         $orders = $orders->toArray();
-
-        //print_r($orders);
-
 
         $orderlist = array();
 
@@ -259,6 +261,10 @@ Indonesia',
             $orderlist[] = $entry;
         }
 
+        foreach($orderres as $ord){
+            $ord->uploaded = true;
+            $ord->save();
+        }
 
         $actor = $key;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'logged out'));
@@ -269,6 +275,18 @@ Indonesia',
 
     public function postStatus()
     {
+        /*
+        "awb":"awb1",
+        "order_id":"no order",
+        "last_status":"kode status kiriman FL ",
+        "cn_name":"penerima",
+        "delivered_date":"tanggal",
+        "delivered_time":"jam"
+        */
+
+        $delivery_trigger = 'delivered';
+        $returned_trigger = 'returned';
+
 
         $key = \Input::get('key');
 
@@ -283,11 +301,82 @@ Indonesia',
 
         $logistic = \Logistic::where('api_key','=',$key)->first();
 
-        $json = \Input::all();
+        $json = \Input::json();
 
         $batch = \Input::get('batch');
 
+        $awbarray = array();
+        $awbs = array();
+
+        foreach($json as $j){
+            $awbarray[] = $j['awb'];
+            $awbs[$j['awb']] = $j;
+
+        }
+
         $result = array();
+
+        $orderlist = \Shipment::whereIn('awb', $awbarray)->get();
+
+        if($orderlist){
+            foreach($orderlist as $order){
+
+                $pre = clone $order;
+
+                if( $awbs[$order->awb]['last_status'] == $delivery_trigger){
+                    $order->status = \Config::get('jayon.trans_status_mobile_delivered');
+                    $order->position = 'CUSTOMER';
+                }
+
+                if($awbs[$order->awb]['last_status'] == $returned_trigger){
+                    $order->status = \Config::get('jayon.trans_status_mobile_return');
+                }
+
+                $order->logistic_status = $awbs[$order->awb]['last_status'];
+                $order->logistic_status_ts = $awbs[$order->awb]['delivered_date'].' '.$awbs[$order->awb]['delivered_time'];
+                $order->logistic_raw_status = $awbs[$order->awb];
+                $order->save();
+
+                $ts = new \MongoDate();
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'api_shipment_change_status';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $order->toArray();
+                $hdata['actor'] = $this->name;
+                $hdata['actor_id'] = '';
+
+                \History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'api_shipment_change_status';
+                $sdata['reason'] = 'api_update';
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $order->toArray();
+                $sdata['preObject'] = $pre->toArray();
+                $sdata['actor'] = $this->name;
+                $sdata['actor_id'] = '';
+                \Shipmentlog::insert($sdata);
+
+            }
+
+            $actor = 'FL : STATUS PUSH';
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
+
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>'FL Status Update' ));
+
+        }else{
+
+            $actor = 'FL : STATUS PUSH';
+            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'empty order list'));
+
+            return \Response::json(array('status'=>'ERR:EMPTYORDER', 'timestamp'=>time(), 'message'=>'Empty Order List' ));
+
+        }
+
 
 
 
