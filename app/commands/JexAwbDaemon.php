@@ -30,6 +30,7 @@ class JexAwbDaemon extends Command {
 	 */
 	public function __construct()
 	{
+        date_default_timezone_set('Asia/Jakarta');
 		parent::__construct();
 	}
 
@@ -40,6 +41,9 @@ class JexAwbDaemon extends Command {
 	 */
 	public function fire()
 	{
+
+        date_default_timezone_set('Asia/Jakarta');
+
         $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/awb';
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/awb';
         $logistic_id = '7735';
