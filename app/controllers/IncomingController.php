@@ -772,6 +772,8 @@ class IncomingController extends AdminController {
         $data['courier_name'] = '';
         $data['courier_id'] = '';
 
+        $data['uploaded'] = 0;
+
         unset($data['volume']);
         unset($data['sessId']);
         unset($data['isHead']);

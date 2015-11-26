@@ -90,6 +90,7 @@ class JexAwbDaemon extends Command {
 
                 $order->awb = $awbs[$order->fulfillment_code];
                 $order->position = '3PL';
+                $order->uploaded = 1;
                 $order->save();
 
                 $ts = new MongoDate();
