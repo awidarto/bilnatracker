@@ -262,6 +262,7 @@ class IncomingController extends AdminController {
                                 $q->where('pending_count','=',0)
                                     ->where('status','=', Config::get('jayon.trans_status_new') );
                             })
+                            ->orWhere('status','=', Config::get('jayon.trans_status_admin_dated') )
                             ->orWhere('status','=', Config::get('jayon.trans_status_confirmed') )
                             ->orWhere('status','=', Config::get('jayon.trans_status_tobeconfirmed') )
                             ->where('status','not regexp','/*assigned/');
@@ -1120,8 +1121,8 @@ class IncomingController extends AdminController {
                 }else{
                     if($r->awb != ''){
                         $r->bucket = Config::get('jayon.bucket_tracker');
-                        $r->status = Config::get('jayon.trans_status_admin_dated');
                     }
+                    $r->status = Config::get('jayon.trans_status_admin_dated');
                 }
 
                 $r->save();

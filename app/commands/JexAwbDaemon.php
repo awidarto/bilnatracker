@@ -48,6 +48,7 @@ class JexAwbDaemon extends Command {
 
 		$orders = Shipment::where('awb','=','')
                         ->where('logistic_type','=','external')
+                        ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->get();
 
