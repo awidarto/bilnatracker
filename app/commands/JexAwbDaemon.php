@@ -41,6 +41,7 @@ class JexAwbDaemon extends Command {
 	public function fire()
 	{
         $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/awb';
+        //$base_url = 'http://localhost/jexadmin/public/api/v1/service/awb';
         $logistic_id = '7735';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
@@ -52,9 +53,17 @@ class JexAwbDaemon extends Command {
 
         if($orders && count($orders->toArray()) > 0){
             $req = array();
+            /*
             foreach($orders as $ord){
                 $req[] = array('order_id'=>$ord->no_sales_order, 'ff_id'=>$ord->consignee_olshop_orderid);
             }
+            */
+
+            $req = $orders->toArray();
+
+            //print json_encode($req);
+
+            //die();
 
             $client = new GuzzleClient();
 
@@ -63,6 +72,8 @@ class JexAwbDaemon extends Command {
             $awblist = json_decode($response->getBody());
 
             //print_r($awblist);
+
+            //die();
 
             $awbs = array();
             $ffs = array();
@@ -112,7 +123,7 @@ class JexAwbDaemon extends Command {
         }
 
         $actor = $this->name;
-        Event::fire('log.api',array('JexAwbDaemon', 'get' ,$actor,'JEX AWB PULL'));
+        Event::fire('log.api',array('JexAwbDaemon', 'get' ,$actor,'JEX PUSH DATA AWB PULL'));
 
 	}
 
