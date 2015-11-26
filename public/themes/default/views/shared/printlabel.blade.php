@@ -134,7 +134,8 @@
                 <tr>
                     <td style="text-align:center">
                         {{ $pd['no_sales_order'] }}<br />
-                        {{ $pd['consignee_olshop_orderid'].' '.($b + 1).'/'.$pd['number_of_package']}}
+                        {{ $pd['consignee_olshop_orderid'].' '.($b + 1).'/'.$pd['number_of_package']}}<br />
+                        AWB : {{ $pd['awb'] }}
                     </td>
                 </tr>
             </table>
