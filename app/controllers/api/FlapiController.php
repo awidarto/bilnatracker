@@ -108,11 +108,10 @@ class FlapiController extends \BaseController {
         $logistic_id = $logistic->consignee_olshop_cust;
 
         $orders = \Shipment::where('awb','!=','')
-                        ->where('bucket','=',\Config::get('jayon.bucket_tracker'))
-                        ->where('status','!=','delivered')
                         ->where('logistic_type','=','external')
+                        ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
-                        ->where('uploaded','=',false)
+                        ->where('uploaded','=',0)
                         ->get();
 
         $orderres = clone $orders;
@@ -262,12 +261,12 @@ Indonesia',
         }
 
         foreach($orderres as $ord){
-            $ord->uploaded = true;
+            $ord->uploaded = 1;
             $ord->save();
         }
 
         $actor = $key;
-        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'logged out'));
+        \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'FL PULL DATA'));
 
         return $orderlist;
         //
