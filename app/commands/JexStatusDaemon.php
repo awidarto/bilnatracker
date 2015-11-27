@@ -40,6 +40,7 @@ class JexStatusDaemon extends Command {
 	 */
 	public function fire()
 	{
+        //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/status';
         $logistic_id = '7735';
         $delivery_trigger = 'delivered';
@@ -64,7 +65,7 @@ class JexStatusDaemon extends Command {
 
             $response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
-            print( $response->getBody() );
+            //print( $response->getBody() );
 
             $awblist = json_decode($response->getBody());
 
@@ -91,6 +92,7 @@ class JexStatusDaemon extends Command {
                     $order->status = Config::get('jayon.trans_status_mobile_return');
                 }
 
+                $order->district = $awbs[$order->awb]->district;
                 $order->logistic_status = $awbs[$order->awb]->status;
                 $order->logistic_status_ts = $awbs[$order->awb]->timestamp;
                 $order->logistic_raw_status = $awbs[$order->awb];
