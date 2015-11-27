@@ -94,6 +94,7 @@ class JexAwbDaemon extends Command {
                 $pre = clone $order;
 
                 $order->awb = $awbs[$order->fulfillment_code];
+                $order->bucket = Config::get('jayon.bucket_tracker');
                 $order->position = '3PL';
                 $order->uploaded = 1;
                 $order->save();
