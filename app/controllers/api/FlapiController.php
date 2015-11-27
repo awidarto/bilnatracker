@@ -322,7 +322,8 @@ Indonesia',
         $orderlist = \Shipment::whereIn('awb', $awbarray)->get();
 
 
-        if(count($orderlist) > 0){
+        if($orderlist){
+
             foreach($orderlist as $order){
 
                 $pre = clone $order;
