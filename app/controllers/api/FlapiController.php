@@ -376,9 +376,17 @@ Indonesia',
             }
 
             $actor = 'FL : STATUS PUSH';
-            \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
 
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>'FL Status Update', 'statusarray'=>$statusarray ));
+            if(count($statusarray) > 0){
+                \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
+                return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>'FL Status Update', 'statusarray'=>$statusarray ));
+            }else{
+
+                \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'empty order list'));
+                return \Response::json(array('status'=>'ERR:EMPTYORDER', 'timestamp'=>time(), 'message'=>'Empty Order List' ));
+
+            }
+
 
         }else{
 
