@@ -76,7 +76,6 @@
             <iframe id="label_frame" name="label_frame" width="100%" height="90%"
             marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"
             title="Dialog Title">Your browser does not suppr</iframe>
-
         </div>
     </div>
     <div class="modal-footer" style="z-index:20000;">
@@ -195,7 +194,21 @@
 
             var pframe = document.getElementById('label_frame');
             var pframeWindow = pframe.contentWindow;
+
+            console.log(pframeWindow.getIds());
+
             pframeWindow.print();
+
+            $.post('{{ URL::to('incoming/exttotrack') }}',
+                {
+                    'ids' : pframeWindow.getIds()
+                },
+                function(data) {
+                    if(data.result == 'OK:MOVED'){
+                        oTable.draw();
+                    }
+                },'json');
+
 
         });
 

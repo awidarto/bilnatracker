@@ -1119,9 +1119,11 @@ class IncomingController extends AdminController {
                         $r->status = Config::get('jayon.trans_status_admin_dated');
                     }
                 }else{
+                    /*
                     if($r->awb != ''){
                         $r->bucket = Config::get('jayon.bucket_tracker');
-                    }
+                    }*/
+
                     $r->status = Config::get('jayon.trans_status_admin_dated');
                 }
 
@@ -1141,6 +1143,64 @@ class IncomingController extends AdminController {
                 $sdata = array();
                 $sdata['timestamp'] = $ts;
                 $sdata['action'] = 'assign_date';
+                $sdata['reason'] = $reason;
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $r->toArray();
+                $sdata['preObject'] = $pre->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:MOVED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:MOVEFAILED' ));
+        }
+
+    }
+
+    public function postExttotrack(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        $ts = new MongoDate();
+        //print_r($results->toArray());
+            $reason = (isset($in['reason']))?$in['reason']:'move after print';
+        //if($results){
+            $res = false;
+        //}else{
+            foreach($results as $r){
+
+                $pre = clone $r;
+
+                if($r->logistic_type == 'external'){
+                    if(trim($r->awb) != ''){
+                        $r->bucket = Config::get('jayon.bucket_tracker');
+                        $r->save();
+                    }
+                }
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'print_external_barcode';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $r->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'print_external_barcode';
                 $sdata['reason'] = $reason;
                 $sdata['objectType'] = 'shipment';
                 $sdata['object'] = $r->toArray();

@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Delivery Slip</title>
+    <title>Print Label</title>
 
 <style type="text/css">
     body{
@@ -104,13 +104,18 @@
     }
 
 </style>
+
+
 </head>
 <body>
 <div id="container">
 
+<?php $pids = array(); ?>
 @foreach( $labels as $l )
-    <?php $pd = $products[ $l['_id'] ]; ?>
-
+    <?php
+        $pd = $products[ $l['_id'] ];
+        $pids[] = '\''.$l['_id'].'\'';
+     ?>
     @for($b = 0; $b < $pd['number_of_package'];$b++)
 
         <div class="label">
@@ -147,6 +152,14 @@
 <?php endforeach; ?>
 
 </div>
+
+<script type="text/javascript">
+    function getIds(){
+        return [
+            {{ implode(',', $pids) }}
+        ];
+    }
+</script>
 
 </body>
 </html>
