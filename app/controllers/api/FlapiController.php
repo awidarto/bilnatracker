@@ -307,9 +307,13 @@ Indonesia',
         $awbarray = array();
         $awbs = array();
 
+        $statusarray = array();
+
         foreach($json as $j){
             $awbarray[] = $j['awb'];
             $awbs[$j['awb']] = $j;
+            $statusarray[] = array('AWB'=>$j['awb'], 'status'=>'NOT FOUND' );
+
 
         }
 
@@ -317,7 +321,8 @@ Indonesia',
 
         $orderlist = \Shipment::whereIn('awb', $awbarray)->get();
 
-        if($orderlist){
+
+        if(count($orderlist) > 0){
             foreach($orderlist as $order){
 
                 $pre = clone $order;
@@ -336,7 +341,12 @@ Indonesia',
                 $order->logistic_status = $awbs[$order->awb]['last_status'];
                 $order->logistic_status_ts = $lts;
                 $order->logistic_raw_status = $awbs[$order->awb];
-                $order->save();
+
+                $saved = $order->save();
+
+                if($saved){
+                    $statusarray[] = array('AWB'=>$order->awb, 'status'=>'STATUS UPDATED' );
+                }
 
                 $ts = new \MongoDate();
 
@@ -367,7 +377,7 @@ Indonesia',
             $actor = 'FL : STATUS PUSH';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
 
-            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>'FL Status Update' ));
+            return \Response::json(array('status'=>'OK', 'timestamp'=>time(), 'message'=>'FL Status Update', 'statusarray'=>$statusarray ));
 
         }else{
 
