@@ -109,7 +109,7 @@ class FlapiController extends \BaseController {
 
         $orders = \Shipment::where('awb','!=','')
                         ->where('logistic_type','=','external')
-                        ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
+                        ->where('status','=', \Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->where('uploaded','=',0)
                         ->get();
