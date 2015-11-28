@@ -74,56 +74,60 @@ class JexAwbDaemon extends Command {
 
             $response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
-            $awblist = json_decode($response->getBody());
+            //if($response->isSuccessful()){
 
-            //print_r($awblist);
+                $awblist = json_decode($response->getBody());
 
-            //die();
+                $awbs = array();
+                $ffs = array();
+                foreach ($awblist as $awb) {
+                    $ffs[] = $awb->ff_id;
+                    $awbs[$awb->ff_id] = $awb->awb;
+                }
 
-            $awbs = array();
-            $ffs = array();
-            foreach ($awblist as $awb) {
-                $ffs[] = $awb->ff_id;
-                $awbs[$awb->ff_id] = $awb->awb;
-            }
+                $orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
 
-            $orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
+                foreach($orderlist as $order){
 
-            foreach($orderlist as $order){
+                    $pre = clone $order;
 
-                $pre = clone $order;
+                    $order->awb = $awbs[$order->fulfillment_code];
+                    //$order->bucket = Config::get('jayon.bucket_tracker');
+                    $order->position = '3PL';
+                    $order->uploaded = 1;
+                    $order->save();
 
-                $order->awb = $awbs[$order->fulfillment_code];
-                //$order->bucket = Config::get('jayon.bucket_tracker');
-                $order->position = '3PL';
-                $order->uploaded = 1;
-                $order->save();
+                    $ts = new MongoDate();
 
-                $ts = new MongoDate();
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'api_shipment_change_awb';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $order->toArray();
+                    $hdata['actor'] = $this->name;
+                    $hdata['actor_id'] = '';
 
-                $hdata = array();
-                $hdata['historyTimestamp'] = $ts;
-                $hdata['historyAction'] = 'api_shipment_change_awb';
-                $hdata['historySequence'] = 1;
-                $hdata['historyObjectType'] = 'shipment';
-                $hdata['historyObject'] = $order->toArray();
-                $hdata['actor'] = $this->name;
-                $hdata['actor_id'] = '';
+                    History::insert($hdata);
 
-                History::insert($hdata);
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'api_shipment_change_awb';
+                    $sdata['reason'] = 'api_update';
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $order->toArray();
+                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['actor'] = $this->name;
+                    $sdata['actor_id'] = '';
+                    Shipmentlog::insert($sdata);
 
-                $sdata = array();
-                $sdata['timestamp'] = $ts;
-                $sdata['action'] = 'api_shipment_change_awb';
-                $sdata['reason'] = 'api_update';
-                $sdata['objectType'] = 'shipment';
-                $sdata['object'] = $order->toArray();
-                $sdata['preObject'] = $pre->toArray();
-                $sdata['actor'] = $this->name;
-                $sdata['actor_id'] = '';
-                Shipmentlog::insert($sdata);
+                }
 
-            }
+
+            //}else{
+                print $response->getBody();
+            //}
+
 
         }else{
             print 'Empty order list'."\r\n";
