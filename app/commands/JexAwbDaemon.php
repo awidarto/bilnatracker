@@ -70,7 +70,7 @@ class JexAwbDaemon extends Command {
 
             //die();
 
-            $client = new GuzzleClient();
+            $client = new GuzzleClient(['defaults'=>['exceptions'=>false]]);
 
             $response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
