@@ -96,6 +96,10 @@ class JexAwbDaemon extends Command {
                     //$awblist = json_decode($response->getBody());
                     $awblist = json_decode($result);
 
+                    print $result;
+
+                    die();
+
                     $awbs = array();
                     $ffs = array();
                     foreach ($awblist as $awb) {
