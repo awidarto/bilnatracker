@@ -54,6 +54,10 @@ class JexAwbDaemon extends Command {
                         ->where('logistic_type','=','external')
                         ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
+                        ->where(function($q){
+                            $q->where('delivery_type','=','COD')
+                                ->orWhere('delivery_type','=','CCOD');
+                        })
                         ->get();
 
         if($orders && count($orders->toArray()) > 0){
@@ -75,8 +79,6 @@ class JexAwbDaemon extends Command {
             try {
 
                 //$response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
-
-                //if($response->isSuccessful()){
 
                     $data_string = json_encode($req);
 
@@ -144,11 +146,6 @@ class JexAwbDaemon extends Command {
                         Shipmentlog::insert($sdata);
 
                     }
-
-
-                //}else{
-                    //print $response->getBody();
-                //}
 
 
             } catch (Exception $e) {
