@@ -1209,8 +1209,8 @@ class IncomingController extends AdminController {
                 $sdata['actor_id'] = Auth::user()->_id;
                 Shipmentlog::insert($sdata);
 
-
             }
+
             $res = true;
         //}
 

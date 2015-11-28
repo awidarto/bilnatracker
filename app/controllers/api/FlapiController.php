@@ -111,7 +111,10 @@ class FlapiController extends \BaseController {
                         ->where('logistic_type','=','external')
                         ->where('status','=', \Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
-                        ->where('uploaded','=',0)
+                        ->where(function($q){
+                            $q->where('uploaded','!=',1)
+                                ->orWhere('uploaded','exists',false)
+                        })
                         ->get();
 
         $orderres = clone $orders;
