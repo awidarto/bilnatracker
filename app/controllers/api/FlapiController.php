@@ -113,7 +113,7 @@ class FlapiController extends \BaseController {
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->where(function($q){
                             $q->where('uploaded','!=',1)
-                                ->orWhere('uploaded','exists',false)
+                                ->orWhere('uploaded','exists',false);
                         })
                         ->get();
 
