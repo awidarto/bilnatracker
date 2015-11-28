@@ -70,15 +70,31 @@ class JexAwbDaemon extends Command {
 
             //die();
 
-            $client = new GuzzleClient(['defaults'=>['exceptions'=>false]]);
+            //$client = new GuzzleClient(['defaults'=>['exceptions'=>false]]);
 
             try {
 
-                $response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
+                //$response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
                 //if($response->isSuccessful()){
 
-                    $awblist = json_decode($response->getBody());
+                    $data_string = json_encode($req);
+
+                    $url = $base_url.'?key='.$logistic->api_key;
+
+                    $ch = curl_init('http://api.local/rest/users');
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($data_string))
+                    );
+
+                    $result = curl_exec($ch);
+
+                    //$awblist = json_decode($response->getBody());
+                    $awblist = json_decode($result);
 
                     $awbs = array();
                     $ffs = array();
