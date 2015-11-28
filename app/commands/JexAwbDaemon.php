@@ -147,7 +147,7 @@ class JexAwbDaemon extends Command {
 
 
                 //}else{
-                    print $response->getBody();
+                    //print $response->getBody();
                 //}
 
 
