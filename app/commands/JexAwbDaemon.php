@@ -82,7 +82,7 @@ class JexAwbDaemon extends Command {
 
                     $url = $base_url.'?key='.$logistic->api_key;
 
-                    $ch = curl_init('http://api.local/rest/users');
+                    $ch = curl_init($url);
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
