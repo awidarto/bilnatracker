@@ -55,8 +55,8 @@ class JexAwbDaemon extends Command {
                         ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->where(function($q){
-                            $q->where('delivery_type','=','COD')
-                                ->orWhere('delivery_type','=','CCOD');
+                            $q->where('consignee_olshop_service','=','COD')
+                                ->orWhere('consignee_olshop_service','=','CCOD');
                         })
                         ->get();
 
