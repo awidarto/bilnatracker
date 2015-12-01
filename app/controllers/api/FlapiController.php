@@ -135,7 +135,7 @@ class FlapiController extends \BaseController {
 
             $consignee = array(
                 'cn_name'=> $o['consignee_olshop_name'],
-                'address'=> $o['consignee_olshop_addr'] ,
+                'address'=> str_replace(array("\r","\n"), ' ', $o['consignee_olshop_addr'] ),
                 'distric'=> $o['district'] ,
                 'city'=> $o['consignee_olshop_city'] ,
                 'province'=> $o['consignee_olshop_region'] ,
@@ -178,11 +178,7 @@ class FlapiController extends \BaseController {
 
             $shipper = array(
                 'merchant'=> 'Bilna.com',
-                'merchant_address'=> 'Kawasan Pergudangan
-PT. WIDYA SAKTI KUSUMA
-Jl. Raya Bekasi KM 28
-( Jl. Wahab Affan ) Pondok Ungu,
-Medan Satria, Bekasi 17132',
+                'merchant_address'=> 'Kawasan Pergudangan PT. WIDYA SAKTI KUSUMA Jl. Raya Bekasi KM 28 ( Jl. Wahab Affan ) Pondok Ungu, Medan Satria, Bekasi 17132',
                 'merchant_distric'=> 'Medan Satria',
                 'merchant_city'=> 'Bekasi',
                 'merchant_province'=> 'Jawa Barat',
@@ -312,12 +308,12 @@ Indonesia',
 
         $statusarray = array();
 
+        $inawbstatus = array();
+
         foreach($json as $j){
             $awbarray[] = $j['awb'];
             $awbs[$j['awb']] = $j;
-            $statusarray[] = array('AWB'=>$j['awb'], 'status'=>'NOT FOUND' );
-
-
+            $inawbstatus[$j['awb']] = 'NOT FOUND';
         }
 
         $result = array();
@@ -349,7 +345,7 @@ Indonesia',
                 $saved = $order->save();
 
                 if($saved){
-                    $statusarray[] = array('AWB'=>$order->awb, 'status'=>'STATUS UPDATED' );
+                    $inawbstatus[$order->awb] = 'STATUS UPDATED';
                 }
 
                 $ts = new \MongoDate();
@@ -379,6 +375,10 @@ Indonesia',
             }
 
             $actor = 'FL : STATUS PUSH';
+
+            foreach($inawbstatus as $k=>$v){
+                $statusarray[] = array('AWB'=> $k, 'status'=> $v);
+            }
 
             if(count($statusarray) > 0){
                 \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
