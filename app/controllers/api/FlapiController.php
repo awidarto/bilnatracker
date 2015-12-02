@@ -265,7 +265,7 @@ Indonesia',
             $orderlist[] = $entry;
         }
 
-        if($dev != 1){
+        if($is_dev != 1){
             foreach($orderres as $ord){
                 $ord->uploaded = 1;
                 $ord->save();
