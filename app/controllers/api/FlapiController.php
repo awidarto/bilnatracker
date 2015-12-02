@@ -95,6 +95,12 @@ class FlapiController extends \BaseController {
         $order_id = Input::get('orderid');
         $ff_id = Input::get('ffid');
 
+        $isdev = Input::get('dev');
+
+        if(is_null($isdev) || $isdev == ''){
+            $is_dev = 0;
+        }
+
         if( is_null($key) || $key == ''){
             $actor = 'no id : no name';
             \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'empty key'));
@@ -259,9 +265,11 @@ Indonesia',
             $orderlist[] = $entry;
         }
 
-        foreach($orderres as $ord){
-            $ord->uploaded = 1;
-            $ord->save();
+        if($dev != 1){
+            foreach($orderres as $ord){
+                $ord->uploaded = 1;
+                $ord->save();
+            }
         }
 
         $actor = $key;
