@@ -95,9 +95,9 @@ class FlapiController extends \BaseController {
         $order_id = Input::get('orderid');
         $ff_id = Input::get('ffid');
 
-        $isdev = Input::get('dev');
+        $is_dev = Input::get('dev');
 
-        if(is_null($isdev) || $isdev == ''){
+        if(is_null($is_dev) || $is_dev == ''){
             $is_dev = 0;
         }
 
