@@ -316,7 +316,8 @@ return array(
             array('CONTACT',array('search'=>true,'sort'=>true)),
             array('DESC',array('search'=>true,'sort'=>true)),
             array('W/V',array('search'=>true,'sort'=>true)),
-            array('INSURANCE',array('search'=>true,'sort'=>true))
+            array('INSURANCE',array('search'=>true,'sort'=>true)),
+            array('UPLOADED',array('search'=>true,'sort'=>true))
 
         ),
 
@@ -353,7 +354,8 @@ return array(
             array('contact',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_desc',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('w_v',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('consignee_olshop_inst_amt',array('kind'=>'currency' , 'query'=>'like', 'pos'=>'both','show'=>true))
+            array('consignee_olshop_inst_amt',array('kind'=>'currency' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('uploaded',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
 
         ),
 

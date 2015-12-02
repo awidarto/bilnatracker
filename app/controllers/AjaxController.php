@@ -755,6 +755,70 @@ class AjaxController extends BaseController {
 
     }
 
+    public function postResetuploaded(){
+        $in = Input::get();
+        $results = Shipment::whereIn('_id', $in['ids'])->get();
+
+        date_default_timezone_set('Asia/Jakarta');
+
+        //print_r($results->toArray());
+
+        //if($results){
+            $res = false;
+        //}else{
+
+            $ts = new MongoDate();
+
+            foreach($results as $sh){
+
+                $pre = clone $sh;
+
+                $sh->uploaded = 0 ;
+
+                $sh->last_action_ts = $ts;
+                $sh->last_action = 'Reset Uploaded Flag';
+                $sh->last_reason = $in['reason'];
+                $sh->save();
+
+                //print_r(Auth::user());
+
+                $hdata = array();
+                $hdata['historyTimestamp'] = $ts;
+                $hdata['historyAction'] = 'cancel_data';
+                $hdata['historySequence'] = 1;
+                $hdata['historyObjectType'] = 'shipment';
+                $hdata['historyObject'] = $sh->toArray();
+                $hdata['actor'] = Auth::user()->fullname;
+                $hdata['actor_id'] = Auth::user()->_id;
+
+                //print_r($hdata);
+
+                History::insert($hdata);
+
+                $sdata = array();
+                $sdata['timestamp'] = $ts;
+                $sdata['action'] = 'cancel_data';
+                $sdata['reason'] = $in['reason'];
+                $sdata['objectType'] = 'shipment';
+                $sdata['object'] = $sh->toArray();
+                $sdata['preObject'] = $pre->toArray();
+                $sdata['actor'] = Auth::user()->fullname;
+                $sdata['actor_id'] = Auth::user()->_id;
+                Shipmentlog::insert($sdata);
+
+
+            }
+            $res = true;
+        //}
+
+        if($res){
+            return Response::json(array('result'=>'OK:RESCHED' ));
+        }else{
+            return Response::json(array('result'=>'ERR:RESCHEDFAILED' ));
+        }
+
+    }
+
     public function postMoveorder(){
         $in = Input::get();
         $results = Shipment::whereIn('_id', $in['ids'])->get();
