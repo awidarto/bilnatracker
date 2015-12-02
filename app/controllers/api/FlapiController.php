@@ -165,6 +165,8 @@ class FlapiController extends \BaseController {
             //    $pickupdate = $o['pick_up_date'];
             //}
 
+            $o['cod'] = (isset($o['cod']))?$o['cod']:0;
+
             $order = array(
                 'orderid'=> $o['no_sales_order'].'-'.$o['fulfillment_code'],
                 //'volumetric'=> $o['w_v'],
