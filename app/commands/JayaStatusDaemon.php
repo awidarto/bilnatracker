@@ -118,14 +118,14 @@ class JayaStatusDaemon extends Command {
             foreach ($awblist as $awb) {
                 if( !is_null($awb->cn_no) && $awb->status != 'AWB TIDAK DITEMUKAN'){
                     $awbarray[] = trim($awb->cn_no);
-                    $awbs[$awb->awb] = $awb;
+                    $awbs[$awb->cn_no] = $awb;
                 }
             }
 
 
             if(count($awbs) > 0){
 
-                print_r($awbs);
+                //print_r($awbs);
 
                 $orderlist = Shipment::whereIn('awb', $awbarray)->get();
 
