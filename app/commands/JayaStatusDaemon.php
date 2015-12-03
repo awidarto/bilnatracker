@@ -109,7 +109,7 @@ class JayaStatusDaemon extends Command {
 
                 $awblist = json_decode($result);
 
-                Logger::api($this->name ,$data_string, $result);
+                Logger::api($this->name ,$data_string, $awblist);
 
                 //print $result;
 
