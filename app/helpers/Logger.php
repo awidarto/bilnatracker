@@ -19,7 +19,7 @@ class Logger{
 
     public static function api($func ,$in, $out)
     {
-        $access = new Accesslog();
+        $access = new Apilog();
 
         $access->func = $func;
         $access->type = 'daemon';
