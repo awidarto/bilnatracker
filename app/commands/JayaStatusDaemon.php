@@ -111,6 +111,8 @@ class JayaStatusDaemon extends Command {
 
                 Logger::api($this->name ,$data_string, $result);
 
+                print $result;
+
             $awbs = array();
             $ffs = array();
             foreach ($awblist as $awb) {
