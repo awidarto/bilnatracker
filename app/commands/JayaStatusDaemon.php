@@ -65,7 +65,7 @@ class JayaStatusDaemon extends Command {
 
             $data_string = json_encode($req);
 
-            print $data_string;
+            //print $data_string;
 
             //$request->setHeader("Accept" , "application/json");
             /*
@@ -111,7 +111,7 @@ class JayaStatusDaemon extends Command {
 
                 Logger::api($this->name ,$data_string, $result);
 
-                print $result;
+                //print $result;
 
             $awbs = array();
             $ffs = array();
@@ -122,7 +122,10 @@ class JayaStatusDaemon extends Command {
                 }
             }
 
+
             if(count($awbs) > 0){
+
+                print_r($awbs);
 
                 $orderlist = Shipment::whereIn('awb', $awbarray)->get();
 
