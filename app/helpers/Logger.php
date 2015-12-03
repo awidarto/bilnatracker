@@ -16,4 +16,17 @@ class Logger{
 
         $access->save();
     }
+
+    public static function api($func ,$in, $out)
+    {
+        $access = new Accesslog();
+
+        $access->func = $func;
+        $access->type = 'daemon';
+        $access->in = $in;
+        $access->out = $out;
+
+        $access->save();
+    }
+
 }
