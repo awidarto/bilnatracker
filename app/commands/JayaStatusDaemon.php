@@ -44,7 +44,7 @@ class JayaStatusDaemon extends Command {
         $base_url = 'http://j-express.id/serverapi.jet/api/tracking/tracking-list.php';
         $logistic_id = 'CGKN00027';
         $delivery_trigger = 'KIRIMAN DITERIMA OLEH';
-        $returned_trigger = 'returned';
+        $returned_trigger = 'KEMBALI KE KOTA ASAL';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
