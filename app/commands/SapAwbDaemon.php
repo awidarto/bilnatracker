@@ -104,7 +104,7 @@ class SapAwbDaemon extends Command {
                         //$awblist = json_decode($response->getBody());
                         print $result;
 
-                        $awblist = json_decode($result);
+                        //$awblist = json_decode($result);
 
                         //print $result;
 
