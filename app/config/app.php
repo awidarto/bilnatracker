@@ -119,7 +119,8 @@ return array(
         'SimpleSoftwareIO\QrCode\QrCodeServiceProvider',
         'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
-        'Pingpong\Auth2\Auth2ServiceProvider'
+        'Pingpong\Auth2\Auth2ServiceProvider',
+        'Nathanmac\Utilities\Parser\ParserServiceProvider'
 	),
 
 	/*
@@ -201,6 +202,7 @@ return array(
         'Code2D'          => 'Dinesh\Barcode\Facades\DNS2DFacade',
         'QRCode'          => 'SimpleSoftwareIO\QrCode\Facades\QrCode',
         'GuzzleClient'    => 'GuzzleHttp\Client',
+        'Parser'          => 'Nathanmac\Utilities\Parser\Facades\Parser',
 	),
 
 );

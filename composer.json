@@ -26,7 +26,9 @@
         "sleeping-owl/with-join": "1.*",
         "parse/php-sdk" : "1.1.*",
         "passioncoder/simplecurl": "dev-master",
-        "guzzlehttp/guzzle": "6.1.0"
+        "guzzlehttp/guzzle": "6.1.0",
+        "soapbox/laravel-formatter": "2.x",
+        "Nathanmac/Parser": "2.*"
 	},
 	"autoload": {
 		"classmap": [

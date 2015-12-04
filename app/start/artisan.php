@@ -14,3 +14,5 @@ Artisan::add(new RegeneratePic);
 Artisan::add(new JexAwbDaemon);
 Artisan::add(new JexStatusDaemon);
 Artisan::add(new JayaStatusDaemon);
+Artisan::add(new SapAwbDaemon);
+Artisan::add(new SapStatusDaemon);
