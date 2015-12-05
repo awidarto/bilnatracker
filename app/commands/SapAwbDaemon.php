@@ -118,7 +118,19 @@ class SapAwbDaemon extends Command {
 
                         $res = json_decode($result, true);
 
-                        print_r($res);
+                        /*
+                            Array
+                            (
+                                [invoice] => X100350935
+                                [status] => 00
+                                [awb] => KWLM151209162715
+                                [orderid] => TEST320476XT
+                                [message] => Success, your request xml have been success.
+                                [trx_id] => 121505091627
+                            )
+                        */
+
+                        //print_r($res);
 
                         if(isset($res['status']) && strval($res['status']) == '00'){
                             $pre = clone $ord;
