@@ -116,7 +116,7 @@ class SapAwbDaemon extends Command {
 
                         //$res = $parser->xml($result);
 
-                        $res = json_decode($result);
+                        $res = json_decode($result, true);
 
                         print_r($res);
 
