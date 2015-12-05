@@ -86,7 +86,7 @@ class SapAwbDaemon extends Command {
 
                         $data_string = str_replace(array('<xml>','</xml>'), array('<sap>','</sap>'), $data_string);
 
-                        //print $data_string;
+                        print $data_string;
 
                         $url = $base_url;
                         //.'?key='.$logistic->api_key;
