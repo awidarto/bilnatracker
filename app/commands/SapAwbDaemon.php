@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use SoapBox\Formatter\Formatter;
+use Nathanmac\Utilities\Parser\Parser;
 
 class SapAwbDaemon extends Command {
 
