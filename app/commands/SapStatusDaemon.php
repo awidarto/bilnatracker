@@ -61,9 +61,12 @@ class SapStatusDaemon extends Command {
                 $client = new GuzzleClient();
 
                 $url = $base_url.$ord->awb;
+
+                print $url;
+
                 $request = $client->get($url, array());
 
-                $request->setAuth('5490188', '5351');
+                $request->setAuth('sapclientapi', 'SAPCLIENTAPI_2014');
 
                 $response = $request->send();
 
