@@ -83,11 +83,13 @@ class SapAwbDaemon extends Command {
 
                     //$response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
-                        $data_string = $formatter->toXml();
+                        //$data_string = $formatter->toXml();
 
-                        $data_string = str_replace(array('<xml>','</xml>'), array('<sap>','</sap>'), $data_string);
+                        //$data_string = str_replace(array('<xml>','</xml>'), array('<sap>','</sap>'), $data_string);
 
                         //print $data_string;
+
+                        $data_string = json_encode($req);
 
                         $url = $base_url;
                         //.'?key='.$logistic->api_key;
@@ -100,7 +102,7 @@ class SapAwbDaemon extends Command {
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                            'Content-Type: text/xml',
+                            'Content-Type: application/json',
                             'Content-Length: ' . strlen($data_string))
                         );
 
@@ -108,9 +110,11 @@ class SapAwbDaemon extends Command {
 
                         //$awblist = json_decode($response->getBody());
 
-                        $parser = new Parser();
+                        //$parser = new Parser();
 
-                        $res = $parser->xml($result);
+                        //$res = $parser->xml($result);
+
+                        $res = json_decode($result);
 
                         print_r($res);
 
