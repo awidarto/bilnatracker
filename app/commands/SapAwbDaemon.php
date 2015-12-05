@@ -106,7 +106,12 @@ class SapAwbDaemon extends Command {
                         $result = curl_exec($ch);
 
                         //$awblist = json_decode($response->getBody());
-                        print $result;
+
+                        $parser = new Parser();
+
+                        $res = $parser->xml($result);
+
+                        print_r($res);
 
                         //$awblist = json_decode($result);
 
