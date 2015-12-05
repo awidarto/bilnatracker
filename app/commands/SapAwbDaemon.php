@@ -119,7 +119,7 @@ class SapAwbDaemon extends Command {
 
                             if(isset($res['awb']) && $res['awb'] != ''){
                                 $ord->awb = (isset($res['awb']))?$res['awb']:'';
-                                $ord->awb = $awbs[$ord->fulfillment_code];
+                                //$ord->awb = $awbs[$ord->fulfillment_code];
                                 //$ord->bucket = Config::get('jayon.bucket_tracker');
                                 //$ord->position = '3PL';
                                 $ord->uploaded = 1;
