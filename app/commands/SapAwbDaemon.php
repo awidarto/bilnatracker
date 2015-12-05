@@ -114,6 +114,45 @@ class SapAwbDaemon extends Command {
 
                         print_r($res);
 
+                        if(isset($res['status']) && strval($res['status']) == '00'){
+                            $pre = clone $order;
+
+                            if(isset($res['awb']) && $res['awb'] != ''){
+                                $ord->awb = (isset($res['awb']))?$res['awb']:'';
+                                $ord->awb = $awbs[$ord->fulfillment_code];
+                                //$ord->bucket = Config::get('jayon.bucket_tracker');
+                                //$ord->position = '3PL';
+                                $ord->uploaded = 1;
+                                $ord->save();
+
+                                $ts = new MongoDate();
+
+                                $hdata = array();
+                                $hdata['historyTimestamp'] = $ts;
+                                $hdata['historyAction'] = 'api_shipment_change_awb';
+                                $hdata['historySequence'] = 1;
+                                $hdata['historyObjectType'] = 'shipment';
+                                $hdata['historyObject'] = $ord->toArray();
+                                $hdata['actor'] = $this->name;
+                                $hdata['actor_id'] = '';
+
+                                History::insert($hdata);
+
+                                $sdata = array();
+                                $sdata['timestamp'] = $ts;
+                                $sdata['action'] = 'api_shipment_change_awb';
+                                $sdata['reason'] = 'api_update';
+                                $sdata['objectType'] = 'shipment';
+                                $sdata['object'] = $ord->toArray();
+                                $sdata['preObject'] = $pre->toArray();
+                                $sdata['actor'] = $this->name;
+                                $sdata['actor_id'] = '';
+                                Shipmentlog::insert($sdata);
+
+                            }
+
+                        }
+
                         //$awblist = json_decode($result);
 
                         //print $result;
