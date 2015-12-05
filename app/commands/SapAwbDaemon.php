@@ -41,8 +41,8 @@ class SapAwbDaemon extends Command {
 
 
         date_default_timezone_set('Asia/Jakarta');
-
-        $base_url = 'https://103.14.21.47:8879/sp_sap.gvm';
+        $base_url = 'http://103.14.21.47:8579/sp_sap2.gvm';
+        //$base_url = 'https://103.14.21.47:8879/sp_sap.gvm';
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/awb';
         $logistic_id = 'CGKN00284';
 
@@ -64,7 +64,7 @@ class SapAwbDaemon extends Command {
                         'invoice'=>$ord->no_sales_order,
                         'address'=> str_replace(array("\r","\n"), ' ', $ord->consignee_olshop_addr ),
                         'name'=>$ord->consignee_olshop_name,
-                        'province'=>$ord->consignee_olshop_province,
+                        'province'=>($ord->consignee_olshop_province == '')?'NA':$ord->consignee_olshop_province,
                         'cod'=>$ord->cod,
                         'volumes'=>1,
                         'chargeable'=>$ord->cod,
