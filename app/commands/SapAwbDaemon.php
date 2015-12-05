@@ -92,8 +92,8 @@ class SapAwbDaemon extends Command {
                         //.'?key='.$logistic->api_key;
 
                         $ch = curl_init($url);
-                        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                        curl_setopt($curl, CURLOPT_USERPWD, "5490188:5351");
+                        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                        curl_setopt($ch, CURLOPT_USERPWD, "5490188:5351");
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
