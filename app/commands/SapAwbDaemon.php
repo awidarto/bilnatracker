@@ -86,15 +86,18 @@ class SapAwbDaemon extends Command {
 
                         $data_string = str_replace(array('<xml>','</xml>'), array('<sap>','</sap>'), $data_string);
 
-                        print $data_string;
+                        //print $data_string;
 
                         $url = $base_url;
                         //.'?key='.$logistic->api_key;
 
                         $ch = curl_init($url);
+                        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                        curl_setopt($curl, CURLOPT_USERPWD, "5490188:5351");
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                             'Content-Type: text/xml',
                             'Content-Length: ' . strlen($data_string))
