@@ -115,7 +115,7 @@ class SapAwbDaemon extends Command {
                         print_r($res);
 
                         if(isset($res['status']) && strval($res['status']) == '00'){
-                            $pre = clone $order;
+                            $pre = clone $ord;
 
                             if(isset($res['awb']) && $res['awb'] != ''){
                                 $ord->awb = (isset($res['awb']))?$res['awb']:'';
