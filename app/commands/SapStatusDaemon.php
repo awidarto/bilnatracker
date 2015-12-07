@@ -37,10 +37,12 @@ class SapStatusDaemon extends Command {
 	 */
 	public function fire()
 	{
-
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $base_url = 'http://api.sap-express.com/api/tracking/list/ref/';
         //$base_url = 'http://182.23.64.151/serverapi.sap/api/tracking/list/id/';
+
+        $base_url = 'http://api.sap-express.com/api/tracking/list';
+
         $logistic_id = 'CGKN00284';
 
         $delivery_trigger = 'delivered';
@@ -75,7 +77,7 @@ class SapStatusDaemon extends Command {
                 $password = 'SAPCLIENTAPI_2014';
 
 
-                $url = $base_url.'352903';
+                $url = $base_url.'?ref=352903';
 
                 print $url;
 

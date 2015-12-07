@@ -41,21 +41,13 @@ class JexConfirmator extends Command {
 
         date_default_timezone_set('Asia/Jakarta');
 
-        $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/awb';
+        $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/confirm';
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/awb';
         $logistic_id = '7735';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
-        $orders = Shipment::where('awb','=','')
-                        ->where('logistic_type','=','external')
-                        ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
-                        ->where('consignee_olshop_cust','=',$logistic_id)
-                        ->where(function($q){
-                            $q->where('consignee_olshop_service','=','COD')
-                                ->orWhere('consignee_olshop_service','=','CCOD');
-                        })
-                        ->get();
+        $orders = Confirmed::where('consignee_id','=',$logistic_id )->where('sent','=',0)->get();
 
         if($orders && count($orders->toArray()) > 0){
             $req = array();
@@ -100,22 +92,21 @@ class JexConfirmator extends Command {
                     //die();
 
                     $awbs = array();
-                    $ffs = array();
+                    $awblist = array();
                     foreach ($awblist as $awb) {
-                        $ffs[] = $awb->ff_id;
+                        $awblist[] = $awb->awb;
                         $awbs[$awb->ff_id] = $awb->awb;
                     }
 
-                    $orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
+                    //$orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
+
+                    $orderlist = Confirmed::where('awb',$awblist)->get();
 
                     foreach($orderlist as $order){
 
                         $pre = clone $order;
 
-                        $order->awb = $awbs[$order->fulfillment_code];
-                        //$order->bucket = Config::get('jayon.bucket_tracker');
-                        $order->position = '3PL';
-                        $order->uploaded = 1;
+                        $order->sent = 1;
                         $order->save();
 
                         $ts = new MongoDate();
