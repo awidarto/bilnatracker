@@ -76,10 +76,10 @@ class SapStatusDaemon extends Command {
                         $ch = curl_init($url);
 
                         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                        curl_setopt($ch, CURLOPT_USERPWD, "5490188:5351");
+                        curl_setopt($ch, CURLOPT_USERPWD, "sapclientapi:SAPCLIENTAPI_2014");
                         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                         /*
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                             'Content-Type: application/json',
                             'Content-Length: ' . strlen($data_string))
