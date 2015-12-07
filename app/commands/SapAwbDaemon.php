@@ -97,6 +97,7 @@ class SapAwbDaemon extends Command {
                         //.'?key='.$logistic->api_key;
 
                         $ch = curl_init($url);
+
                         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                         curl_setopt($ch, CURLOPT_USERPWD, "5490188:5351");
                         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -140,6 +141,8 @@ class SapAwbDaemon extends Command {
                                 //$ord->awb = $awbs[$ord->fulfillment_code];
                                 //$ord->bucket = Config::get('jayon.bucket_tracker');
                                 //$ord->position = '3PL';
+
+                                $ord->trx_id = (isset($res['trx_id']))?$res['trx_id']:'';
                                 $ord->uploaded = 1;
                                 $ord->save();
 

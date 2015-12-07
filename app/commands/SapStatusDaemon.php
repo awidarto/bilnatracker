@@ -39,7 +39,8 @@ class SapStatusDaemon extends Command {
 	{
 
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
-        $base_url = 'http://182.23.64.151/serverapi.sap/api/tracking/list/id/';
+        $base_url = 'http://api.sap-express.com/api/tracking/list/ref/';
+        //$base_url = 'http://182.23.64.151/serverapi.sap/api/tracking/list/id/';
         $logistic_id = 'CGKN00284';
 
         $delivery_trigger = 'delivered';
@@ -60,7 +61,7 @@ class SapStatusDaemon extends Command {
                 //$req[] = array('awb'=>$ord->awb);
                 //$client = new GuzzleClient();
 
-                $url = $base_url.$ord->awb;
+                $url = $base_url.$ord->consignee_olshop_orderid;
 
                 print $url;
 
@@ -73,21 +74,21 @@ class SapStatusDaemon extends Command {
                 //print $response->getBody();
 
 
-                        $ch = curl_init($url);
+                $ch = curl_init($url);
 
-                        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                        curl_setopt($ch, CURLOPT_USERPWD, "sapclientapi:SAPCLIENTAPI_2014");
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        /*
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                            'Content-Type: application/json',
-                            'Content-Length: ' . strlen($data_string))
-                        );*/
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($ch, CURLOPT_USERPWD, "sapclientapi:SAPCLIENTAPI_2014");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                /*
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($data_string))
+                );*/
 
-                        $result = curl_exec($ch);
+                $result = curl_exec($ch);
 
-                        $res = json_decode($result, true);
+                $res = json_decode($result, true);
 
             }
 

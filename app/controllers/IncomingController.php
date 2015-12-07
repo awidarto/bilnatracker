@@ -1209,6 +1209,17 @@ class IncomingController extends AdminController {
                 $sdata['actor_id'] = Auth::user()->_id;
                 Shipmentlog::insert($sdata);
 
+                $confirm = array(
+                        'awb'=>$r->awb,
+                        'order_id'=>$r->no_sales_order,
+                        'consignee_id'=>$r->consignee_olshop_cust,
+                        'ff_id'=>$r->consignee_olshop_orderid,
+                        'ts'=>$ts,
+                        'sent'=>0
+                    );
+
+                Confirmed::insert($confirm);
+
             }
 
             $res = true;
