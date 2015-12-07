@@ -142,6 +142,7 @@ Route::group(array('prefix' => 'api/v1/service'), function (){
     Route::get('fl/order', 'Api\FlapiController@index');
     Route::post('fl/status', 'Api\FlapiController@postStatus');
     Route::post('sap/status', 'Api\SapapiController@postStatus');
+    Route::resource('sap/awb', 'Api\SapapiController');
 });
 
 
