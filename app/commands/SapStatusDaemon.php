@@ -89,7 +89,11 @@ class SapStatusDaemon extends Command {
                 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
 
-                $result = curl_exec($ch);
+                //$result = curl_exec($ch);
+
+                if(!$result = curl_exec($ch)){
+                    die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+                }
 
                 $status_code = curl_getinfo($ch);   //get status code
 
