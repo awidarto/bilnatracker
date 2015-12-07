@@ -76,11 +76,18 @@ class SapStatusDaemon extends Command {
                 //print $response->getBody();
 
 
-                $ch = curl_init($url);
-
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL,$url);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30); //timeout after 30 seconds
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
                 curl_setopt($ch, CURLOPT_USERPWD, "sapclientapi:SAPCLIENTAPI_2014");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+                $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
+                $result = curl_exec($ch);
+
+                curl_close ($ch);
+
                 /*
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -88,9 +95,9 @@ class SapStatusDaemon extends Command {
                     'Content-Length: ' . strlen($data_string))
                 );*/
 
-                $result = curl_exec($ch);
-
                 $res = json_decode($result, true);
+
+                print_r($res);
 
             }
 
