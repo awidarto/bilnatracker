@@ -63,6 +63,8 @@ class SapStatusDaemon extends Command {
 
                 $url = $base_url.$ord->consignee_olshop_orderid;
 
+                $url = $base_url.'352903';
+
                 print $url;
 
                 //$request = $client->get($url, array());
