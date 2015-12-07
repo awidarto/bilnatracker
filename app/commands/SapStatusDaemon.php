@@ -58,19 +58,37 @@ class SapStatusDaemon extends Command {
             $req = array();
             foreach($orders as $ord){
                 //$req[] = array('awb'=>$ord->awb);
-                $client = new GuzzleClient();
+                //$client = new GuzzleClient();
 
                 $url = $base_url.$ord->awb;
 
                 print $url;
 
-                $request = $client->get($url, array());
+                //$request = $client->get($url, array());
 
-                $request->setAuth('sapclientapi', 'SAPCLIENTAPI_2014');
+                //$request->setAuth('sapclientapi', 'SAPCLIENTAPI_2014');
 
-                $response = $request->send();
+                //$response = $request->send();
 
-                print $response->getBody();
+                //print $response->getBody();
+
+
+                        $ch = curl_init($url);
+
+                        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                        curl_setopt($ch, CURLOPT_USERPWD, "5490188:5351");
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        /*
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                            'Content-Type: application/json',
+                            'Content-Length: ' . strlen($data_string))
+                        );*/
+
+                        $result = curl_exec($ch);
+
+                        $res = json_decode($result, true);
+
             }
 
             /*
