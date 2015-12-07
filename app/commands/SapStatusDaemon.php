@@ -86,6 +86,8 @@ class SapStatusDaemon extends Command {
                 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
                 $result = curl_exec($ch);
 
+                print $result;
+
                 curl_close ($ch);
 
                 /*
@@ -95,9 +97,9 @@ class SapStatusDaemon extends Command {
                     'Content-Length: ' . strlen($data_string))
                 );*/
 
-                $res = json_decode($result, true);
+                //$res = json_decode($result, true);
 
-                print_r($res);
+                //print_r($res);
 
             }
 
