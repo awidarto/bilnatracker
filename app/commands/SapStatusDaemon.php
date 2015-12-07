@@ -61,12 +61,6 @@ class SapStatusDaemon extends Command {
                 //$req[] = array('awb'=>$ord->awb);
                 //$client = new GuzzleClient();
 
-                $url = $base_url.$ord->consignee_olshop_orderid;
-
-                $url = $base_url.'352903';
-
-                print $url;
-
                 //$request = $client->get($url, array());
 
                 //$request->setAuth('sapclientapi', 'SAPCLIENTAPI_2014');
@@ -75,31 +69,37 @@ class SapStatusDaemon extends Command {
 
                 //print $response->getBody();
 
+                //$url = $base_url.$ord->consignee_olshop_orderid;
+
+                $username = 'sapclientapi';
+                $password = 'SAPCLIENTAPI_2014';
+
+
+                $url = $base_url.'352903';
+
+                print $url;
 
                 $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL,$url);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 30); //timeout after 30 seconds
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
-                curl_setopt($ch, CURLOPT_USERPWD, "sapclientapi:SAPCLIENTAPI_2014");
 
-                $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
                 $result = curl_exec($ch);
 
-                print $result;
+                $status_code = curl_getinfo($ch);   //get status code
+
+                //$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
 
                 curl_close ($ch);
 
-                /*
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($data_string))
-                );*/
+                print $result;
 
-                //$res = json_decode($result, true);
+                $res = json_decode($result, true);
 
-                //print_r($res);
+                print_r($res);
 
             }
 
