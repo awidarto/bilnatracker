@@ -105,9 +105,10 @@ class SapStatusDaemon extends Command {
 
                 $res = json_decode($result, true);
 
-                $res['consignee_logistic_id'] = $logistic->logistic_code;
-                $res['consignee_olshop_cust'] = $logistic_id;
-                Threeplstatuslog::insert($res);
+                $reslog = $res;
+                $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+                $reslog['consignee_olshop_cust'] = $logistic_id;
+                Threeplstatuslog::insert($reslog);
 
                 print_r($res);
 
