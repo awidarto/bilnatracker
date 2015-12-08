@@ -46,7 +46,7 @@ class SapStatusDaemon extends Command {
         $logistic_id = 'CGKN00284';
 
         $delivery_trigger = 'DELIVERED';
-        $returned_trigger = 'RETURNED';
+        $returned_trigger = 'UNDELIVERED';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
@@ -112,7 +112,9 @@ class SapStatusDaemon extends Command {
 
                 print_r($res);
 
-                if(isset($res['cn_no'])){
+
+
+                if( $res['status'] && isset($res['cn_no'])){
 
                     $pre = clone $ord;
 
