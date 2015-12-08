@@ -114,7 +114,7 @@ class SapStatusDaemon extends Command {
 
 
 
-                if( $res['status'] && isset($res['cn_no'])){
+                if(isset($res['cn_no'])){
 
                     $pre = clone $ord;
 
@@ -161,8 +161,6 @@ class SapStatusDaemon extends Command {
 
                 }
 
-
-            }else{
 
             }
 
