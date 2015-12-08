@@ -162,6 +162,8 @@ class SapStatusDaemon extends Command {
                 }
 
 
+            }else{
+
             }
 
             /*
