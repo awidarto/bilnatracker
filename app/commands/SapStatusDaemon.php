@@ -127,7 +127,7 @@ class SapStatusDaemon extends Command {
                         $ord->status = Config::get('jayon.trans_status_mobile_return');
                     }
 
-                    $ord->district = $ls->district;
+                    //$ord->district = $ls->district;
                     $ord->logistic_status = $ls['status'];
                     $ord->logistic_status_ts = $ls['time'];
                     $ord->logistic_raw_status = $ls;
