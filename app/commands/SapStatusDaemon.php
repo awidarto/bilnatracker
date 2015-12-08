@@ -45,8 +45,8 @@ class SapStatusDaemon extends Command {
 
         $logistic_id = 'CGKN00284';
 
-        $delivery_trigger = 'delivered';
-        $returned_trigger = 'returned';
+        $delivery_trigger = 'DELIVERED';
+        $returned_trigger = 'RETURNED';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
@@ -101,11 +101,63 @@ class SapStatusDaemon extends Command {
 
                 curl_close ($ch);
 
-                print $result;
+                //print $result;
 
                 $res = json_decode($result, true);
 
+                $res['consignee_logistic_id'] = $logistic->logistic_code;
+                $res['consignee_olshop_cust'] = $logistic_id;
+                Threeplstatuslog::insert($res);
+
                 print_r($res);
+
+                if(isset($res['cn_no'])){
+
+                    $pre = clone $ord;
+
+                    $ls = $res['laststatus'];
+
+                    if( $ls['status'] == $delivery_trigger){
+                        $ord->status = Config::get('jayon.trans_status_mobile_delivered');
+                        $ord->position = 'CUSTOMER';
+                    }
+
+                    if($ls['status'] == $returned_trigger){
+                        $ord->status = Config::get('jayon.trans_status_mobile_return');
+                    }
+
+                    $ord->district = $ls->district;
+                    $ord->logistic_status = $ls['status'];
+                    $ord->logistic_status_ts = $ls['time'];
+                    $ord->logistic_raw_status = $ls;
+                    $ord->save();
+
+                    $ts = new MongoDate();
+
+                    $hdata = array();
+                    $hdata['historyTimestamp'] = $ts;
+                    $hdata['historyAction'] = 'api_shipment_change_status';
+                    $hdata['historySequence'] = 1;
+                    $hdata['historyObjectType'] = 'shipment';
+                    $hdata['historyObject'] = $ord->toArray();
+                    $hdata['actor'] = $this->name;
+                    $hdata['actor_id'] = '';
+
+                    History::insert($hdata);
+
+                    $sdata = array();
+                    $sdata['timestamp'] = $ts;
+                    $sdata['action'] = 'api_shipment_change_status';
+                    $sdata['reason'] = 'api_update';
+                    $sdata['objectType'] = 'shipment';
+                    $sdata['object'] = $ord->toArray();
+                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['actor'] = $this->name;
+                    $sdata['actor_id'] = '';
+                    Shipmentlog::insert($sdata);
+
+                }
+
 
             }
 
