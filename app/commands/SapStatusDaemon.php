@@ -77,7 +77,7 @@ class SapStatusDaemon extends Command {
                 $password = 'SAPCLIENTAPI_2014';
 
 
-                $url = $base_url.'?ref=352903';
+                $url = $base_url.'?ref='.$ord->consignee_olshop_orderid;
 
                 print $url;
 
