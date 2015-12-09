@@ -67,7 +67,15 @@ class JexStatusDaemon extends Command {
 
             //print( $response->getBody() );
 
+
+
             $awblist = json_decode($response->getBody());
+
+
+            $reslog = $awblist;
+            $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+            $reslog['consignee_olshop_cust'] = $logistic_id;
+            Threeplstatuslog::insert($reslog);
 
 
             $awbs = array();
