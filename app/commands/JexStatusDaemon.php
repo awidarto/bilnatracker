@@ -45,6 +45,7 @@ class JexStatusDaemon extends Command {
         $logistic_id = '7735';
         $delivery_trigger = 'delivered';
         $returned_trigger = 'returned';
+        $canceled_trigger = 'canceled';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
@@ -98,6 +99,10 @@ class JexStatusDaemon extends Command {
 
                 if($awbs[$order->awb]->status == $returned_trigger){
                     $order->status = Config::get('jayon.trans_status_mobile_return');
+                }
+
+                if($awbs[$order->awb]->status == $canceled_trigger){
+                    $order->status = Config::get('jayon.trans_status_canceled');
                 }
 
                 $order->district = $awbs[$order->awb]->district;

@@ -53,8 +53,12 @@
         <td>{{ $order->number_of_package }}</td>
     </tr>
     <tr>
-        <td>Status Paling Akhir</td>
+        <td>Status Internal Paling Akhir</td>
         <td>{{ Prefs::colorizestatus( $order->status, 'delivery') }}</td>
+    </tr>
+    <tr>
+        <td>Status 3PL Paling Akhir</td>
+        <td>{{ $order->logistic_status }}</td>
     </tr>
     <tr>
         <td>Posisi Paling Akhir</td>
