@@ -312,12 +312,13 @@ Indonesia',
 
         $json = \Input::json();
 
-        $reslog = $json;
-        $reslog['timestamp'] = new MongoDate();
+        /*
+        $reslog = (array)$json;
+        $reslog['timestamp'] = new \MongoDate();
         $reslog['consignee_logistic_id'] = $logistic->logistic_code;
         $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
-        Threeplstatuslog::insert($reslog);
-
+        \Threeplstatuslog::insert($reslog);
+        */
 
         $batch = \Input::get('batch');
 
