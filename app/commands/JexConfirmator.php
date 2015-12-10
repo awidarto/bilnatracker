@@ -47,7 +47,7 @@ class JexConfirmator extends Command {
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
-        $orders = Confirmed::where(function($q){
+        $orders = Confirmed::where(function($q) use($logistic_id){
                         $q->where('consignee_id','=',$logistic_id )
                             ->orWhere('consignee_id','=',strval($logistic_id));
                     })->where('sent','=',0)->get();
