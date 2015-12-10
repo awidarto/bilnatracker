@@ -111,7 +111,7 @@ class JexConfirmator extends Command {
 
                         print_r($awblist);
 
-                        $ships = Shipment::whereIn('awb',$awblist)->get();
+                        $ships = Confirmed::whereIn('awb',$awblist)->get();
 
                         foreach($ships as $sh){
                             $sh->sent = 1;
