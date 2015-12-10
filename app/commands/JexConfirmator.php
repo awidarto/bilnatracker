@@ -43,8 +43,8 @@ class JexConfirmator extends Command {
 
         $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/confirm';
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/awb';
-        $logistic_id = '1400000655';
-        //$logistic_id = '7735';
+        //$logistic_id = '1400000655';
+        $logistic_id = '7735';
 
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
