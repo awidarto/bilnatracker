@@ -71,6 +71,8 @@ class JayaStatusDaemon extends Command {
 
         $res = array();
 
+        print 'count '.count($orders->toArray());
+
         if($orders && count($orders->toArray()) > 0){
             $req = array();
             foreach($orders as $ord){
@@ -129,7 +131,7 @@ class JayaStatusDaemon extends Command {
 
                 Logger::api($this->name ,$data_string, $awblist);
 
-                //print $result;
+                print $result;
 
             $awbs = array();
             $ffs = array();
