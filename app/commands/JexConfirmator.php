@@ -115,7 +115,7 @@ class JexConfirmator extends Command {
 
                         foreach($ships as $sh){
                             $sh->sent = 1;
-                            $sh->save();
+                            //$sh->save();
                         }
 
 
