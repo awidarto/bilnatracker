@@ -92,6 +92,8 @@ class JexConfirmator extends Command {
                     //$awblist = json_decode($response->getBody());
                     $res = json_decode($result,true);
 
+                    print_r($res);
+
                     $reslog = $res;
                     $reslog['timestamp'] = new MongoDate();
                     $reslog['consignee_logistic_id'] = $logistic->logistic_code;
