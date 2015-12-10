@@ -88,17 +88,32 @@ class JexConfirmator extends Command {
                     $result = curl_exec($ch);
 
                     //$awblist = json_decode($response->getBody());
-                    $awblist = json_decode($result);
+                    $res = json_decode($result,true);
 
-                    print $awblist;
+                    if(isset($res['result']) && $res['result'] == 'NOK'){
+
+                    }else{
+
+                        $awblist = array();
+
+                        foreach ($res as $r) {
+                            $awblist[] = $r['awb'];
+                        }
+
+
+                        $ships = Shipment::whereIn('awb',$awblist)->get();
+
+                        foreach($ships as $sh){
+                            $sh->sent = 1;
+                            $sh->save();
+                        }
+
+                        print $awblist;
+
+                    }
+
 
                     //die();
-
-                    $awbs = array();
-                    $awblist = array();
-                    foreach ($awblist as $awb) {
-                        $awblist[] = $awb->awb;
-                    }
 
                     //$orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
                     /*
