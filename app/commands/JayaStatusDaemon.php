@@ -58,8 +58,6 @@ class JayaStatusDaemon extends Command {
 
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $logistic_id = 'CGKN00027';
-        $delivery_trigger = 'KIRIMAN DITERIMA OLEH';
-        $returned_trigger = 'KEMBALI KE KOTA ASAL';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
@@ -103,6 +101,9 @@ class JayaStatusDaemon extends Command {
 
     public function sendData($req, $client, $logistic , $logistic_id)
     {
+
+        $delivery_trigger = 'KIRIMAN DITERIMA OLEH';
+        $returned_trigger = 'KEMBALI KE KOTA ASAL';
 
             $data_string = json_encode($req);
 
