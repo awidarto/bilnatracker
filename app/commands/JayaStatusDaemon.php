@@ -40,6 +40,20 @@ class JayaStatusDaemon extends Command {
 	 */
     public function fire()
     {
+
+        $jaya_status = array(
+            'ENTRI DATA PENGIRIMAN',
+            'KEBERANGKATAN KOTA ASAL',
+            'TIBA DIKOTA TRANSIT',
+            'BERANGKAT DARI KOTA TRANSIT',
+            'TIBA DIKOTA TUJUAN',
+            'DALAM PENGANTARAN',
+            'KIRIMAN DITERIMA OLEH',
+            'KEMBALI KE KOTA ASAL'
+        );
+
+
+
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $base_url = 'http://j-express.id/serverapi.jet/api/tracking/tracking-list.php';
         $logistic_id = 'CGKN00027';
@@ -54,6 +68,8 @@ class JayaStatusDaemon extends Command {
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->get();
+
+        $res = array();
 
         if($orders && count($orders->toArray()) > 0){
             $req = array();
@@ -108,6 +124,8 @@ class JayaStatusDaemon extends Command {
                 */
 
                 $awblist = json_decode($result);
+
+                $res[] = $awblist;
 
                 Logger::api($this->name ,$data_string, $awblist);
 
@@ -175,6 +193,12 @@ class JayaStatusDaemon extends Command {
                 }
 
             }
+
+            $reslog = $res;
+            $reslog['timestamp'] = new MongoDate();
+            $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+            $reslog['consignee_olshop_cust'] = $logistic_id;
+            Threeplstatuslog::insert($reslog);
 
 
         }else{

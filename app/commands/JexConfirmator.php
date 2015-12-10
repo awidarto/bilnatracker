@@ -174,7 +174,7 @@ class JexConfirmator extends Command {
         }
 
         $actor = $this->name;
-        Event::fire('log.api',array('JexAwbDaemon', 'get' ,$actor,'JEX PUSH DATA AWB PULL'));
+        Event::fire('log.api',array('JexConfDaemon', 'get' ,$actor,'JEX PUSH CONFIRM DATA'));
 	}
 
 	/**
