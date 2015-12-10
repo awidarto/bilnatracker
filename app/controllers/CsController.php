@@ -136,11 +136,18 @@ class CsController extends AdminController {
         $orderff = trim($in['orderFf']);
         $delivery_id = trim($in['delivery_id']);
 
-        $order = Shipment::where('fulfillment_code','=',$orderff)
-                        ->where('no_sales_order','=',$orderid)
-                        ->where('delivery_id','=',$delivery_id)
-                        ->orderBy('pick_up_date','desc')
-                        ->first();
+        if(isset($in['delivery_id'])){
+            $order = Shipment::where('fulfillment_code','=',$orderff)
+                            ->where('no_sales_order','=',$orderid)
+                            ->where('delivery_id','=',$delivery_id)
+                            ->orderBy('pick_up_date','desc')
+                            ->first();
+        }else{
+            $order = Shipment::where('fulfillment_code','=',$orderff)
+                            ->where('no_sales_order','=',$orderid)
+                            ->orderBy('pick_up_date','desc')
+                            ->first();
+        }
 
         if($order){
             $order->picList = $this->picList($order);
