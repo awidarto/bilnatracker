@@ -76,7 +76,11 @@
     </tr>
     <tr>
         <td>Posisi Paling Akhir</td>
-        <td>{{ Prefs::getPosition('node_code',$order->position)->name .' ('. $order->position.')' }}</td>
+        <td>
+            @if( isset(Prefs::getPosition('node_code',$order->position)->name))
+            {{ Prefs::getPosition('node_code',$order->position)->name .' ('. $order->position.')' }}
+            @endif
+        </td>
     </tr>
     <tr>
         <td>Catatan Pengiriman</td>
