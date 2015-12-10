@@ -8,6 +8,67 @@ use Illuminate\Support\Facades\Response;
 
 class FlapiController extends \BaseController {
 
+        private $fl_status = array(
+            'AGREED DELIVERY',
+            'ARRIVED AT SORT FACILITY',
+            'BAD ADDRESS'=>array(
+                                'UNKNOWN COMPANY',
+                                'INCORRECT CITY',
+                                'INCORRECT STREET',
+                                'UNKNOWN PERSON',
+                                'INCORRECT BUILDING NUMBER'
+                            ),
+            'CLOSED ON ARRIVAL'=>array(
+                                'AFTER BUSINESS HOURS',
+                                'CONSIGNEE HOLIDAY',
+                                'PRE BUSINESS HOURS',
+                                'LUNCH BREAK',
+                                'NOT OPEN'
+                            ),
+            'CONSIGNEE COLLECTION',
+            'CUSTOMER MOVED'=>array(
+                            'CONSIGNEE MOVED',
+                            'COMPANY MOVED',
+                            'GUESS CHECKED OUT'
+                        ),
+            'DEPARTED FROM SORT FACILITY',
+            'ON FORWARDING AREA  AGENT',
+            'NOT DELIVERED'=>array(
+                                'ACCESS FLOODED',
+                                'TRAFFIC JAM',
+                                'STRIKE',
+                                'ROUTE MISSORT',
+                                'VEHICLE PROBLEM',
+                                'OUT OF AREA',
+                                'FORCE MAJEURE'
+                            ),
+            'NOT HOME',
+            'DELIVERED',
+            'PICK UP'=>array(
+                            'SHIPMENT PICKED UP',
+                            'NOT READY',
+                            'CLOSED',
+                            'PICKED UP BY OTHER COURIER'
+                        ),
+            'REFUSE'=>array(
+                        'DELIVERY DAMAGE',
+                        'DELIVERY CANCEL'
+                    ),
+            'RETURN'=>array(
+                        'SHIPPER REQUEST',
+                        'DANGEROUS GOODS IDENTIFIED',
+                        'RETURN TO CDC',
+                        'CONSIGNEE REQUEST'
+                        ),
+            'SHIPMENT ACCEPTANCE'=>array(
+                                    'FACILITY POINT',
+                                    'AGENT POINT'
+                                    ),
+            'SCHEDULLED FOR MOVEMENT',
+            'WITH DELIVERY COURIER',
+            'WAITING INFO'
+        );
+
 
 /*
 {
@@ -201,69 +262,6 @@ class FlapiController extends \BaseController {
 
             $entry['shipper'] = $shipper;
 
-/*
-array (
-  '_id' => new MongoId("564c5dedccae5b110f0041f7"),
-  'awb' => '007735-17-112015-00146067',
-  'bucket' => 'tracker',
-  'cod' => 127000,
-  'consignee_olshop_addr' => 'bagus sulaiman
-jl.bakti rt.004 rw.008 no.10b cililitan kramatjati 13640
-Jakarta Timur JK 13640
-Indonesia',
-  'consignee_olshop_city' => 'Jakarta Timur',
-  'consignee_olshop_cust' => '7735',
-  'consignee_olshop_desc' => 'Susu dan Perlengkapan Bayi',
-  'consignee_olshop_name' => '106191 bagus sulaiman',
-  'consignee_olshop_orderid' => '334975',
-  'consignee_olshop_phone' => '81317857612',
-  'consignee_olshop_region' => 'JK',
-  'consignee_olshop_service' => 'COD',
-  'consignee_olshop_zip' => '13640',
-  'contact' => '106191 bagus sulaiman',
-  'courier_id' => '',
-  'courier_name' => '',
-  'courier_status' => 'at_initial_node',
-  'createdDate' => new MongoDate(1447845357, 699000),
-  'created_at' => '2015-11-18 18:15:20',
-  'delivery_id' => '18-112015-JEJVV',
-  'delivery_type' => 'REG',
-  'device_id' => '',
-  'device_key' => '',
-  'device_name' => '',
-  'district' => '',
-  'email' => 'bagus_sulaiman@india.com',
-  'fulfillment_code' => '334975',
-  'lastUpdate' => new MongoDate(1447845357, 699000),
-  'logistic' => 'JEX',
-  'logistic_raw_status' =>
-  array (
-    'awb' => '007735-17-112015-00146067',
-    'timestamp' => '2015-11-19 11:18:23',
-    'pending' => '0',
-    'status' => 'delivered',
-    'note' => 'iwan 12.05',
-  ),
-  'logistic_status' => 'delivered',
-  'logistic_status_ts' => '2015-11-19 11:18:23',
-  'logistic_type' => 'external',
-  'no_sales_order' => '100364363',
-  'number_of_package' => '1',
-  'order_id' => '100364363',
-  'pending_count' => new MongoInt64(0),
-  'pick_up_date' => new MongoDate(1447952400, 0),
-  'pickup_status' => 'to_be_picked_up',
-  'position' => 'CUSTOMER',
-  'status' => 'delivered',
-  'trip' => new MongoInt64(1),
-  'updated_at' => new MongoDate(1447931897, 898000),
-  'w_v' => '0.9',
-  'warehouse_status' => 'at_initial_node',
-)
-
-*/
-
-
             $orderlist[] = $entry;
         }
 
@@ -283,18 +281,10 @@ Indonesia',
 
     public function postStatus()
     {
-        /*
-        "awb":"awb1",
-        "order_id":"no order",
-        "last_status":"kode status kiriman FL ",
-        "cn_name":"penerima",
-        "delivered_date":"tanggal",
-        "delivered_time":"jam"
-        */
 
         $delivery_trigger = 'DELIVERED';
-        $returned_trigger = 'RETURN';
-        $undelivered_trigger = 'NOT DELIVERED';
+        $returned_trigger = $this->fl_status['RETURN'];
+        $undelivered_trigger = $this->fl_status['NOT DELIVERED'];
 
 
         $key = \Input::get('key');
@@ -312,7 +302,8 @@ Indonesia',
 
         $json = \Input::json();
 
-        $reslog = (object)$json;
+
+        $reslog = Input::all();
         $reslog['timestamp'] = new \MongoDate();
         $reslog['consignee_logistic_id'] = $logistic->logistic_code;
         $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
@@ -351,16 +342,18 @@ Indonesia',
 
                 $pre = clone $order;
 
+                $lst = $awbs[$order->awb]['last_status'];
+
                 if( $awbs[$order->awb]['last_status'] == $delivery_trigger){
                     $order->status = \Config::get('jayon.trans_status_mobile_delivered');
                     $order->position = 'CUSTOMER';
                 }
 
-                if($awbs[$order->awb]['last_status'] == $returned_trigger){
+                if( in_array( $lst , $returned_trigger) || $lst == 'RETURN' ){
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
                 }
 
-                if($awbs[$order->awb]['last_status'] == $undelivered_trigger){
+                if( in_array( $lst , $undelivered_trigger) || $lst == 'NOT DELIVERED' ){
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
                 }
 
@@ -601,5 +594,8 @@ Indonesia',
             return 'out';
         }
     }
+
+
+
 
 }
