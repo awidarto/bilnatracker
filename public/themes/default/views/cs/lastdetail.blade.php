@@ -60,6 +60,20 @@
         <td>Status 3PL Paling Akhir</td>
         <td>{{ $order->logistic_status }}</td>
     </tr>
+    <?php
+        $logistic_status_ts  = '';
+        if(isset($order->logistic_status_ts)){
+            if($order0->logistic_status_ts instanceOf MongoDate){
+                $logistic_status_ts = date('Y-m-d H:i:s', $order0->logistic_status_ts->sec );
+            }else{
+                $logistic_status_ts = $order->$logistic_status_ts;
+            }
+        }
+    ?>
+    <tr>
+        <td>Waktu Update 3PL Paling Akhir</td>
+        <td>{{ $logistic_status }}</td>
+    </tr>
     <tr>
         <td>Posisi Paling Akhir</td>
         <td>{{ Prefs::getPosition('node_code',$order->position)->name .' ('. $order->position.')' }}</td>
