@@ -98,13 +98,11 @@ class JexConfirmator extends Command {
                     $reslog['consignee_olshop_cust'] = $logistic_id;
                     Threeplconfirm::insert($reslog);
 
-                    if(isset($res['status']) && preg_match('/^ERR/', $res['status'])){
-
-                    }else{
+                    if(isset($res['status']) && $res['status'] == 'OK' ){
 
                         $awblist = array();
 
-                        foreach ($res as $r) {
+                        foreach ($res['data'] as $r) {
                             $awblist[] = $r['awb'];
                         }
 

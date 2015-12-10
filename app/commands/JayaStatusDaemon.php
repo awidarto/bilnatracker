@@ -93,7 +93,7 @@ class JayaStatusDaemon extends Command {
             $awblist = json_decode($response->getBody());
             */
 
-                $postArr    = array('awbs'=>$data_string);
+                $postArr = array('awbs'=>$data_string);
 
                 $url = "http://j-express.id/serverapi.jet/api/tracking/tracking-list.php";
 
