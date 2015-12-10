@@ -90,7 +90,7 @@ class JexConfirmator extends Command {
                     //$awblist = json_decode($response->getBody());
                     $awblist = json_decode($result);
 
-                    //print $result;
+                    print $awblist;
 
                     //die();
 
