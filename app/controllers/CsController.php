@@ -239,7 +239,7 @@ class CsController extends AdminController {
 
     public function statusButton($data)
     {
-        return '<div style="display:inline-block;" class="order-detail action" data-deliveryid="'.$data['delivery_id'].'" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" >View Detail <i class="fa fa-chevron-right pull-right order-detail action" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" ></i></div>';
+        return '<div style="display:inline-block;" class="order-detail action" data-deliveryid="'.$data['delivery_id'].'" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" >View Detail <i class="fa fa-chevron-right pull-right order-detail action" data-deliveryid="'.$data['delivery_id'].'" data-order="'.$data['no_sales_order'].'" data-ff="'.$data['fulfillment_code'].'" ></i></div>';
     }
 
     public function shipmentOrder($data)
