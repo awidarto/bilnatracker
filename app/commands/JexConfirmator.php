@@ -64,6 +64,7 @@ class JexConfirmator extends Command {
 
             $req = $orders->toArray();
 
+            print_r($req);
             //print json_encode($req);
 
             //die();
