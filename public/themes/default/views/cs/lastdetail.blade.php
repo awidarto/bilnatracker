@@ -72,7 +72,7 @@
     ?>
     <tr>
         <td>Waktu Update 3PL Paling Akhir</td>
-        <td>{{ $logistic_status }}</td>
+        <td>{{ $logistic_status_ts }}</td>
     </tr>
     <tr>
         <td>Posisi Paling Akhir</td>
