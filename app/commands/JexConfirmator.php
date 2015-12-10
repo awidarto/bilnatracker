@@ -74,7 +74,7 @@ class JexConfirmator extends Command {
 
                 //$response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
                     $data_string = json_encode($req);
-                    print_r($data_string);
+                    //print_r($data_string);
 
                     $url = $base_url.'?key='.$logistic->api_key;
 
