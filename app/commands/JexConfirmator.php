@@ -43,7 +43,9 @@ class JexConfirmator extends Command {
 
         $base_url = 'http://www.jayonexpress.com/jexadmin/api/v1/service/confirm';
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/awb';
-        $logistic_id = '1400000655';
+        //$logistic_id = '1400000655';
+        $logistic_id = '7735';
+
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
@@ -90,6 +92,11 @@ class JexConfirmator extends Command {
                     //$awblist = json_decode($response->getBody());
                     $res = json_decode($result,true);
 
+                    $reslog = $res;
+                    $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+                    $reslog['consignee_olshop_cust'] = $logistic_id;
+                    Threeplconfirm::insert($reslog);
+
                     if(isset($res['result']) && $res['result'] == 'NOK'){
 
                     }else{
@@ -100,6 +107,7 @@ class JexConfirmator extends Command {
                             $awblist[] = $r['awb'];
                         }
 
+                        print $awblist;
 
                         $ships = Shipment::whereIn('awb',$awblist)->get();
 
@@ -108,7 +116,6 @@ class JexConfirmator extends Command {
                             $sh->save();
                         }
 
-                        print $awblist;
 
                     }
 
