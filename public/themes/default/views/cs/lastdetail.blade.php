@@ -63,7 +63,7 @@
     <?php
         $logistic_status_ts  = '';
         if(isset($order->logistic_status_ts)){
-            if($order0->logistic_status_ts instanceOf MongoDate){
+            if($order->logistic_status_ts instanceOf MongoDate){
                 $logistic_status_ts = date('Y-m-d H:i:s', $order0->logistic_status_ts->sec );
             }else{
                 $logistic_status_ts = $order->$logistic_status_ts;
