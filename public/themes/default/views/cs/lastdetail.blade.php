@@ -66,7 +66,7 @@
             if($order->logistic_status_ts instanceOf MongoDate){
                 $logistic_status_ts = date('Y-m-d H:i:s', $order->logistic_status_ts->sec );
             }else{
-                $logistic_status_ts = $order->$logistic_status_ts;
+                $logistic_status_ts = $order->logistic_status_ts;
             }
         }
     ?>
