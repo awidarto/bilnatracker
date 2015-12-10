@@ -93,7 +93,7 @@ class JexConfirmator extends Command {
                     //$awblist = json_decode($response->getBody());
                     $res = json_decode($result,true);
 
-                    print_r($res);
+                    print_r($result);
 
                     $reslog = $res;
                     $reslog['timestamp'] = new MongoDate();
