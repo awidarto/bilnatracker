@@ -109,7 +109,7 @@ class JexConfirmator extends Command {
                             $awblist[] = $r['awb'];
                         }
 
-                        print $awblist;
+                        print_r($awblist);
 
                         $ships = Shipment::whereIn('awb',$awblist)->get();
 
