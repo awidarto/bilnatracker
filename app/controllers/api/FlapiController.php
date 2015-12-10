@@ -292,8 +292,9 @@ Indonesia',
         "delivered_time":"jam"
         */
 
-        $delivery_trigger = 'delivered';
-        $returned_trigger = 'returned';
+        $delivery_trigger = 'DELIVERED';
+        $returned_trigger = 'RETURN';
+        $undelivered_trigger = 'NOT DELIVERED';
 
 
         $key = \Input::get('key');
@@ -310,6 +311,13 @@ Indonesia',
         $logistic = \Logistic::where('api_key','=',$key)->first();
 
         $json = \Input::json();
+
+        $reslog = $json;
+        $reslog['timestamp'] = new MongoDate();
+        $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+        $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
+        Threeplstatuslog::insert($reslog);
+
 
         $batch = \Input::get('batch');
 
@@ -350,6 +358,10 @@ Indonesia',
                 }
 
                 if($awbs[$order->awb]['last_status'] == $returned_trigger){
+                    $order->status = \Config::get('jayon.trans_status_mobile_return');
+                }
+
+                if($awbs[$order->awb]['last_status'] == $undelivered_trigger){
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
                 }
 

@@ -93,6 +93,7 @@ class JexConfirmator extends Command {
                     $res = json_decode($result,true);
 
                     $reslog = $res;
+                    $reslog['timestamp'] = new MongoDate();
                     $reslog['consignee_logistic_id'] = $logistic->logistic_code;
                     $reslog['consignee_olshop_cust'] = $logistic_id;
                     Threeplconfirm::insert($reslog);
