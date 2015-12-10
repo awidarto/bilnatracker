@@ -47,7 +47,10 @@ class JexConfirmator extends Command {
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
-        $orders = Confirmed::where('consignee_id','=',$logistic_id )->where('sent','=',0)->get();
+        $orders = Confirmed::where(function($q){
+                        $q->where('consignee_id','=',$logistic_id )
+                            ->orWhere('consignee_id','=',strval($logistic_id));
+                    })->where('sent','=',0)->get();
 
         if($orders && count($orders->toArray()) > 0){
             $req = array();
@@ -68,7 +71,7 @@ class JexConfirmator extends Command {
             try {
 
                 //$response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
-
+                    print_r($data_string);
                     $data_string = json_encode($req);
 
                     $url = $base_url.'?key='.$logistic->api_key;
@@ -99,7 +102,7 @@ class JexConfirmator extends Command {
                     }
 
                     //$orderlist = Shipment::whereIn('fulfillment_code', $ffs)->get();
-
+                    /*
                     $orderlist = Confirmed::where('awb',$awblist)->get();
 
                     foreach($orderlist as $order){
@@ -134,6 +137,7 @@ class JexConfirmator extends Command {
                         Shipmentlog::insert($sdata);
 
                     }
+                    */
 
 
             } catch (Exception $e) {
