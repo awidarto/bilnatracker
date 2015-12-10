@@ -97,7 +97,7 @@ class JexConfirmator extends Command {
                     $reslog['consignee_olshop_cust'] = $logistic_id;
                     Threeplconfirm::insert($reslog);
 
-                    if(isset($res['result']) && $res['result'] == 'NOK'){
+                    if(isset($res['status']) && preg_match('/^ERR/', $res['status'])){
 
                     }else{
 
