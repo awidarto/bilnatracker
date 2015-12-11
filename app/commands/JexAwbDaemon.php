@@ -52,7 +52,10 @@ class JexAwbDaemon extends Command {
 
 		$orders = Shipment::where('awb','=','')
                         ->where('logistic_type','=','external')
-                        ->where('status','=', Config::get('jayon.trans_status_admin_dated') )
+                        ->where(function($q){
+                            $q->where('status','=', \Config::get('jayon.trans_status_admin_dated') )
+                                ->orWhere('status','=', \Config::get('jayon.trans_status_confirmed'));
+                        })
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->where(function($q){
                             $q->where('consignee_olshop_service','=','COD')
@@ -69,6 +72,13 @@ class JexAwbDaemon extends Command {
             */
 
             $req = $orders->toArray();
+
+            $reslog = $req;
+            $reslog['timestamp'] = new \MongoDate();
+            $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+            $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
+            Threepluploadlog::insert($reslog);
+
 
             //print json_encode($req);
 
