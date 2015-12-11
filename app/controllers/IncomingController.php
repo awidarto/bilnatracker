@@ -1183,6 +1183,7 @@ class IncomingController extends AdminController {
                 if($r->logistic_type == 'external'){
                     if(trim($r->awb) != ''){
                         $r->bucket = Config::get('jayon.bucket_tracker');
+                        $r->status = Config::get('jayon.trans_status_confirmed');
                         $r->save();
                     }
                 }
