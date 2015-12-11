@@ -176,8 +176,11 @@ class FlapiController extends \BaseController {
 
         $orders = \Shipment::where('awb','!=','')
                         ->where('logistic_type','=','external')
-                        ->where('status','=', \Config::get('jayon.trans_status_admin_dated') )
                         ->where('consignee_olshop_cust','=',$logistic_id)
+                        ->where(function($q){
+                            $q->where('status','=', \Config::get('jayon.trans_status_admin_dated') )
+                                ->orWhere('status','=', \Config::get('jayon.trans_status_confirmed'));
+                        })
                         ->where(function($q){
                             $q->where('uploaded','!=',1)
                                 ->orWhere('uploaded','exists',false);
@@ -271,6 +274,12 @@ class FlapiController extends \BaseController {
                 $ord->save();
             }
         }
+
+        $reslog = $orderlist;
+        $reslog['timestamp'] = new \MongoDate();
+        $reslog['consignee_logistic_id'] = $logistic->logistic_code;
+        $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
+        \Threepluploadlog::insert($reslog);
 
         $actor = $key;
         \Event::fire('log.api',array($this->controller_name, 'get' ,$actor,'FL PULL DATA'));
