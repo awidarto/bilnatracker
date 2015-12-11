@@ -320,9 +320,10 @@ class FlapiController extends \BaseController {
 
 
         foreach($json as $j){
-            $awbarray[] = trim($j['awb']);
-            $awbs[$j['awb']] = $j;
-            $inawbstatus[$j['awb']] = 'NOT FOUND';
+            $tawb = trim($j['awb']);
+            $awbarray[] = $tawb;
+            $awbs[$tawb] = $j;
+            $inawbstatus[$tawb] = 'NOT FOUND';
         }
         /*
         $reslog = $json;
