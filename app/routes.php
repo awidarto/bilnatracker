@@ -145,6 +145,15 @@ Route::group(array('prefix' => 'api/v1/service'), function (){
     Route::resource('sap/awb', 'Api\SapapiController');
 });
 
+Route::get('lastup/{log}',function($log){
+
+    $last = Threeplstatuslog::where('consignee_logistic_id','=',$log)->orderBy('timestamp','desc')->first();
+
+    print date('Y-m-d H:i:s',$last->timestamp->sec);
+    print_r($last->toArray());
+
+
+});
 
 Route::get('tolower',function(){
 
