@@ -176,6 +176,8 @@ class CsController extends AdminController {
                 $model = $model->orWhere(function($q) use($s){
                     $q->where('no_sales_order','=',$s)
                         ->orWhere('no_sales_order','regexp','/'.$s.'/i')
+                        ->orWhere('consignee_olshop_orderid','regexp','/'.$s.'/i')
+                        ->orWhere('consignee_olshop_orderid','=',$s)
                         ->orWhere('consignee_olshop_addr','regexp','/'.$s.'/i');
                 });
             }
