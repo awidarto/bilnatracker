@@ -178,6 +178,8 @@ class CsController extends AdminController {
                         ->orWhere('no_sales_order','regexp','/'.$s.'/i')
                         ->orWhere('consignee_olshop_orderid','regexp','/'.$s.'/i')
                         ->orWhere('consignee_olshop_orderid','=',$s)
+                        ->orWhere('awb','regexp','/'.$s.'/i')
+                        ->orWhere('awb','=',$s)
                         ->orWhere('consignee_olshop_addr','regexp','/'.$s.'/i');
                 });
             }
