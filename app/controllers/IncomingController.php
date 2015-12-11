@@ -743,6 +743,8 @@ class IncomingController extends AdminController {
 
         $data['trip'] = (isset($data['trip']))?intval($data['trip']):1;
 
+        $data['awb'] = (isset($data['awb']))?trim($data['awb']):'';
+
         if(isset($data['cod'])){
             if($data['cod'] == '' || is_null($data['cod'])){
                 //print 'cod is null';
