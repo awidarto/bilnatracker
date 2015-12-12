@@ -309,6 +309,39 @@ class SyncapiController extends \Controller {
                     $ts = new \MongoDate();
                     $pre = clone $shipment;
 
+                    if($appname == \Config::get('jex.pickup_app')){
+                        $shipment->pickup_status = $olog->pickupStatus;
+                        if(isset($user->node_id)){
+                            $shipment->position = $user->node_id;
+                        }
+                    }elseif($appname == \Config::get('jex.hub_app')){
+                        $shipment->warehouse_status = $olog->warehouseStatus;
+                        if(isset($user->node_id)){
+                            $shipment->position = $user->node_id;
+                        }
+                    }else{
+                        $shipment->status = $olog->status;
+                        $shipment->courier_status = $olog->courierStatus;
+
+                        if($olog->status == 'pending'){
+                            $shipment->pending_count = $shipment->pending_count + 1;
+                        }elseif($olog->status == 'delivered'){
+                            $shipment->deliverytime = date('Y-m-d H:i:s',time());
+                        }
+
+                        if($olog->status == 'pending'){
+                            //$shipment->pending_count = $olog->pendingCount;
+                        }elseif($olog->status == 'delivered'){
+                            //$shipment->deliverytime = date('Y-m-d H:i:s',time());
+                            $shipment->delivered_time = date('Y-m-d H:i:s',time());
+
+                            $shipment->position = 'CUSTOMER';
+
+                        }
+
+                    }
+
+                    /*
                     $shipment->status = $olog->status;
                     $shipment->courier_status = $olog->courierStatus;
 
@@ -317,7 +350,7 @@ class SyncapiController extends \Controller {
                     }elseif($olog->status == 'delivered'){
                         //$shipment->deliverytime = date('Y-m-d H:i:s',time());
                         $shipment->delivered_time = date('Y-m-d H:i:s',time());
-                    }
+                    }*/
 
                     $shipment->save();
 
