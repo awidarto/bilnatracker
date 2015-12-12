@@ -160,6 +160,8 @@ class SapStatusDaemon extends Command {
                     $sdata['actor_id'] = '';
                     Shipmentlog::insert($sdata);
 
+                    $this->saveStatus($res, $logistic->logistic_code, $logistic_id);
+
                 }
 
 
@@ -256,5 +258,23 @@ class SapStatusDaemon extends Command {
 			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
 		);
 	}
+
+    private function saveStatus($log, $logistic_name, $logistic_cust_code)
+    {
+        //SAP use individual AWB request
+
+        if(is_array($log) && count($log) > 0){
+            $l = $log;
+            if(isset($l['laststatus']['time'])){
+                $l['ts'] = new MongoDate( strtotime($l['laststatus']['time']) );
+            }else{
+                $l['ts'] = new MongoDate();
+            }
+            $l['consignee_logistic_id'] = $logistic_name;
+            $l['consignee_olshop_cust'] = $logistic_cust_code;
+
+            Threeplstatuses::insert($l);
+        }
+    }
 
 }
