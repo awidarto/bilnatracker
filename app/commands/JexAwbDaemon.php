@@ -87,7 +87,7 @@ class JexAwbDaemon extends Command {
             //$client = new GuzzleClient(['defaults'=>['exceptions'=>false]]);
 
             try {
-
+                    print_r($req);
                 //$response = $client->request('POST', $base_url , array('json'=>$req, 'query'=>array('key'=> $logistic->api_key ) ) );
 
                     $data_string = json_encode($req);
