@@ -158,7 +158,7 @@ class JayaStatusDaemon extends Command {
 
                     $slog = json_decode($result,true);
                     //$logistic , $logistic_id
-                    $this->saveStatus($slog, $logistic->logistic_code, $logistic_id);
+                    //$this->saveStatus($slog, $logistic->logistic_code, $logistic_id);
 
                 $awbs = array();
                 $ffs = array();
