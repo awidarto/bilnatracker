@@ -312,11 +312,17 @@ class FlapiController extends \BaseController {
         $json = \Input::json();
 
 
-        $reslog = Input::all();
+        $reslog = \Input::all();
+
+        $slog = $json;
+
         $reslog['timestamp'] = new \MongoDate();
         $reslog['consignee_logistic_id'] = $logistic->logistic_code;
         $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
         \Threeplstatuslog::insert($reslog);
+
+
+        $this->saveStatus($slog,$logistic->consignee_olshop_cust,$logistic->logistic_code);
 
         $batch = \Input::get('batch');
 
@@ -602,6 +608,27 @@ class FlapiController extends \BaseController {
             return $last->status;
         }else{
             return 'out';
+        }
+    }
+
+    private function saveStatus($log, $logistic_name, $logistic_cust_code)
+    {
+        $log = $log->all();
+
+        if(is_array($log) && count($log) > 0){
+            foreach($log as $l){
+
+                if(isset($l['timestamp'])){
+                    $l['ts'] = new \MongoDate( strtotime($l['timestamp']) );
+                }else{
+                    $l['ts'] = new \MongoDate();
+                }
+
+                $l['consignee_logistic_id'] = $logistic_name;
+                $l['consignee_olshop_cust'] = $logistic_cust_code;
+
+                \Threeplstatuses::insert($l);
+            }
         }
     }
 
