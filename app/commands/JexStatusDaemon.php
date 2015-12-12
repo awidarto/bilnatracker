@@ -173,11 +173,13 @@ class JexStatusDaemon extends Command {
 
     private function saveStatus($log, $logistic_name, $logistic_cust_code)
     {
-        foreach($log as $l){
-            $l['ts'] = new MongoDate( strtotime($l['timestamp']) );
-            $l['consignee_logistic_id'] = $logistic_name;
-            $l['consignee_olshop_cust'] = $logistic_cust_code;
-            Threeplstatuses::insert($l);
+        if(is_array($log) && count($log) > 0){
+            foreach($log as $l){
+                $l['ts'] = new MongoDate( strtotime($l['timestamp']) );
+                $l['consignee_logistic_id'] = $logistic_name;
+                $l['consignee_olshop_cust'] = $logistic_cust_code;
+                Threeplstatuses::insert($l);
+            }
         }
     }
 
