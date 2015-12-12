@@ -1005,14 +1005,15 @@ class DeliveredController extends AdminController {
 
             $bcount = count($boxes);
 
+            /*
             if(count($boxes) > ($dcount + $rcount) && $data['logistic_type'] == 'internal'){
                 $data['status'] = Config::get('jayon.trans_status_mobile_delivered_partial');
-            }
+            }*/
 
         }
 
         $slist = array(
-            Prefs::colorizestatus($data['status'],'delivery').'<br />BOX:'.$bcount.' D:'.$dcount.' R:'.$rcount.' P:'.$pcount,
+            Prefs::colorizestatus($data['status'],'delivery').'<br /><span class="badge">BOX:'.$bcount.'</span><span class="badge">D:'.$dcount.'</span><span class="badge">R:'.$rcount.'</span><span class="badge">P:'.$pcount.'</span>',
             //Prefs::colorizestatus($data['courier_status'],'courier'),
             //Prefs::colorizestatus($data['pickup_status'],'pickup'),
             //Prefs::colorizestatus($data['warehouse_status'],'warehouse')
