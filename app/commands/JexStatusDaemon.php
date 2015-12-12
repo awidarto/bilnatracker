@@ -77,6 +77,7 @@ class JexStatusDaemon extends Command {
             $reslog['consignee_logistic_id'] = $logistic->logistic_code;
             $reslog['consignee_olshop_cust'] = $logistic_id;
             Threeplstatuslog::insert($reslog);
+            $this->saveStatus($awblist,$logistic_id,$logistic->logistic_code);
 
 
             $awbs = array();
@@ -169,5 +170,15 @@ class JexStatusDaemon extends Command {
 			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
 		);
 	}
+
+    private function saveStatus($log, $logistic_name, $logistic_cust_code)
+    {
+        foreach($log as $l){
+            $l['ts'] = new MongoDate( strtotime($l['timestamp']) );
+            $l['consignee_logistic_id'] = $logistic_name;
+            $l['consignee_olshop_cust'] = $logistic_cust_code;
+            Threeplstatuses::insert($l);
+        }
+    }
 
 }
