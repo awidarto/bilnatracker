@@ -17,3 +17,4 @@ Artisan::add(new JexConfirmator);
 Artisan::add(new JayaStatusDaemon);
 Artisan::add(new SapAwbDaemon);
 Artisan::add(new SapStatusDaemon);
+Artisan::add(new Backtrack);
