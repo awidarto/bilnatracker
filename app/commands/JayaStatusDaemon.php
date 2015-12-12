@@ -157,8 +157,8 @@ class JayaStatusDaemon extends Command {
                     Logger::api($this->name ,$data_string, $awblist);
 
                     $slog = json_decode($result,true);
-                    //$logistic , $logistic_id
-                    //$this->saveStatus($slog, $logistic->logistic_code, $logistic_id);
+
+                    $this->saveStatus($slog, $logistic->logistic_code, $logistic_id);
 
                 $awbs = array();
                 $ffs = array();
@@ -261,11 +261,15 @@ class JayaStatusDaemon extends Command {
     {
         if(is_array($log) && count($log) > 0){
             foreach($log as $l){
-                $l['ts'] = new MongoDate( strtotime($l->timestamp) );
+                if(isset($l['time'])){
+                    $l['ts'] = new MongoDate( strtotime($l['time']) );
+                }else{
+                    $l['ts'] = new MongoDate();
+                }
                 $l['consignee_logistic_id'] = $logistic_name;
                 $l['consignee_olshop_cust'] = $logistic_cust_code;
 
-                Threeplstatuses::insert($al);
+                Threeplstatuses::insert($l);
             }
         }
     }
