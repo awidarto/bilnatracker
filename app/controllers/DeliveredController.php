@@ -1013,7 +1013,7 @@ class DeliveredController extends AdminController {
         }
 
         $slist = array(
-            Prefs::colorizestatus($data['status'],'delivery').'<br /><span class="badge">BOX:'.$bcount.'</span><span class="badge">D:'.$dcount.'</span><span class="badge">R:'.$rcount.'</span><span class="badge">P:'.$pcount.'</span>',
+            Prefs::colorizestatus($data['status'],'delivery').'<br /><span class="badge">BOX:'.$bcount.'</span> <span class="badge">D:'.$dcount.'</span> <span class="badge">R:'.$rcount.'</span> <span class="badge">P:'.$pcount.'</span>',
             //Prefs::colorizestatus($data['courier_status'],'courier'),
             //Prefs::colorizestatus($data['pickup_status'],'pickup'),
             //Prefs::colorizestatus($data['warehouse_status'],'warehouse')
