@@ -493,6 +493,27 @@ class SyncapiController extends \Controller {
 
                 $blog->mtimestamp = new \MongoDate(time());
 
+                $box = \Box::where('delivery_id','=',$blog->deliveryId)
+                        ->where('merchant_trans_id','=',$blog->merchantTransId)
+                        ->where('fulfillment_code','=',$blog->fulfillmentCode)
+                        ->where('box_id','=',$blog->boxId)
+                        ->first();
+
+
+                if($box){
+
+                    if($appname == \Config::get('jex.pickup_app')){
+                        $box->pickupStatus = $blog->pickupStatus;
+                    }elseif($appname == \Config::get('jex.hub_app')){
+                        $box->warehouseStatus = $blog->warehouseStatus;
+                    }else{
+                        $box->deliveryStatus = $blog->deliveryStatus;
+                        $box->courierStatus = $blog->courierStatus;
+                    }
+
+                    $box->save();
+                }
+
                 $r = $blog->save();
 
                 if( $r ){

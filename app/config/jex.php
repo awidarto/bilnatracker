@@ -7,6 +7,7 @@
 return array(
         'tracker_app'=>'com.kickstartlab.android.mctracker',
         'hub_app'=>'com.kickstartlab.android.mcwarehouse',
+        'pickup_app'=>'com.kickstartlab.android.mcpickup',
         'buckets'=>array(
                 'incoming'=>'Incoming',
                 'dispatcher'=>'Dispatcher',
