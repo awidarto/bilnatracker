@@ -178,7 +178,13 @@ class JexStatusDaemon extends Command {
                 $l->ts = new MongoDate( strtotime($l->timestamp) );
                 $l->consignee_logistic_id = $logistic_name;
                 $l->consignee_olshop_cust = $logistic_cust_code;
-                Threeplstatuses::insert($l);
+
+                $al = array();
+                foreach($l as $k=>$l){
+                    $al[$k] = $l;
+                }
+
+                Threeplstatuses::insert($al);
             }
         }
     }
