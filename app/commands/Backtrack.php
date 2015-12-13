@@ -47,14 +47,14 @@ class Backtrack extends Command {
 
                 $box = Box::where('delivery_id','=',$dbx->deliveryId)
                                 ->where(function($q) use($dbx){
-                                    $q->where('box_id','=', $dbx->boxId )
+                                    $q->where('box_id','=', intval($dbx->boxId) )
                                         ->orWhere('box_id','=', strval( $dbx->boxId) );
                                 })->first();
 
                 if($box){
                     //$box->deliveryStatus = $dbx->deliveryStatus;
 
-                    print $box->delivery_id.' '.$box->box_id.' '.$box->deliveryStatus."\r\n";
+                    print 'box : '.$box->delivery_id.' '.$box->box_id.' '.$box->deliveryStatus."\r\n";
 
                     //$box->save();
                 }
