@@ -52,9 +52,11 @@ class Backtrack extends Command {
                                 })->first();
 
                 if($box){
-                    //$box->deliveryStatus = $dbx->deliveryStatus;
+                    print 'box before : '.$box->delivery_id.' '.$box->box_id.' '.$box->deliveryStatus."\r\n";
 
-                    print 'box : '.$box->delivery_id.' '.$box->box_id.' '.$box->deliveryStatus."\r\n";
+                    $box->deliveryStatus = $dbx->deliveryStatus;
+
+                    print 'box after : '.$box->delivery_id.' '.$box->box_id.' '.$box->deliveryStatus."\r\n";
 
                     //$box->save();
                 }
