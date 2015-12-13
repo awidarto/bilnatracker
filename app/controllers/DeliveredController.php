@@ -1006,8 +1006,8 @@ class DeliveredController extends AdminController {
             $bcount = count($boxes);
 
             $dclass = ($dcount == 0)?'lightgrey':'';
-            $dclass = ($rcount == 0)?'lightgrey':'';
-            $rclass = ($pcount == 0)?'lightgrey':'';
+            $rclass = ($rcount == 0)?'lightgrey':'';
+            $pclass = ($pcount == 0)?'lightgrey':'';
 
 
             /*
