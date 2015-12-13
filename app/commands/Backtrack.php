@@ -37,7 +37,22 @@ class Backtrack extends Command {
 	 */
 	public function fire()
 	{
-		//
+        $dbox = Boxstatus::where('appname','=',Config::get('jex.tracker_app'))
+                            ->where('deliveryStatus','=', Config::get('jayon.trans_status_mobile_delivered') )
+                            ->get();
+
+        if($dbox){
+            foreach($dbox as $dbx){
+                print $dbx->boxId;
+
+                $box = Box::where('delivery_id','=',$dbx->deliveryId)->first();
+
+                if($box){
+                    $box->deliveryStatus = $dbx->deliveryStatus;
+                    $box->save();
+                }
+            }
+        }
 	}
 
 	/**
@@ -48,7 +63,7 @@ class Backtrack extends Command {
 	protected function getArguments()
 	{
 		return array(
-			array('example', InputArgument::REQUIRED, 'An example argument.'),
+			array('example', InputArgument::OPTIONAL, 'An example argument.'),
 		);
 	}
 
