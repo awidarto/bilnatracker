@@ -58,7 +58,7 @@ class Backtrack extends Command {
 
                     print 'box after : '.$box->delivery_id.' '.$box->box_id.' '.$box->deliveryStatus."\r\n";
 
-                    //$box->save();
+                    $box->save();
                 }
             }
         }
