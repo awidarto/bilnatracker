@@ -47,7 +47,7 @@ class Backtrack extends Command {
                 $box = Box::where('delivery_id','=',$dbx->deliveryId)
                                 ->where(function($q) use($dbx){
                                     $q->where('box_id','=', $dbx->boxId )
-                                        ->orWhere('box_id','=', strval( $dbx->boxId) )
+                                        ->orWhere('box_id','=', strval( $dbx->boxId) );
                                 })->first();
 
                 if($box){
