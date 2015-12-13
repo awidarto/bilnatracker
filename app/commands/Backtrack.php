@@ -43,6 +43,7 @@ class Backtrack extends Command {
 
         if($dbox){
             foreach($dbox as $dbx){
+                print 'box status : '.$dbx->deliveryId.' '.$dbx->dbxId.' '.$box->deliveryStatus."\r\n";
 
                 $box = Box::where('delivery_id','=',$dbx->deliveryId)
                                 ->where(function($q) use($dbx){
