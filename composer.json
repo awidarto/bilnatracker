@@ -28,7 +28,8 @@
         "passioncoder/simplecurl": "dev-master",
         "guzzlehttp/guzzle": "6.1.0",
         "soapbox/laravel-formatter": "2.x",
-        "Nathanmac/Parser": "2.*"
+        "Nathanmac/Parser": "2.*",
+        "artisaninweb/laravel-soap": "0.2.*"
 	},
 	"autoload": {
 		"classmap": [

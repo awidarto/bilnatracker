@@ -588,6 +588,30 @@ class Prefs {
         return $status;
     }
 
+    public static function transstatus($status, $type){
+
+        $trans = Config::get('jayon.'.$type.'_status');
+
+        $colors = Config::get('jayon.'.$type.'_status_changes');
+        if($status == '' || !in_array($status, array_keys($colors))){
+            $class = 'brown';
+            $status = 'N/A';
+        }else{
+            $class = $colors[$status];
+            if(isset($trans[$status])){
+                $status = $trans[$status];
+            }else{
+                $status = 'N/A';
+            }
+        }
+
+        //$atatus = str_replace('_', ' ', $status);
+        //$status = $prefix.ucwords($status).$suffix;
+
+        return $status;
+    }
+
+
     public static function colorizestatus($status, $type ,$prefix = '', $suffix = ''){
 
         $trans = Config::get('jayon.'.$type.'_status');

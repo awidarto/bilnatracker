@@ -135,20 +135,20 @@ $config['trans_cr_canceled'] = 'canceled';
 /* Translation and Look Up */
 
 $config['dispatcher_status'] = array(
-    $config['trans_status_admin_zoned'] => 'Zone Assigned',
-    $config['trans_status_admin_dated'] => 'Date Assigned',
-    $config['trans_status_admin_devassigned'] => 'Device Assigned',
-    $config['trans_status_admin_courierassigned'] => '',
-    $config['trans_status_admin_dispatched'] => 'Dispatched',
+    $config['trans_status_admin_zoned'] => 'Diberi Zona Kirim',
+    $config['trans_status_admin_dated'] => 'Diberi Tanggal Kirim',
+    $config['trans_status_admin_devassigned'] => 'Ditempatkan di Perangkat',
+    $config['trans_status_admin_courierassigned'] => 'Ditugaskan ke Kurir',
+    $config['trans_status_admin_dispatched'] => 'Dalam Proses Pengiriman',
 );
 
 
 $config['delivery_status'] = array(
     $config['trans_status_new'] => 'Siap Kirim',
-    $config['trans_status_tobeconfirmed'] => 'Belum Konfirm',
+    $config['trans_status_tobeconfirmed'] => 'Belum Siap Kirim',
     $config['trans_status_purged'] => 'Hapus',
     $config['trans_status_archived'] => 'Arsipkan',
-    $config['trans_status_confirmed'] => 'Konfirm',
+    $config['trans_status_confirmed'] => 'Konfirm Siap Dikirim',
     $config['trans_status_canceled'] => 'Data Batal',
     $config['trans_status_rescheduled'] => 'Jadwal Ulang',
     $config['trans_status_inprogress'] => 'Dalam Proses Pengiriman',
@@ -157,17 +157,17 @@ $config['delivery_status'] = array(
     $config['trans_status_mobile_delivered_partial'] => 'Delivered Sebagian',
     $config['trans_status_mobile_return'] => 'Retur',
     $config['trans_status_mobile_departure'] => 'Berangkat',
-    $config['trans_status_admin_zoned'] => 'Zone Assigned',
-    $config['trans_status_admin_dated'] => 'Date Assigned',
-    $config['trans_status_admin_devassigned'] => 'Device Assigned',
-    $config['trans_status_admin_courierassigned'] => 'Courier Assigned',
+    $config['trans_status_admin_zoned'] => 'Diberi Zona Kirim',
+    $config['trans_status_admin_dated'] => 'Diberi Tanggal Kirim',
+    $config['trans_status_admin_devassigned'] => 'Ditempatkan di Perangkat',
+    $config['trans_status_admin_courierassigned'] => 'Ditugaskan ke Kurir',
     $config['trans_status_admin_dispatched'] => 'Dalam Proses Pengiriman'
 );
 
 $config['pickup_status'] = array(
     $config['trans_status_tobepickup'] => 'Belum Diambil',
     $config['trans_status_pickup'] => 'Sudah Diambil',
-    $config['trans_status_pickup_canceled'] => 'Batal',
+    $config['trans_status_pickup_canceled'] => 'Pick Up Batal',
 );
 
 $config['warehouse_status'] = array(
@@ -194,7 +194,7 @@ $config['courier_status'] = array(
 // change status dialog
 $config['dialog_delivery_status'] = array(
     '' => 'Tidak Ada Perubahan',
-    $config['trans_status_confirmed'] => 'Konfirm',
+    $config['trans_status_confirmed'] => 'Konfirm Siap Kirim',
     $config['trans_status_canceled'] => 'Data Batal',
     $config['trans_status_mobile_pending'] => 'Pending',
     $config['trans_status_mobile_delivered'] => 'Delivered',

@@ -603,9 +603,9 @@ class DispatchedController extends AdminController {
     public function postDlxl()
     {
 
-        $this->heads = Config::get('jex.default_export_heads');
+        $this->heads = Config::get('jex.default_dispatched_export_heads');
 
-        $this->fields = Config::get('jex.default_export_fields');
+        $this->fields = Config::get('jex.default_dispatched_export_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -1022,6 +1022,20 @@ class DispatchedController extends AdminController {
         //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
+    public function transStatus($data)
+    {
+            return Prefs::transstatus($data['status'],'delivery');
+    }
+
+    public function transCrStatus($data)
+    {
+            return Prefs::transstatus($data['courier_status'],'courier');
+    }
+
+    public function transHubStatus($data)
+    {
+            return Prefs::transstatus($data['pickup_status'],'pickup');
+    }
 
     public function colorizetype($data)
     {
