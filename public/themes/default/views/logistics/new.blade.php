@@ -69,7 +69,9 @@
 
         {{ Former::text('api_pass','API Password') }}
 
-        {{ Former::text('api_key','API Key') }}
+        {{ Former::text('api_key','API Key / Client ID') }}
+
+        {{ Former::text('api_key_secret','API / Client Secret') }}
 
 @stop
 

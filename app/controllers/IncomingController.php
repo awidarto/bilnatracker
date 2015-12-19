@@ -751,6 +751,9 @@ class IncomingController extends AdminController {
                 $data['cod'] = 0;
             }
             $data['cod'] = doubleval($data['cod']);
+
+            $data['cod'] = floor($data['cod'] * 100) / 100;
+
         }
 
         $data['bucket'] = Config::get('jayon.bucket_incoming');

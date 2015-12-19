@@ -18,3 +18,6 @@ Artisan::add(new JayaStatusDaemon);
 Artisan::add(new SapAwbDaemon);
 Artisan::add(new SapStatusDaemon);
 Artisan::add(new Backtrack);
+Artisan::add(new E21ExpressStatus);
+Artisan::add(new RPXStatusDaemon);
+

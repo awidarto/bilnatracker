@@ -120,7 +120,8 @@ return array(
         'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
         'Pingpong\Auth2\Auth2ServiceProvider',
-        'Nathanmac\Utilities\Parser\ParserServiceProvider'
+        'Nathanmac\Utilities\Parser\ParserServiceProvider',
+        'Artisaninweb\SoapWrapper\ServiceProvider'
 	),
 
 	/*
@@ -203,6 +204,7 @@ return array(
         'QRCode'          => 'SimpleSoftwareIO\QrCode\Facades\QrCode',
         'GuzzleClient'    => 'GuzzleHttp\Client',
         'Parser'          => 'Nathanmac\Utilities\Parser\Facades\Parser',
+        'SoapWrapper'     => 'Artisaninweb\SoapWrapper\Facades\SoapWrapper',
 	),
 
 );

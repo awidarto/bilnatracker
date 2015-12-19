@@ -4,14 +4,14 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class RPXStatusDaemon extends Command {
+class E21ExpressStatus extends Command {
 
 	/**
 	 * The console command name.
 	 *
 	 * @var string
 	 */
-	protected $name = 'rpx:status';
+	protected $name = 'e21express:status';
 
 	/**
 	 * The console command description.
@@ -38,50 +38,12 @@ class RPXStatusDaemon extends Command {
 	public function fire()
 	{
 
-        $wsdl="http://api.rpxholding.com/wsdl/rpxwsdl.php?wsdl";
-        //$client = new SoapClient($wsdl);
-        $username = 'bilna';
-        $password  = 'Bilna2015';
-
-
-        SoapWrapper::add(function ($service) use ($wsdl, $username, $password) {
-            $service
-                ->name('getTrackingAWB')
-                ->wsdl($wsdl)
-                ->trace(true)                                                   // Optional: (parameter: true/false)
-                //->header()                                                      // Optional: (parameters: $namespace,$name,$data,$mustunderstand,$actor)
-                //->customHeader($customHeader)                                   // Optional: (parameters: $customerHeader) Use this to add a custom SoapHeader or extended class
-                //->cookie()                                                      // Optional: (parameters: $name,$value)
-                //->location()                                                    // Optional: (parameter: $location)
-                //->certificate()                                                 // Optional: (parameter: $certLocation)
-                ->cache(WSDL_CACHE_NONE);                                        // Optional: Set the WSDL cache
-                //->options(['user' => $username, 'password' => $password, 'format'=>'JSON' ]);   // Optional: Set some extra options
-        });
-
-        $data = array(
-            'user' => $username,
-            'password' => $password,
-            'format'=>'JSON',
-            'awb'=>'8979867812376'
-            );
-
-        SoapWrapper::service('getTrackingAWB', function ($service) use ($data) {
-            //var_dump($service->getFunctions());
-            print_r($service->call('getTrackingAWB', [$data]));
-        });
-
-
-        die();
-
-        $base_url = 'http://119.110.72.234/api/v1/shipment/';
-
         $logistic_id = 'B234-JKT';
 
         $delivery_trigger = 'DELIVERED';
         $returned_trigger = 'UNDELIVERED';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
-
 
         $token = '';
 
@@ -93,8 +55,12 @@ class RPXStatusDaemon extends Command {
 
         if($token == ''){
             $token = $this->getToken($logistic);
+        }else{
+            $token = json_decode($token);
+            if(isset($token->access_token)){
+                $token = $token->access_token;
+            }
         }
-
 
         $orders = Shipment::where('awb','!=','')
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))
@@ -107,38 +73,23 @@ class RPXStatusDaemon extends Command {
             $req = array();
             foreach($orders as $ord){
 
-                $username = $logistic->api_user;
-                $password = $logistic->api_pass;
-
-
-
-                $url = $base_url.$ord->awb.'?access_token='.$token;
-
-                print $url;
-
-                $ch = curl_init();
-
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-
-                //$result = curl_exec($ch);
-
-                if(!$result = curl_exec($ch)){
-                    die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
-                }
-
-                $status_code = curl_getinfo($ch);   //get status code
-
-                //$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
-
-                curl_close ($ch);
-
-                //print $result;
+                $result = $this->sendRequest($ord->awb,$logistic,$token);
 
                 $res = json_decode($result, true);
+
+                if(isset($res['code']) && ($res['code'] == '0' || $res['code'] == 0) )
+                {
+                    print 'reset token'."\r\n";
+
+                    $token = $this->getToken($logistic);
+
+                    $res = $this->sendRequest($ord->awb,$logistic,$token);
+
+                    $res = json_decode($result, true);
+
+                }
+
+
 
                 $reslog = $res;
                 $reslog['timestamp'] = new MongoDate();
@@ -147,8 +98,6 @@ class RPXStatusDaemon extends Command {
                 Threeplstatuslog::insert($reslog);
 
                 print_r($res);
-
-
 
                 if(isset($res['cn_no'])){
 
@@ -207,9 +156,8 @@ class RPXStatusDaemon extends Command {
         }
 
         $actor = $this->name;
-        Event::fire('log.api',array('RPXStatusDaemon', 'get' ,$actor,'RPX STATUS PULL'));
-		//
-	}
+        Event::fire('log.api',array('E21StatusDaemon', 'get' ,$actor,'E21 STATUS PULL'));
+    }
 
 	/**
 	 * Get the console command arguments.
@@ -235,6 +183,81 @@ class RPXStatusDaemon extends Command {
 		);
 	}
 
+
+    private function getToken($logistic){
+
+        print 'requesting token'."\r\n";
+
+        $base_oauth = 'http://119.110.72.234/api/oauth/access_token';
+
+        $token_file = public_path().'/storage/21oauth.key';
+
+        $formdata = array(
+            'grant_type'=>'password',
+            'client_id'=>$logistic->api_key,
+            'client_secret'=>$logistic->api_key_secret,
+            'username'=>$logistic->api_user,
+            'password'=>$logistic->api_pass
+        );
+
+        //print_r($formdata);
+
+        $choauth = curl_init();
+
+        curl_setopt($choauth, CURLOPT_URL, $base_oauth);
+        curl_setopt($choauth, CURLOPT_POST, 1);
+        curl_setopt($choauth, CURLOPT_POSTFIELDS, http_build_query($formdata));
+        curl_setopt($choauth, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($choauth, CURLOPT_SSL_VERIFYPEER, true);
+
+        $result = curl_exec($choauth);
+
+        file_put_contents($token_file, $result);
+
+        $result = json_decode($result);
+
+        if(isset($result->access_token)){
+            return $result->access_token;
+        }else{
+            return $result;
+        }
+
+    }
+
+    private function sendRequest($awb,$logistic, $token)
+    {
+        print 'sending request'."\r\n";
+
+        $base_url = 'http://119.110.72.234/api/v1/shipment/';
+
+        $url = $base_url.$awb.'?access_token='.$token;
+
+        $username = $logistic->api_user;
+        $password = $logistic->api_pass;
+
+        print $url."\r\n";
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+        //curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+
+        $result = curl_exec($ch);
+
+        if(!$result){
+            die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+        }
+
+        $status_code = curl_getinfo($ch);   //get status code
+
+        curl_close ($ch);
+
+        return $result;
+    }
+
     private function saveStatus($log, $logistic_name, $logistic_cust_code)
     {
         //SAP use individual AWB request
@@ -252,6 +275,5 @@ class RPXStatusDaemon extends Command {
             Threeplstatuses::insert($l);
         }
     }
-
 
 }
