@@ -242,6 +242,8 @@ class E21ExpressStatus extends Command {
 
         $result = json_decode($result);
 
+        print $result;
+
         if(isset($result->access_token)){
             return $result->access_token;
         }else{
