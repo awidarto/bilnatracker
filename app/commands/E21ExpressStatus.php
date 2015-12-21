@@ -268,6 +268,8 @@ class E21ExpressStatus extends Command {
 
         $base_url = 'http://119.110.72.234/api/v1/shipment/';
 
+        $awb = trim($awb);
+
         $url = $base_url.$awb.'?access_token='.$token;
 
         $username = $logistic->api_user;
