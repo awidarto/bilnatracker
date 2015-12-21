@@ -20,6 +20,14 @@ class E21ExpressStatus extends Command {
 	 */
 	protected $description = 'Command description.';
 
+    private $e21status = array(
+            'DELIVERED'=>array('RECEIVED'),
+            'RETURNED'=>array('RETURNED'),
+            'UNDELIVERED'=>array('MISS-DELIVERY','LOSS')
+
+        );
+
+
 	/**
 	 * Create a new command instance.
 	 *
@@ -40,8 +48,9 @@ class E21ExpressStatus extends Command {
 
         $logistic_id = 'B234-JKT';
 
-        $delivery_trigger = 'DELIVERED';
-        $returned_trigger = 'UNDELIVERED';
+        $delivery_trigger = $this->e21status['DELIVERED'];
+        $returned_trigger = $this->e21status['RETURNED'];
+        $undelivered_trigger = $this->e21status['UNDELIVERED'];
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
@@ -99,52 +108,64 @@ class E21ExpressStatus extends Command {
 
                 print_r($res);
 
-                if(isset($res['cn_no'])){
+                if(isset($res['shipment'])){
 
-                    $pre = clone $ord;
+                    $ord = Shipment::where('awb','=',$res['shipment']['code'])
+                                ->orderBy('created_at','desc')
+                                ->first();
 
-                    $ls = $res['laststatus'];
+                    if($ord){
+                        $pre = clone $ord;
 
-                    if( $ls['status'] == $delivery_trigger){
-                        $ord->status = Config::get('jayon.trans_status_mobile_delivered');
-                        $ord->position = 'CUSTOMER';
+                        $lst = trim($awbs[$order->awb]['last_status']);
+
+                        if( $lst == $delivery_trigger){
+                            $order->status = \Config::get('jayon.trans_status_mobile_delivered');
+                            $order->position = 'CUSTOMER';
+                        }
+
+                        if( in_array( $lst , $returned_trigger) || $lst == 'RETURN' ){
+                            $order->status = \Config::get('jayon.trans_status_mobile_return');
+                        }
+
+                        if( in_array( $lst , $undelivered_trigger) || $lst == 'NOT DELIVERED' ){
+                            $order->status = \Config::get('jayon.trans_status_mobile_return');
+                        }
+
+                        //$ord->district = $ls->district;
+                        $ord->logistic_status = $ls['status'];
+                        $ord->logistic_status_ts = $ls['time'];
+                        $ord->logistic_raw_status = $ls;
+                        $ord->save();
+
+                        $ts = new MongoDate();
+
+                        $hdata = array();
+                        $hdata['historyTimestamp'] = $ts;
+                        $hdata['historyAction'] = 'api_shipment_change_status';
+                        $hdata['historySequence'] = 1;
+                        $hdata['historyObjectType'] = 'shipment';
+                        $hdata['historyObject'] = $ord->toArray();
+                        $hdata['actor'] = $this->name;
+                        $hdata['actor_id'] = '';
+
+                        History::insert($hdata);
+
+                        $sdata = array();
+                        $sdata['timestamp'] = $ts;
+                        $sdata['action'] = 'api_shipment_change_status';
+                        $sdata['reason'] = 'api_update';
+                        $sdata['objectType'] = 'shipment';
+                        $sdata['object'] = $ord->toArray();
+                        $sdata['preObject'] = $pre->toArray();
+                        $sdata['actor'] = $this->name;
+                        $sdata['actor_id'] = '';
+                        Shipmentlog::insert($sdata);
+
+                        $this->saveStatus($res, $logistic->logistic_code, $logistic_id);
+
+
                     }
-
-                    if($ls['status'] == $returned_trigger){
-                        $ord->status = Config::get('jayon.trans_status_mobile_return');
-                    }
-
-                    //$ord->district = $ls->district;
-                    $ord->logistic_status = $ls['status'];
-                    $ord->logistic_status_ts = $ls['time'];
-                    $ord->logistic_raw_status = $ls;
-                    $ord->save();
-
-                    $ts = new MongoDate();
-
-                    $hdata = array();
-                    $hdata['historyTimestamp'] = $ts;
-                    $hdata['historyAction'] = 'api_shipment_change_status';
-                    $hdata['historySequence'] = 1;
-                    $hdata['historyObjectType'] = 'shipment';
-                    $hdata['historyObject'] = $ord->toArray();
-                    $hdata['actor'] = $this->name;
-                    $hdata['actor_id'] = '';
-
-                    History::insert($hdata);
-
-                    $sdata = array();
-                    $sdata['timestamp'] = $ts;
-                    $sdata['action'] = 'api_shipment_change_status';
-                    $sdata['reason'] = 'api_update';
-                    $sdata['objectType'] = 'shipment';
-                    $sdata['object'] = $ord->toArray();
-                    $sdata['preObject'] = $pre->toArray();
-                    $sdata['actor'] = $this->name;
-                    $sdata['actor_id'] = '';
-                    Shipmentlog::insert($sdata);
-
-                    $this->saveStatus($res, $logistic->logistic_code, $logistic_id);
 
                 }
 
@@ -262,10 +283,14 @@ class E21ExpressStatus extends Command {
     {
         //SAP use individual AWB request
 
+        $laststatus = array_pop($log['shipment']['statuses']);
+
+        print_r($laststatus);
+
         if(is_array($log) && count($log) > 0){
-            $l = $log;
-            if(isset($l['laststatus']['time'])){
-                $l['ts'] = new MongoDate( strtotime($l['laststatus']['time']) );
+            $laststatus = $log;
+            if(isset($laststatus['datetime'])){
+                $l['ts'] = new MongoDate( strtotime($laststatus['datetime']) );
             }else{
                 $l['ts'] = new MongoDate();
             }
