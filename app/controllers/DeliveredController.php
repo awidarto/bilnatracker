@@ -255,6 +255,7 @@ class DeliveredController extends AdminController {
                     $query->where('bucket','=',Config::get('jayon.bucket_tracker'))
                         ->where(function($q){
                             $q->where('status','=', Config::get('jayon.trans_status_mobile_delivered') )
+                                ->orWhere('status','=', Config::get('jayon.trans_status_undelivered') )
                                 ->orWhere('status','=', Config::get('jayon.trans_status_mobile_revoked') )
                                 ->orWhere('status','=', Config::get('jayon.trans_status_mobile_noshow') )
                                 ->orWhere('status','=', Config::get('jayon.trans_status_mobile_return') );
