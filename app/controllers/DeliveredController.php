@@ -985,6 +985,10 @@ class DeliveredController extends AdminController {
         $rcount = 0;
         $pcount = 0;
 
+        $dclass = '';
+        $rclass = '';
+        $pclass = '';
+
         if($data['status'] == Config::get('jayon.trans_status_mobile_delivered_partial') ||
             $data['status'] == Config::get('jayon.trans_status_mobile_delivered') ||
             $data['status'] == Config::get('jayon.trans_status_mobile_return') ||
