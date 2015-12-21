@@ -54,6 +54,12 @@ class E21ExpressStatus extends Command {
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
 
+        if($logistic){
+
+        }else{
+            die('logistic data not found');
+        }
+
         $token = '';
 
         $token_file = public_path().'/storage/21oauth.key';
