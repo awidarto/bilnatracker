@@ -226,7 +226,7 @@ class E21ExpressStatus extends Command {
             'password'=>$logistic->api_pass
         );
 
-        //print_r($formdata);
+        print_r($formdata);
 
         $choauth = curl_init();
 
