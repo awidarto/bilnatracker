@@ -228,6 +228,7 @@ class E21ExpressStatus extends Command {
 
         print_r($formdata);
 
+        die();
         $choauth = curl_init();
 
         curl_setopt($choauth, CURLOPT_URL, $base_oauth);
