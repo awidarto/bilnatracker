@@ -117,25 +117,30 @@ class E21ExpressStatus extends Command {
                     if($ord){
                         $pre = clone $ord;
 
-                        $lst = trim($awbs[$order->awb]['last_status']);
+                        $laststat = $res['shipment']['statuses'];
 
-                        if( $lst == $delivery_trigger){
-                            $order->status = \Config::get('jayon.trans_status_mobile_delivered');
-                            $order->position = 'CUSTOMER';
+                        $laststat = array_pop($laststat);
+
+                        $lst = trim($laststat['status']);
+
+
+                        if( in_array( $lst , $delivery_trigger) || $lst == 'RECEIVED' ){
+                            $ord->status = \Config::get('jayon.trans_status_mobile_delivered');
+                            $ord->position = 'CUSTOMER';
                         }
 
                         if( in_array( $lst , $returned_trigger) || $lst == 'RETURN' ){
-                            $order->status = \Config::get('jayon.trans_status_mobile_return');
+                            $ord->status = \Config::get('jayon.trans_status_mobile_return');
                         }
 
                         if( in_array( $lst , $undelivered_trigger) || $lst == 'NOT DELIVERED' ){
-                            $order->status = \Config::get('jayon.trans_status_mobile_return');
+                            $ord->status = \Config::get('jayon.trans_status_mobile_return');
                         }
 
                         //$ord->district = $ls->district;
-                        $ord->logistic_status = $ls['status'];
-                        $ord->logistic_status_ts = $ls['time'];
-                        $ord->logistic_raw_status = $ls;
+                        $ord->logistic_status = $laststat['status'];
+                        $ord->logistic_status_ts = $laststat['datetime'];
+                        $ord->logistic_raw_status = $laststat;
                         $ord->save();
 
                         $ts = new MongoDate();
@@ -282,23 +287,49 @@ class E21ExpressStatus extends Command {
     private function saveStatus($log, $logistic_name, $logistic_cust_code)
     {
         //SAP use individual AWB request
+        $statuses = $log['shipment']['statuses'];
 
-        $laststatus = array_pop($log['shipment']['statuses']);
+        if(is_array($statuses)){
+            foreach ($statuses as $stat) {
+                $st = Threeplstatuses::where('consignee_olshop_cust','=',$logistic_cust_code)
+                        ->where('awb','=',$log['shipment']['code'])
+                        ->where('datetime',$stat['datetime'])
+                        ->first();
 
-        print_r($laststatus);
+                if($st){
 
-        if(is_array($log) && count($log) > 0){
-            $laststatus = $log;
-            if(isset($laststatus['datetime'])){
-                $l['ts'] = new MongoDate( strtotime($laststatus['datetime']) );
-            }else{
-                $l['ts'] = new MongoDate();
+                }else{
+                    if(isset($stat['datetime'])){
+                        $stat['ts'] = new MongoDate( strtotime($stat['datetime']) );
+                    }else{
+                        $stat['ts'] = new MongoDate();
+                    }
+                    $stat['raw'] = 0;
+                    $stat['awb'] = $log['shipment']['code'];
+                    $stat['consignee_logistic_id'] = $logistic_name;
+                    $stat['consignee_olshop_cust'] = $logistic_cust_code;
+                    Threeplstatuses::insert($stat);
+                }
             }
-            $l['consignee_logistic_id'] = $logistic_name;
-            $l['consignee_olshop_cust'] = $logistic_cust_code;
-
-            Threeplstatuses::insert($l);
         }
+
+        $stat = $log['shipment'];
+
+        if(isset($stat['datetime'])){
+            $stat['ts'] = new MongoDate( strtotime($stat['datetime']) );
+        }else{
+            $stat['ts'] = new MongoDate();
+        }
+
+        //$stat['raw'] = 1;
+        //$stat['awb'] = $log['shipment']['code'];
+        //$stat['consignee_logistic_id'] = $logistic_name;
+        //$stat['consignee_olshop_cust'] = $logistic_cust_code;
+        //Threeplstatuses::insert($stat);
+
+        //$stat['timestamp'] = new \MongoDate();
+        //Threeplstatuslog::insert($stat);
+
     }
 
 }
