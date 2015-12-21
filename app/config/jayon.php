@@ -84,6 +84,8 @@ $config['trans_status_canceled'] = 'canceled';
 $config['trans_status_rescheduled'] = 'rescheduled';
 $config['trans_status_inprogress'] = 'inprogress';
 
+$config['trans_status_undelivered'] = 'undelivered';
+
 
 $config['trans_status_mobile_pending'] = 'pending';
 $config['trans_status_mobile_dispatched'] = 'dispatched';

@@ -73,10 +73,16 @@ class E21ExpressStatus extends Command {
 
         $orders = Shipment::where('awb','!=','')
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))
-                        ->where('status','!=','delivered')
+                        ->where(function($sq){
+                            $sq->where('status','!=','delivered')
+                                ->where('status','!=','undelivered')
+                                ->where('status','!=','returned');
+                        })
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->get();
+
+
 
         if($orders && count($orders->toArray()) > 0){
             $req = array();
@@ -134,7 +140,7 @@ class E21ExpressStatus extends Command {
                         }
 
                         if( in_array( $lst , $undelivered_trigger) || $lst == 'NOT DELIVERED' ){
-                            $ord->status = \Config::get('jayon.trans_status_mobile_return');
+                            $ord->status = \Config::get('jayon.trans_status_undelivered');
                         }
 
                         //$ord->district = $ls->district;
@@ -226,9 +232,8 @@ class E21ExpressStatus extends Command {
             'password'=>$logistic->api_pass
         );
 
-        print_r($formdata);
+        //print_r($formdata);
 
-        die();
         $choauth = curl_init();
 
         curl_setopt($choauth, CURLOPT_URL, $base_oauth);
@@ -242,8 +247,6 @@ class E21ExpressStatus extends Command {
         file_put_contents($token_file, $result);
 
         $result = json_decode($result);
-
-        print $result;
 
         if(isset($result->access_token)){
             return $result->access_token;
