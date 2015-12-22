@@ -263,7 +263,7 @@ class DeliveredController extends AdminController {
                         });
                     })
                     ->orderBy('delivered_time','desc')
-                    ->orderBy('pick_up_date');
+                    ->orderBy('pick_up_date','desc');
 
         return $model;
 
