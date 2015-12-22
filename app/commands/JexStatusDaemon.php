@@ -187,7 +187,6 @@ class JexStatusDaemon extends Command {
         if(is_array($log) && count($log) > 0){
             foreach($log as $l){
 
-                print_r($l);
 
                 $l->ts = new MongoDate( strtotime($l->timestamp) );
                 $l->consignee_logistic_id = $logistic_name;
@@ -199,6 +198,10 @@ class JexStatusDaemon extends Command {
                 }
 
                 Threeplstatuses::insert($al);
+
+
+                print_r($l->pod);
+
                 /*
                 foreach($l->pod as $p){
                     $p->ts = new MongoDate( strtotime($l->timestamp) );
