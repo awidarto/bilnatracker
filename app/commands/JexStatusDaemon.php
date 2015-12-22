@@ -51,7 +51,7 @@ class JexStatusDaemon extends Command {
 
         $orders = Shipment::where('awb','!=','')
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))
-                        ->where('status','=','delivered')
+                        ->where('status','!=','delivered')
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->get();
@@ -61,6 +61,8 @@ class JexStatusDaemon extends Command {
             foreach($orders as $ord){
                 $req[] = array('awb'=>$ord->awb);
             }
+
+            $req[] = array('awb'=>'007735-16-122015-00155749');
 
             $client = new GuzzleClient();
 
