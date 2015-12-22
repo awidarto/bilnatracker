@@ -98,7 +98,7 @@ class JexStatusDaemon extends Command {
 
                 if( $awbs[$order->awb]->status == $delivery_trigger){
                     $order->status = Config::get('jayon.trans_status_mobile_delivered');
-                    //$order->delivered_time = $awbs[$order->awb]->delivery_time;
+                    $order->delivered_time = $awbs[$order->awb]->delivery_time;
                     $order->position = 'CUSTOMER';
                 }
 
@@ -114,7 +114,10 @@ class JexStatusDaemon extends Command {
                 $order->logistic_status = $awbs[$order->awb]->status;
                 $order->logistic_status_ts = $awbs[$order->awb]->timestamp;
                 $order->logistic_raw_status = $awbs[$order->awb];
-                //$order->logistic_pickup_time = $awbs[$order->awb]->pickuptime;
+                $order->logistic_delivered_time = $awbs[$order->awb]->delivery_time;
+                $order->logistic_pickup_time = $awbs[$order->awb]->pickuptime;
+                $order->logistic_last_note = $awbs[$order->awb]->note;
+
 
                 $order->save();
 
