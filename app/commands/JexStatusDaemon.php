@@ -193,8 +193,8 @@ class JexStatusDaemon extends Command {
                 $l->consignee_olshop_cust = $logistic_cust_code;
 
                 $al = array();
-                foreach($l as $k=>$l){
-                    $al[$k] = $l;
+                foreach($l as $k=>$vl){
+                    $al[$k] = $vl;
                 }
 
                 Threeplstatuses::insert($al);
