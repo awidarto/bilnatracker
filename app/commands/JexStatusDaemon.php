@@ -197,20 +197,18 @@ class JexStatusDaemon extends Command {
 
                 Threeplstatuses::insert($al);
 
-                if(isset($l->pod)){
-                    foreach($l->pod as $p){
-                        $p->ts = new MongoDate( strtotime($l->timestamp) );
-                        $p->consignee_logistic_id = $logistic_name;
-                        $p->consignee_olshop_cust = $logistic_cust_code;
-                        $p->awb = $l->awb;
+                foreach($l->pod as $p){
+                    $p->ts = new MongoDate( strtotime($l->timestamp) );
+                    $p->consignee_logistic_id = $logistic_name;
+                    $p->consignee_olshop_cust = $logistic_cust_code;
+                    $p->awb = $l->awb;
 
-                        $pl = array();
-                        foreach ($p as $pk=>$pv){
-                            $pl[$pk] = $pv;
-                        }
-
-                        Threeplpictures::insert($pl);
+                    $pl = array();
+                    foreach ($p as $pk=>$pv){
+                        $pl[$pk] = $pv;
                     }
+
+                    Threeplpictures::insert($pl);
                 }
 
             }
