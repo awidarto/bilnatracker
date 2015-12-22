@@ -77,6 +77,7 @@ class JexStatusDaemon extends Command {
             $reslog['consignee_logistic_id'] = $logistic->logistic_code;
             $reslog['consignee_olshop_cust'] = $logistic_id;
             Threeplstatuslog::insert($reslog);
+
             $this->saveStatus($awblist,$logistic_id,$logistic->logistic_code);
 
 
@@ -95,6 +96,7 @@ class JexStatusDaemon extends Command {
 
                 if( $awbs[$order->awb]->status == $delivery_trigger){
                     $order->status = Config::get('jayon.trans_status_mobile_delivered');
+                    $order->delivered_time = $awbs[$order->awb]->delivery_time;
                     $order->position = 'CUSTOMER';
                 }
 
@@ -110,6 +112,8 @@ class JexStatusDaemon extends Command {
                 $order->logistic_status = $awbs[$order->awb]->status;
                 $order->logistic_status_ts = $awbs[$order->awb]->timestamp;
                 $order->logistic_raw_status = $awbs[$order->awb];
+                $order->logistic_pickup_time = $awbs[$order->awb]->pickup_time;
+
                 $order->save();
 
                 $ts = new MongoDate();
