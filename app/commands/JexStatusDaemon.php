@@ -199,10 +199,6 @@ class JexStatusDaemon extends Command {
 
                 Threeplstatuses::insert($al);
 
-
-                print_r($l->pod);
-
-                /*
                 foreach($l->pod as $p){
                     $p->ts = new MongoDate( strtotime($l->timestamp) );
                     $p->consignee_logistic_id = $logistic_name;
@@ -216,7 +212,6 @@ class JexStatusDaemon extends Command {
 
                     Threeplpictures::insert($pl);
                 }
-                */
 
             }
         }
