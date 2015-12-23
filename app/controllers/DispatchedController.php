@@ -757,6 +757,20 @@ class DispatchedController extends AdminController {
         return $cats;
     }
 
+    public function dupeFF($data){
+        $count = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
+                        ->where('status','!=', Config::get('jayon.trans_status_canceled') )
+                        ->count();
+        $ccount = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
+                        ->where('status','=', Config::get('jayon.trans_status_canceled') )
+                        ->count();
+        if($count > 1 || $ccount > 1 ){
+            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.'</div>'.'<div class="badge pull-right">'.$ccount.' canceled</div>';
+        }else{
+            return $data['consignee_olshop_orderid'];
+        }
+    }
+
     public function splitTag($data){
         $tags = explode(',',$data['tags']);
         if(is_array($tags) && count($tags) > 0 && $data['tags'] != ''){

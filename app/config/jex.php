@@ -341,7 +341,7 @@ return array(
             array('awb',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_cust',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('no_sales_order',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('consignee_olshop_orderid',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_orderid',array('kind'=>'text' , 'callback'=>'dupeFF' ,'query'=>'like', 'pos'=>'both','show'=>true)),
             array('number_of_package',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('cod',array('kind'=>'currency', 'query'=>'like','pos'=>'both','show'=>true)),
             array('email',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
