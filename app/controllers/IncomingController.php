@@ -1062,8 +1062,11 @@ class IncomingController extends AdminController {
         $count = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
                         ->where('status','!=', Config::get('jayon.trans_status_canceled') )
                         ->count();
-        if($count > 1){
-            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.'</div>';
+        $ccount = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
+                        ->where('status','=', Config::get('jayon.trans_status_canceled') )
+                        ->count();
+        if($count > 1 || $ccount > 1 ){
+            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.'</div>'.'<div class="badge pull-right">'.$ccount.' canceled</div>';
         }else{
             return $data['consignee_olshop_orderid'];
         }

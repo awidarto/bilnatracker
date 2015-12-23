@@ -32,7 +32,7 @@ class KurirJKTStatus extends Command {
     private $kjktstatus = array(
             'DELIVERED'=>array(3),
             'RETURNED'=>array(4),
-            'UNDELIVERED'=>array(4)
+            'UNDELIVERED'=>array(6)
         );
 
     private $kjktstatusdesc = array(
@@ -41,7 +41,8 @@ class KurirJKTStatus extends Command {
             'Terjadwal',
             'Terkirim',
             'Batal',
-            'Dalam pengiriman'
+            'Dalam pengiriman',
+            'Undelivered'
         );
 
 
