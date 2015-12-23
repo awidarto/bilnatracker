@@ -148,7 +148,9 @@ class DeliveryapiController extends \BaseController {
 
             $or->boxList = $this->boxList('delivery_id',$or->deliveryId, $key);
             $or->boxObjects = $this->boxList('delivery_id',$or->deliveryId, $key , true);
-            $or->boxCount = $or->numberOfPackage;
+
+            $or->numberOfPackage = ($or->numberOfPackage == '')?0:$or->numberOfPackage;
+            $or->boxCount = ($or->numberOfPackage == '')?0:$or->numberOfPackage;
 
             $or->pickUpDate = date('Y-m-d H:i:s', $or->pickUpDate->sec);
             $or->createdDate = date('Y-m-d H:i:s', $or->createdDate->sec);
