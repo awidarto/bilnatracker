@@ -766,7 +766,7 @@ class DispatchedController extends AdminController {
                             ->where('status','=', Config::get('jayon.trans_status_canceled') )
                             ->count();
 
-            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.' dup.</div>'.'<div class="badge pull-right">'.$ccount.' canceled</div>';
+            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.($count - 1).' dup.</div>'.'<div class="badge pull-right">'.$ccount.' canceled</div>';
         }else{
             return $data['consignee_olshop_orderid'];
         }
