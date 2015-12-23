@@ -97,7 +97,7 @@ class HubapiController extends \BaseController {
 
         $orders = $this->model
                     ->where('pick_up_date', '=', new \MongoDate( strtotime($deliverydate) ) )
-                    //->where('logistic_type','=','internal')
+                    ->where('logistic_type','=','internal')
                     //->where('device_key', '=', $key)
 
                     ->where(function($qz) use($key, $deliverydate){
