@@ -759,13 +759,14 @@ class DispatchedController extends AdminController {
 
     public function dupeFF($data){
         $count = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
-                        ->where('status','!=', Config::get('jayon.trans_status_canceled') )
                         ->count();
-        $ccount = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
-                        ->where('status','=', Config::get('jayon.trans_status_canceled') )
-                        ->count();
-        if($count > 1 || $ccount > 1 ){
-            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.'</div>'.'<div class="badge pull-right">'.$ccount.' canceled</div>';
+        $ccount = 0;
+        if($count > 1 ){
+            $ccount = Shipment::where('consignee_olshop_orderid','=',$data['consignee_olshop_orderid'])
+                            ->where('status','=', Config::get('jayon.trans_status_canceled') )
+                            ->count();
+
+            return '<span class="red">'.$data['consignee_olshop_orderid'].'</span>'.'<div class="badge pull-right">'.$count.' dup.</div>'.'<div class="badge pull-right">'.$ccount.' canceled</div>';
         }else{
             return $data['consignee_olshop_orderid'];
         }
