@@ -268,8 +268,11 @@ class JayaStatusDaemon extends Command {
                 }
                 $l['consignee_logistic_id'] = $logistic_name;
                 $l['consignee_olshop_cust'] = $logistic_cust_code;
-
-                Threeplstatuses::insert($l);
+                if($l['status'] == 'AWB TIDAK DITEMUKAN'){
+                    Threeplstatuserror::insert($l);
+                }else{
+                    Threeplstatuses::insert($l);
+                }
             }
         }
     }

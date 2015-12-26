@@ -387,17 +387,6 @@ class FlapiController extends \BaseController {
 
                 $ts = new \MongoDate();
 
-                $hdata = array();
-                $hdata['historyTimestamp'] = $ts;
-                $hdata['historyAction'] = 'api_shipment_change_status';
-                $hdata['historySequence'] = 1;
-                $hdata['historyObjectType'] = 'shipment';
-                $hdata['historyObject'] = $order->toArray();
-                $hdata['actor'] = $this->name;
-                $hdata['actor_id'] = '';
-
-                //\History::insert($hdata);
-
                 $sdata = array();
                 $sdata['timestamp'] = $ts;
                 $sdata['action'] = 'api_shipment_change_status';
