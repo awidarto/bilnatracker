@@ -392,8 +392,8 @@ class FlapiController extends \BaseController {
                 $sdata['action'] = 'api_shipment_change_status';
                 $sdata['reason'] = 'api_update';
                 $sdata['objectType'] = 'shipment';
-                $sdata['object'] = $order;
-                $sdata['preObject'] = $pre;
+                $sdata['object'] = $order->toArray();
+                $sdata['preObject'] = $pre->toArray();
                 $sdata['actor'] = $this->name;
                 $sdata['actor_id'] = '';
                 \Shipmentlog::insert($sdata);
