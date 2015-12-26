@@ -142,15 +142,15 @@ class JexAwbDaemon extends Command {
                         $hdata['actor'] = $this->name;
                         $hdata['actor_id'] = '';
 
-                        History::insert($hdata);
+                        //History::insert($hdata);
 
                         $sdata = array();
                         $sdata['timestamp'] = $ts;
                         $sdata['action'] = 'api_shipment_change_awb';
                         $sdata['reason'] = 'api_update';
                         $sdata['objectType'] = 'shipment';
-                        $sdata['object'] = $order->toArray();
-                        $sdata['preObject'] = $pre->toArray();
+                        $sdata['object'] = $order;
+                        $sdata['preObject'] = $pre;
                         $sdata['actor'] = $this->name;
                         $sdata['actor_id'] = '';
                         Shipmentlog::insert($sdata);

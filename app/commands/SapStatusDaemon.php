@@ -147,15 +147,15 @@ class SapStatusDaemon extends Command {
                     $hdata['actor'] = $this->name;
                     $hdata['actor_id'] = '';
 
-                    History::insert($hdata);
+                    //History::insert($hdata);
 
                     $sdata = array();
                     $sdata['timestamp'] = $ts;
                     $sdata['action'] = 'api_shipment_change_status';
                     $sdata['reason'] = 'api_update';
                     $sdata['objectType'] = 'shipment';
-                    $sdata['object'] = $ord->toArray();
-                    $sdata['preObject'] = $pre->toArray();
+                    $sdata['object'] = $ord;
+                    $sdata['preObject'] = $pre;
                     $sdata['actor'] = $this->name;
                     $sdata['actor_id'] = '';
                     Shipmentlog::insert($sdata);

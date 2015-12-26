@@ -206,7 +206,7 @@ class JayaStatusDaemon extends Command {
                         $hdata['actor'] = $this->name;
                         $hdata['actor_id'] = '';
 
-                        History::insert($hdata);
+                        //History::insert($hdata);
 
                         $sdata = array();
                         $sdata['timestamp'] = $ts;
