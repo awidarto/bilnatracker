@@ -65,7 +65,7 @@ return array(
 
 
         'default_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('trip',array('kind'=>'numeric','query'=>'like','pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','courier_status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
@@ -128,7 +128,7 @@ return array(
         ),
 
         'default_export_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('courier_status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('pickup_status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
@@ -192,7 +192,7 @@ return array(
 
 
         'default_zoning_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('consignee_olshop_city',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
@@ -255,7 +255,7 @@ return array(
 
 
         'default_courierassign_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             //array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
@@ -324,7 +324,7 @@ return array(
 
 
         'default_dispatched_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('trip',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -400,7 +400,7 @@ return array(
         ),
 
         'default_dispatched_export_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('trip',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -476,7 +476,7 @@ return array(
 
 
         'default_delivered_fields'=>array(
-            array('createdDate',array('kind'=>'daterange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('delivered_time',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),

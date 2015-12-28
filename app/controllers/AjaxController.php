@@ -742,6 +742,17 @@ class AjaxController extends BaseController {
                 $sdata['actor_id'] = Auth::user()->_id;
                 Shipmentlog::insert($sdata);
 
+                $canceled = array(
+                        'awb'=>$sh->awb,
+                        'order_id'=>$sh->no_sales_order,
+                        'consignee_id'=>$sh->consignee_olshop_cust,
+                        'ff_id'=>$sh->consignee_olshop_orderid,
+                        'ts'=>$ts,
+                        'sent'=>0
+                    );
+
+                Canceled::insert($canceled);
+
 
             }
             $res = true;
