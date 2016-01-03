@@ -212,7 +212,7 @@ class FlapiController extends \BaseController {
             $consignee = array(
                 'cn_name'=> $o['consignee_olshop_name'],
                 'address'=>$con_address,
-                'address'=> str_replace(array("\r","\n"), ' ', $o['consignee_olshop_addr'] ),
+                //'address'=> str_replace(array("\r","\n"), ' ', $o['consignee_olshop_addr'] ),
                 'distric'=> $o['district'] ,
                 'city'=> $o['consignee_olshop_city'] ,
                 'province'=> $o['consignee_olshop_region'] ,
