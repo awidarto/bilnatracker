@@ -203,8 +203,15 @@ class FlapiController extends \BaseController {
 
             $entry['remark'] = '-';
 
+            if(isset($o['consignee_olshop_addr'])){
+                $con_address = str_replace(array("\r","\n"), ' ', $o['consignee_olshop_addr'] );
+            }else{
+                $con_address = '';
+            }
+
             $consignee = array(
                 'cn_name'=> $o['consignee_olshop_name'],
+                'address'=>$con_address,
                 'address'=> str_replace(array("\r","\n"), ' ', $o['consignee_olshop_addr'] ),
                 'distric'=> $o['district'] ,
                 'city'=> $o['consignee_olshop_city'] ,
