@@ -149,18 +149,18 @@ class JexAwbDaemon extends Command {
                         $sdata['action'] = 'api_shipment_change_awb';
                         $sdata['reason'] = 'api_update';
                         $sdata['objectType'] = 'shipment';
-                        $sdata['object'] = $order;
-                        $sdata['preObject'] = $pre;
+                        $sdata['object'] = $order->toArray();
+                        $sdata['preObject'] = $pre->toArray();
                         $sdata['actor'] = $this->name;
                         $sdata['actor_id'] = '';
 
                         print_r($sdata);
 
-                        try{
+                        //try{
                             Shipmentlog::insert($sdata);
-                        }catch(Exception $e){
-                            print_r($e);
-                        }
+                        //}catch(Exception $e){
+                        //    print_r($e);
+                        //}
 
                     }
 
