@@ -75,7 +75,8 @@ class JayaStatusDaemon extends Command {
         if($orders && count($orders->toArray()) > 0){
             $req = array();
             foreach($orders as $ord){
-                $req[] = array('order_id'=>$ord->no_sales_order.'-'.$ord->consignee_olshop_orderid,'awb'=>$ord->awb);
+                //$req[] = array('order_id'=>$ord->no_sales_order.'-'.$ord->consignee_olshop_orderid,'awb'=>$ord->awb);
+                $req[] = array('order_id'=>$ord->no_sales_order,'awb'=>$ord->consignee_olshop_orderid);
             }
 
             $client = new GuzzleClient();
