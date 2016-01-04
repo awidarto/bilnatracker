@@ -159,7 +159,7 @@ class JexAwbDaemon extends Command {
                         try{
                             Shipmentlog::insert($sdata);
                         }catch(Exception $e){
-                            print $e;
+                            print_r($e);
                         }
 
                     }
