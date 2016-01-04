@@ -156,7 +156,11 @@ class JexAwbDaemon extends Command {
 
                         print_r($sdata);
 
-                        //Shipmentlog::insert($sdata);
+                        try{
+                            Shipmentlog::insert($sdata);
+                        }catch(Exception $e){
+                            print $e;
+                        }
 
                     }
 
