@@ -153,7 +153,7 @@ class JexAwbDaemon extends Command {
                         $sdata['preObject'] = $pre;
                         $sdata['actor'] = $this->name;
                         $sdata['actor_id'] = '';
-                        Shipmentlog::insert($sdata);
+                        //Shipmentlog::insert($sdata);
 
                     }
 
