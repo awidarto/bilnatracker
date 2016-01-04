@@ -166,8 +166,8 @@ class KurirJKTStatus extends Command {
                         $sdata['action'] = 'api_shipment_change_status';
                         $sdata['reason'] = 'api_update';
                         $sdata['objectType'] = 'shipment';
-                        $sdata['object'] = $ord;
-                        $sdata['preObject'] = $pre;
+                        $sdata['object'] = $ord->toArray();
+                        $sdata['preObject'] = $pre->toArray();
                         $sdata['actor'] = $this->name;
                         $sdata['actor_id'] = '';
                         Shipmentlog::insert($sdata);
