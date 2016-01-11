@@ -1922,6 +1922,288 @@ class AdminController extends Controller {
         return array('model'=>$model, 'q'=>$q);
     }
 
+    public function DLcompileSearch($fields,$model,$infilter){
+
+        $q = array();
+
+        //print_r($infilter);
+
+        for($i = 1;$i < count($fields);$i++){
+            $idx = $i;
+
+            //print_r($fields[$i]);
+
+            $field = $fields[$i][0];
+            $type = $fields[$i][1]['kind'];
+
+
+            $qval = '';
+
+            $sfields = explode('.',$field);
+            $sub = '';
+            if(count($sfields) > 1){
+                $sub = $sfields[0];
+                $subfield = $sfields[1];
+            }
+
+            if($infilter[$i])
+            {
+                //print $infilter[$i];
+
+                $multi = (isset($fields[$i][1]['multi']))?$fields[$i][1]['multi']:false;
+                $multirel = (isset($fields[$i][1]['multi']))?$fields[$i][1]['multirel']:'AND';
+
+                if( $type == 'text'){
+                    if($fields[$i][1]['query'] == 'like'){
+                        $pos = $fields[$i][1]['pos'];
+                        if($pos == 'both'){
+
+                            $model = $model->where(function($q) use($infilter,$field,$multi,$multirel,$idx){
+
+                                if($multi){
+                                    $n = 0;
+                                    foreach($multi as $mf){
+                                        if($n == 0){
+                                            $q = $q->where($mf,'like','%'.$infilter[$idx].'%');
+                                        }else{
+                                            if($multirel == 'OR'){
+                                                $q = $q->orWhere($mf,'like','%'.$infilter[$idx].'%');
+                                            }else{
+                                                $q = $q->where($mf,'like','%'.$infilter[$idx].'%');
+                                            }
+                                        }
+                                        $n++;
+                                    }
+                                }else{
+                                    $q->where($field,'like','%'.$infilter[$idx].'%');
+                                    $qval = new MongoRegex('/'.$infilter[$idx].'/i');
+                                }
+
+                            });
+
+                        }else if($pos == 'before'){
+
+                            $model = $model->where(function($q) use($infilter,$field,$multi,$multirel,$idx){
+
+                                if($multi){
+                                    $n = 0;
+                                    foreach($multi as $mf){
+                                        if($n == 0){
+                                            $q = $q->where($mf,'like','%'.$infilter[$idx]);
+                                        }else{
+                                            if($multirel == 'OR'){
+                                                $q = $q->orWhere($mf,'like','%'.$infilter[$idx]);
+                                            }else{
+                                                $q = $q->where($mf,'like','%'.$infilter[$idx]);
+                                            }
+                                        }
+                                        $n++;
+                                    }
+                                }else{
+                                    $q->where($field,'like','%'.$infilter[$idx]);
+                                    $qval = new MongoRegex('/'.$infilter[$idx].'/i');
+                                }
+
+                            });
+
+
+                        }else if($pos == 'after'){
+
+                            $model = $model->where(function($q) use($infilter,$field,$multi,$multirel,$idx){
+
+                                if($multi){
+                                    $n = 0;
+                                    foreach($multi as $mf){
+                                        if($n == 0){
+                                            $q = $q->where($mf,'like',$infilter[$idx].'%');
+                                        }else{
+                                            if($multirel == 'OR'){
+                                                $q = $q->orWhere($mf,'like',$infilter[$idx].'%');
+                                            }else{
+                                                $q = $q->where($mf,'like',$infilter[$idx].'%');
+                                            }
+                                        }
+                                        $n++;
+                                    }
+                                }else{
+                                    $q->where($field,'like',$infilter[$idx].'%');
+                                    $qval = new MongoRegex('/'.$infilter[$idx].'/i');
+                                }
+
+                            });
+
+                        }
+                    }else{
+
+                        $model = $model->where(function($q) use($infilter,$field,$multi,$multirel,$idx){
+
+                            if($multi){
+                                $n = 0;
+                                foreach($multi as $mf){
+                                    if($n == 0){
+                                        $q = $q->where($mf,'=',$infilter[$idx]);
+                                    }else{
+                                        if($multirel == 'OR'){
+                                            $q = $q->orWhere($mf,'=',$infilter[$idx]);
+                                        }else{
+                                            $q = $q->where($mf,'=',$infilter[$idx]);
+                                        }
+                                    }
+                                    $n++;
+                                }
+                            }else{
+                                $q->where($field,'=',$infilter[$idx]);
+                                $qval = new MongoRegex('/'.$infilter[$idx].'/i');
+                            }
+
+                        });
+
+
+                    }
+
+                    $q[$field] = $qval;
+
+                }elseif($type == 'numeric' || $type == 'currency'){
+
+                    $str = $infilter[$idx];
+
+                    $sign = null;
+
+                    $strval = trim(str_replace(array('<','>','='), '', $str));
+
+                    $qval = (double)$strval;
+
+                    if(strpos($str, "<=") !== false){
+                        $sign = '<=';
+                    }elseif(strpos($str, ">=") !== false){
+                        $sign = '>=';
+                    }elseif(strpos($str, ">") !== false){
+                        $sign = '>';
+                    }elseif(stripos($str, "<") !== false){
+                        $sign = '<';
+                    }else{
+                        $sign = '=';
+                    }
+
+
+                    $model = $model->where(function($q) use($infilter,$field,$qval,$sign,$multi,$multirel,$idx){
+
+                        if($multi){
+                            $n = 0;
+                            foreach($multi as $mf){
+                                if($n == 0){
+                                    $q = $q->where($mf,$sign,$qval);
+                                }else{
+                                    if($multirel == 'OR'){
+                                        $q = $q->orWhere($mf,$sign,$qval);
+                                    }else{
+                                        $q = $q->where($mf,$sign,$qval);
+                                    }
+                                }
+                                $n++;
+                            }
+                        }else{
+                            $q->where($field,$sign,$qval);
+                        }
+
+                    });
+
+
+
+                }elseif($type == 'date'|| $type == 'datetime'){
+                    $datestring = $infilter[$idx];
+                    $datestring = date('d-m-Y', $datestring / 1000);
+
+                    if (($timestamp = $datestring) === false) {
+
+                    } else {
+                        //$daystart = new MongoDate(strtotime($datestring.' 00:00:00'));
+                        //$dayend = new MongoDate(strtotime($datestring.' 23:59:59'));
+
+                        $daystart = $datestring.' 00:00:00';
+                        $dayend = $datestring.' 23:59:59';
+
+                        //$qval = array($field =>array('$gte'=>$daystart,'$lte'=>$dayend));
+                        //echo "$str == " . date('l dS \o\f F Y h:i:s A', $timestamp);
+
+                        $model = $model->where(function($q) use($infilter,$field,$daystart,$dayend){
+                            $q->whereBetween($field,array($daystart,$dayend));
+                        });
+
+                    }
+                    $qval = array('$gte'=>$daystart,'$lte'=>$dayend);
+                    //$qval = $infilter[$idx];
+
+                    $q[$field] = $qval;
+                }elseif($type == 'daterange'){
+                    $datestring = $infilter[$idx];
+
+                    //print $datestring;
+
+                    if($datestring != ''){
+                        $dates = explode(' - ', $datestring);
+
+                        if(count($dates) == 2){
+
+                            $daystart = date('Y-m-d',strtotime($dates[0])).' 00:00:00';
+                            $dayend = date('Y-m-d',strtotime($dates[1])).' 23:59:59';
+
+                            //print $daystart;
+                            //$qval = array($field =>array('$gte'=>$daystart,'$lte'=>$dayend));
+
+                            $qval = array('$gte'=>$daystart,'$lte'=>$dayend);
+                            //$qval = $infilter[$idx];
+
+                            $q[$field] = $qval;
+
+
+                            $model = $model->where(function($q) use($infilter,$field,$daystart,$dayend){
+                                $q->whereBetween($field,array($daystart,$dayend));
+                            });
+
+
+                        }
+
+                    }
+
+                }elseif($type == 'datetimerange'){
+                    $datestring = $infilter[$idx];
+
+                    if($datestring != ''){
+                        $dates = explode(' - ', $datestring);
+
+                        //print_r($dates);
+
+                        if(count($dates) == 2){
+                            $daystart = date('Y-m-d H:i:s',strtotime($dates[0]));
+                            $dayend = date('Y-m-d H:i:s',strtotime($dates[1]));
+
+                            //$qval = array($field =>array('$gte'=>$daystart,'$lte'=>$dayend));
+
+                            $qval = array('$gte'=>$daystart,'$lte'=>$dayend);
+                            //$qval = Input::get('sSearch_'.$idx);
+
+                            //$model = $model->whereBetween($field,array($daystart,$dayend));
+
+                            $model = $model->where(function($q) use($infilter,$field,$daystart,$dayend){
+                                $q->whereBetween($field,array($daystart,$dayend));
+                            });
+
+                            $q[$field] = $qval;
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        }
+
+        return array('model'=>$model, 'q'=>$q);
+    }
+
 	public function getAdd(){
 
 		$controller_name = strtolower($this->controller_name);
@@ -2629,7 +2911,7 @@ class AdminController extends Controller {
 
         //$model = $this->SQL_make_join($model);
 
-        $comres = $this->SQLcompileSearch($fields, $model);
+        $comres = $this->DLcompileSearch($fields, $model,$infilters);
 
         $model = $comres['model'];
         $q = $comres['q'];
