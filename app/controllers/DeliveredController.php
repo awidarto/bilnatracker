@@ -895,7 +895,11 @@ class DeliveredController extends AdminController {
     {
         $data = $data->toArray();
 
-        $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
+        if($data['logistic_type'] == 'internal'){
+            $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
+        }else{
+            $pics = Threeplpictures::where('awb','=', $data['delivery_id'] )->get();
+        }
 
         $glinks = '';
 
@@ -904,8 +908,14 @@ class DeliveredController extends AdminController {
         if($pics){
             if(count($pics) > 0){
                 foreach($pics as $g){
-                    $thumbnail_url = $g->thumbnail_url;
-                    $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                    if($data['logistic_type'] == 'internal'){
+                        $thumbnail_url = $g->thumbnail_url;
+                        $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                    }else{
+                        $thumbnail_url = $g->thumbnail;
+                        $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->consignee_olshop_cust.'" value="'.$g->pictures.'" />';
+                    }
+
                 }
 
                 $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
