@@ -898,7 +898,7 @@ class DeliveredController extends AdminController {
         if($data['logistic_type'] == 'internal'){
             $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
         }else{
-            $pics = Threeplpictures::where('awb','=', $data['delivery_id'] )->get();
+            $pics = Threeplpictures::where('awb','=', $data['awb'] )->get();
         }
 
         $glinks = '';
