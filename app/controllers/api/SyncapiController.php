@@ -337,7 +337,7 @@ class SyncapiController extends \Controller {
 
                             }else{
                                 $shipment->delivered_time = date('Y-m-d H:i:s',time());
-                                $shipment->delivered_time_ts = new MongoDate();
+                                $shipment->delivered_time_ts = new \MongoDate();
                             }
 
 
