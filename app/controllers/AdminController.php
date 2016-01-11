@@ -2581,6 +2581,7 @@ class AdminController extends Controller {
 
     public function postDlxl()
     {
+        set_time_limit(0);
 
         $fields = $this->fields; // fields set must align with search column index
 

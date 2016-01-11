@@ -66,13 +66,12 @@ class KurirJKTStatus extends Command {
 	public function fire()
 	{
 
-        $result = $this->sendRequest('8680',null);
+        //$result = $this->sendRequest('8680',null);
 
-        print_r(json_decode($result,true));
+        //print_r(json_decode($result,true));
 
-        die();
 
-        $logistic_id = 'B234-JKT';
+        $logistic_id = '3758';
 
         $delivery_trigger = $this->kjktstatus['DELIVERED'];
         $returned_trigger = $this->kjktstatus['RETURNED'];
