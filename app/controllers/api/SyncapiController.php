@@ -267,8 +267,6 @@ class SyncapiController extends \Controller {
 
         //$user = \Apiauth::user($key);
 
-        $appname = (\Input::has('app'))?\Input::get('app'):'app.name';
-
         $user = \Device::where('key','=',$key)->first();
 
         if(!$user){
