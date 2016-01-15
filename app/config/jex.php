@@ -481,7 +481,7 @@ return array(
         'default_delivered_fields'=>array(
             array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('delivered_time',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('delivered_time',array('kind'=>'datetimerange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('courier_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
