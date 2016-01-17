@@ -221,7 +221,7 @@ class G21apiController extends \BaseController {
                 'cn_name'=> $o['consignee_olshop_name'],
                 'address'=>$con_address,
                 //'address'=> str_replace(array("\r","\n"), ' ', $o['consignee_olshop_addr'] ),
-                'distric'=> $o['district'] ,
+                'district'=> $o['district'] ,
                 'city'=> $o['consignee_olshop_city'] ,
                 'province'=> $o['consignee_olshop_region'] ,
                 'country'=> $o['consignee_olshop_region'] ,
@@ -266,7 +266,7 @@ class G21apiController extends \BaseController {
             $shipper = array(
                 'merchant'=> 'Bilna.com',
                 'merchant_address'=> 'Kawasan Pergudangan PT. WIDYA SAKTI KUSUMA Jl. Raya Bekasi KM 28 ( Jl. Wahab Affan ) Pondok Ungu, Medan Satria, Bekasi 17132',
-                'merchant_distric'=> 'Medan Satria',
+                'merchant_district'=> 'Medan Satria',
                 'merchant_city'=> 'Bekasi',
                 'merchant_province'=> 'Jawa Barat',
                 'merchant_country'=> 'Indonesia',
