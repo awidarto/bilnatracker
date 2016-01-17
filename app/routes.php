@@ -143,6 +143,7 @@ Route::group(array('prefix' => 'api/v1/service'), function (){
     Route::post('fl/status', 'Api\FlapiController@postStatus');
     Route::post('sap/status', 'Api\SapapiController@postStatus');
     Route::resource('sap/awb', 'Api\SapapiController');
+    Route::get('g21/order', 'Api\G21apiController@index');
 });
 
 Route::get('lastup/{log}',function($log){
