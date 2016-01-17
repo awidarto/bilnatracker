@@ -166,7 +166,8 @@ class ManifestController extends AdminController {
         }
 
         if($period_from == '' || is_null($period_from) ){
-
+            $def_from = date('Y-m-d',time());
+            $model = $model->where('pick_up_date','=', new MongoDate( strtotime($def_from) ));
         }else{
             $model = $model->where('pick_up_date','=', new MongoDate( strtotime($period_from) ));
         }
