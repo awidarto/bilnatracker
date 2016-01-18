@@ -46,7 +46,7 @@ class RPXStatusDaemon extends Command {
 
         SoapWrapper::add(function ($service) use ($wsdl, $username, $password) {
             $service
-                ->name('getTrackingAWB')
+                ->name('trackAWB')
                 ->wsdl($wsdl)
                 ->trace(true)                                                   // Optional: (parameter: true/false)
                 //->header()                                                      // Optional: (parameters: $namespace,$name,$data,$mustunderstand,$actor)
@@ -65,9 +65,13 @@ class RPXStatusDaemon extends Command {
             'awb'=>'8979867812376'
             );
 
-        SoapWrapper::service('getTrackingAWB', function ($service) use ($data) {
-            //var_dump($service->getFunctions());
-            print_r($service->call('getTrackingAWB', [$data]));
+        $data = [$username, $password, '8979867812376','JSON'];
+        //string $user, string $password, string $awb, string $format
+
+        SoapWrapper::service('trackAWB', function ($service) use ($data) {
+            var_dump($service->getFunctions());
+            print($service->call('getTrackingAWB', $data));
+            //print_r($service->call('getTrackingAWB', [$data]));
         });
 
 
