@@ -2479,8 +2479,20 @@ class AdminController extends Controller {
                             //$daystart = date('Y-m-d H:i:s',strtotime($dates[0]));
                             //$dayend = date('Y-m-d H:i:s',strtotime($dates[1]));
 
-                            $daystart = new MongoDate( strtotime($dates[0]) );
-                            $dayend = new MongoDate( strtotime($dates[1]) );
+                            if(stripos($dates[0], ':' ) === false){
+                                $datestart = $dates[0].' 00:00:00';
+                            }else{
+                                $datestart = $dates[0];
+                            }
+
+                            if(stripos($dates[1], ':' ) === false){
+                                $dateend = $dates[1].' 23:59:59';
+                            }else{
+                                $dateend = $dates[1];
+                            }
+
+                            $daystart = new MongoDate( strtotime($datestart) );
+                            $dayend = new MongoDate( strtotime($dateend) );
 
                             //$qval = array($field =>array('$gte'=>$daystart,'$lte'=>$dayend));
 
