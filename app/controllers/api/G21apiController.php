@@ -173,6 +173,20 @@ class G21apiController extends \BaseController {
             return \Response::json(array('status'=>'ERR:EMPTYKEY', 'timestamp'=>time(), 'message'=>'Empty Key' ));
         }
 
+        $date_from = Input::get('from');
+        $date_to = Input::get('to');
+
+        if(is_null($date_from) || $date_from == '' ){
+            $date_from = new \MongoDate( strtotime( date( 'Y-m-d', time() ).' 00:00:00'  ) );
+        }else{
+            $date_from = new \MongoDate( strtotime( $date_from.' 00:00:00'  ) );
+        }
+
+        if(is_null($date_to) || $date_to == '' ){
+            $date_to = new \MongoDate( strtotime( date( 'Y-m-d', time() ).' 23:59:59'  ) );
+        }else{
+            $date_to = new \MongoDate( strtotime( $date_to.' 23:59:59'  ) );
+        }
 
 
         //$logistic = \Logistic::where('api_key','=',$key)->first();
@@ -188,6 +202,9 @@ class G21apiController extends \BaseController {
                         ->where(function($q){
                             $q->where('status','=', \Config::get('jayon.trans_status_admin_dated') )
                                 ->orWhere('status','=', \Config::get('jayon.trans_status_confirmed'));
+                        })
+                        ->where(function($qd) use( $date_from, $date_to ){
+                            $qd->whereBetween('pick_up_date', array($date_from, $date_to ));
                         })
                         ->where(function($q){
                             $q->where('uploaded','!=',1)
