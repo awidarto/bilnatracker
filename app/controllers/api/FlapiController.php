@@ -302,6 +302,8 @@ class FlapiController extends \BaseController {
         $returned_trigger = $this->fl_status['RETURN'];
         $undelivered_trigger = $this->fl_status['NOT DELIVERED'];
 
+        $pickup_trigger = 'PICK UP';
+
 
         $key = \Input::get('key');
 
@@ -373,6 +375,14 @@ class FlapiController extends \BaseController {
 
                     $order->position = 'CUSTOMER';
                 }
+
+                if( $lst == $pickup_trigger || preg_match('\^'.$pickup_trigger.'\i', $awbs[$order->awb]['last_status'] )){
+
+                    $order->logistic_pickup_time = $awbs[$order->awb]['delivered_date'].' '.$awbs[$order->awb]['delivered_time'];
+
+                }
+
+
 
                 if( in_array( $lst , $returned_trigger) || $lst == 'RETURN' ){
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
