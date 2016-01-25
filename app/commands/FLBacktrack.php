@@ -37,11 +37,12 @@ class FLBacktrack extends Command {
 	 */
 	public function fire()
 	{
-        $statuses = Threeplstatuslog::where('consignee_olshop_cust','=','1400000655')->skip(0)->take(100)->get();
+        $count = Shipment::where('consignee_olshop_cust','=','1400000655')
+                            ->where('logistic_status' ,'regexp', '\^DELIVERED\i')
+                            ->where('status','!=','delivered')
+                            ->count();
+        print $count;
 
-        foreach ($statuses as $s) {
-            print_r($s->toArray());
-        }
 		//
 	}
 
