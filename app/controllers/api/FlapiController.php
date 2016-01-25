@@ -386,11 +386,11 @@ class FlapiController extends \BaseController {
                 $order->logistic_status_ts = $lts;
                 $order->logistic_raw_status = $awbs[$order->awb];
 
-                $saved = $order->save();
+                $order->save();
 
-                if($saved){
+                //if($saved){
                     $inawbstatus[$order->awb] = 'STATUS UPDATED';
-                }
+                //}
 
                 $ts = new \MongoDate();
 
