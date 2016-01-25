@@ -43,6 +43,15 @@ class FLBacktrack extends Command {
                             ->count();
         print $count;
 
+
+        $orders = Shipment::where('consignee_olshop_cust','=','1400000655')
+                            ->where('logistic_status' ,'regexp', '/^DELIVERED/i')
+                            ->where('status','!=','delivered')
+                            ->get();
+
+        foreach($orders as $ord){
+            print_r($ord->toArray());
+        }
 		//
 	}
 
