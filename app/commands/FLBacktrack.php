@@ -54,9 +54,11 @@ class FLBacktrack extends Command {
 
             $lstat = $ord->logistic_raw_status;
 
-            print_r($lstat);
+            //print_r($lstat);
+            $ord->status = 'delivered';
+            $ord->delivered_time = $lstat['delivered_date'].' '.$lstat['delivered_time'];
 
-            //$ord->delivered_time =
+            print $ord->delivered_time.' '.$ord->status."\r\n";
 
         }
 		//
