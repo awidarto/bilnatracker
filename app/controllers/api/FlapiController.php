@@ -400,6 +400,8 @@ class FlapiController extends \BaseController {
 
                 $order->save();
 
+                $this->saveStatusSingle($awbs[$order->awb],$logistic->consignee_olshop_cust,$logistic->logistic_code);
+
                 //if($saved){
                     $inawbstatus[$order->awb] = 'STATUS UPDATED';
                 //}
@@ -640,6 +642,19 @@ class FlapiController extends \BaseController {
         }
     }
 
+    private function saveStatusSingle($l, $logistic_name, $logistic_cust_code)
+    {
+            if(isset($l['timestamp'])){
+                $l['ts'] = new \MongoDate( strtotime($l['timestamp']) );
+            }else{
+                $l['ts'] = new \MongoDate();
+            }
+
+            $l['consignee_logistic_id'] = $logistic_name;
+            $l['consignee_olshop_cust'] = $logistic_cust_code;
+
+            \Threeplstatuses::insert($l);
+    }
 
 
 
