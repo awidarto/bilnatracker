@@ -367,7 +367,7 @@ class FlapiController extends \BaseController {
 
                 $lst = trim($awbs[$order->awb]['last_status']);
 
-                if( $lst == $delivery_trigger){
+                if( $lst == $delivery_trigger || preg_match('\^'.$delivery_trigger.'\i', $awbs[$order->awb]['last_status'] )){
                     $order->status = \Config::get('jayon.trans_status_mobile_delivered');
                     $order->position = 'CUSTOMER';
                 }
