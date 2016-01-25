@@ -50,7 +50,14 @@ class FLBacktrack extends Command {
                             ->get();
 
         foreach($orders as $ord){
-            print_r($ord->toArray());
+            //print_r($ord->toArray());
+
+            $lstat = $ord->logistic_raw_status;
+
+            print_r($lstat);
+
+            //$ord->delivered_time =
+
         }
 		//
 	}
