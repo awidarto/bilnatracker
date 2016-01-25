@@ -369,14 +369,14 @@ class FlapiController extends \BaseController {
 
                 $lst = trim($awbs[$order->awb]['last_status']);
 
-                if( $lst == $delivery_trigger || preg_match('\^'.$delivery_trigger.'\i', $awbs[$order->awb]['last_status'] )){
+                if( $lst == $delivery_trigger || preg_match('\^'.$delivery_trigger.'\i', $awbs[$order->awb]['last_status'] ) ){
                     $order->status = \Config::get('jayon.trans_status_mobile_delivered');
                     $ord->delivered_time = $awbs[$order->awb]['delivered_date'].' '.$awbs[$order->awb]['delivered_time'];
 
                     $order->position = 'CUSTOMER';
                 }
 
-                if( $lst == $pickup_trigger || preg_match('\^'.$pickup_trigger.'\i', $awbs[$order->awb]['last_status'] )){
+                if( $lst == $pickup_trigger || preg_match('\^'.$pickup_trigger.'\i', $awbs[$order->awb]['last_status'] ) ){
 
                     $order->logistic_pickup_time = $awbs[$order->awb]['delivered_date'].' '.$awbs[$order->awb]['delivered_time'];
 
@@ -384,11 +384,11 @@ class FlapiController extends \BaseController {
 
 
 
-                if( in_array( $lst , $returned_trigger) || $lst == 'RETURN' ){
+                if( in_array( $lst , $returned_trigger) || $lst == 'RETURN' || preg_match('\^RETURN\i', $awbs[$order->awb]['last_status']) ){
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
                 }
 
-                if( in_array( $lst , $undelivered_trigger) || $lst == 'NOT DELIVERED' ){
+                if( in_array( $lst , $undelivered_trigger) || $lst == 'NOT DELIVERED' || preg_match('\^NOT DELIVERED\i', $awbs[$order->awb]['last_status'] ) ){
                     $order->status = \Config::get('jayon.trans_status_mobile_return');
                 }
 
