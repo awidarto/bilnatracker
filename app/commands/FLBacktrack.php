@@ -60,9 +60,15 @@ class FLBacktrack extends Command {
 
             print $ord->delivered_time.' '.$ord->status."\r\n";
 
-            $ord->save();
+            //$ord->save();
 
         }
+
+
+        $fl_status = Shipment::distinct('logistic_status')->where('logistic','=','FL')->get();
+
+        print_r($fl_status->toArray());
+
 		//
 	}
 
