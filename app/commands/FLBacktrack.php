@@ -38,7 +38,7 @@ class FLBacktrack extends Command {
 	public function fire()
 	{
         $count = Shipment::where('consignee_olshop_cust','=','1400000655')
-                            ->where('logistic_status' ,'regexp', '\^DELIVERED\i')
+                            ->where('logistic_status' ,'regexp', '/^DELIVERED/i')
                             ->where('status','!=','delivered')
                             ->count();
         print $count;
