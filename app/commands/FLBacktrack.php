@@ -37,7 +37,7 @@ class FLBacktrack extends Command {
 	 */
 	public function fire()
 	{
-        $statuses = Threeplstatuses::where('consignee_olshop_cust','=','1400000655')->skip(0)->take(100)->get();
+        $statuses = Threeplstatuslog::where('consignee_olshop_cust','=','1400000655')->skip(0)->take(100)->get();
 
         foreach ($statuses as $s) {
             print_r($s);
