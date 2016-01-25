@@ -21,5 +21,6 @@ Artisan::add(new Backtrack);
 Artisan::add(new E21ExpressStatus);
 Artisan::add(new RPXStatusDaemon);
 Artisan::add(new KurirJKTStatus);
+Artisan::add(new FLBacktrack);
 
 
