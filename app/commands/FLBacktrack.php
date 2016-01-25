@@ -60,6 +60,8 @@ class FLBacktrack extends Command {
 
             print $ord->delivered_time.' '.$ord->status."\r\n";
 
+            $ord->save();
+
         }
 		//
 	}
