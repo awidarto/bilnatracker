@@ -100,7 +100,8 @@ class KurirJKTStatus extends Command {
             $req = array();
             foreach($orders as $ord){
 
-                $result = $this->sendRequest($ord->awb,$logistic,$token);
+
+                $result = $this->sendRequest($ord->awb,$logistic);
 
                 $res = json_decode($result, true);
 
@@ -215,7 +216,7 @@ class KurirJKTStatus extends Command {
 		);
 	}
 
-    private function sendRequest($awb,$logistic, $token)
+    private function sendRequest($awb,$logistic)
     {
         print 'sending request'."\r\n";
 
