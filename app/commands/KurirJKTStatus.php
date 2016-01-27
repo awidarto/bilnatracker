@@ -215,7 +215,7 @@ class KurirJKTStatus extends Command {
 		);
 	}
 
-    private function sendRequest($awb,$logistic)
+    private function sendRequest($awb,$logistic, $token)
     {
         print 'sending request'."\r\n";
 
