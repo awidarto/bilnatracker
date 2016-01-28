@@ -16,6 +16,33 @@ class IncomingController extends AdminController {
         //$this->model = DB::collection('documents');
         $this->title = 'Incoming Order';
 
+
+        $this->import_validate_list = array(
+                'consig',
+                'no_sales_order',
+                'pick_up_date',
+                'consignee_olshop_orderid',
+                'number_of_package',
+                'delivery_type',
+                'cod',
+                'email',
+                'consignee_olshop_name',
+                'consignee_olshop_addr',
+                'consignee_olshop_city',
+                'consignee_olshop_province',
+                'consignee_olshop_region',
+                'consignee_olshop_zip',
+                'consignee_olshop_phone',
+                'contact',
+                'consignee_olshop_desc',
+                'w_v',
+                'awb',
+                'consignee_olshop_cust',
+                'consignee_olshop_service',
+                'consignee_olshop_inst_amt',
+                //'district'
+            );
+
     }
 
     public function getDetail($id)
@@ -593,6 +620,7 @@ class IncomingController extends AdminController {
 
     public function postDlxl()
     {
+        $this->search_fields = Config::get('jex.default_fields');
 
         $this->heads = Config::get('jex.default_export_heads');
 
@@ -616,10 +644,12 @@ class IncomingController extends AdminController {
     public function postAwbdlxl()
     {
 
-        $this->heads = null;
-        $this->fields = Config::get('jex.default_fields');
+        $this->heads = Config::get('jex.default_awb_heads');
+        $this->fields = Config::get('jex.default_awb_fields');
 
-        $this->export_output_fields = Config::get('jex.default_awb_fields');
+        $this->search_fields = Config::get('jex.default_fields');
+
+        //$this->export_output_fields = Config::get('jex.default_awb_fields');
 
         $db = Config::get('jayon.main_db');
 
@@ -641,7 +671,46 @@ class IncomingController extends AdminController {
 
         //$this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
 
+        $this->import_commit_submit = strtolower($this->controller_name).'/uploadimportawb';
+
+        $this->title = 'Update AWB';
         return parent::getImport();
+    }
+
+    public function postUploadimportawb()
+    {
+        $this->import_commit_url = strtolower($this->controller_name).'/commitawb';
+
+        return parent::postUploadimport();
+
+    }
+
+    public function getCommitawb($sessid)
+    {
+        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
+
+        $this->import_commit_submit = strtolower($this->controller_name).'/commitawb';
+
+        return parent::getCommit($sessid);
+    }
+
+    public function postCommitawb($sessid)
+    {
+
+        $this->import_update_exclusion = array(
+            'position',
+            'consignee_olshop_cust',
+            'no_sales_order',
+            'consignee_olshop_orderid',
+            'sessId',
+            'updated_at',
+            'created_at'
+        );
+
+
+
+        return parent::postCommit($sessid);
+
     }
 
 
@@ -762,7 +831,10 @@ class IncomingController extends AdminController {
         $data['order_id'] = $data['no_sales_order'];
         $data['fulfillment_code'] = $data['consignee_olshop_orderid'];
 
-        $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package'], $data['position'] );
+        // for AWB update
+        if( isset($data['number_of_package']) ){
+            $this->updateBox($data['delivery_id'], $data['order_id'], $data['fulfillment_code'], $data['number_of_package'], $data['position'] );
+        }
 
         $data['status'] = Config::get('jayon.trans_status_confirmed');
         $data['logistic_status'] = '';
@@ -786,6 +858,15 @@ class IncomingController extends AdminController {
 
         return $data;
 
+    }
+
+
+
+    public function getCommit($sessid)
+    {
+        $this->import_aux_form = View::make(strtolower($this->controller_name).'.importauxform')->render();
+
+        return parent::getCommit($sessid);
     }
 
     public function makeActions($data)

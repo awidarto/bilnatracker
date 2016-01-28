@@ -579,6 +579,8 @@ class DeliveredController extends AdminController {
 
         $this->fields = Config::get('jex.default_export_fields');
 
+        $this->search_fields = Config::get('jex.default_delivered_fields');
+
         $db = Config::get('jayon.main_db');
 
         $this->def_order_by = 'ordertime';

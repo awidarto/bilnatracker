@@ -545,7 +545,12 @@ return array(
         ),
 
 
-        'default_awb_fields'=>array('awb', 'consignee_olshop_cust','no_sales_order', 'consignee_olshop_orderid'),
+        'default_awb_fields'=>array(
+            array('awb',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_cust',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('no_sales_order',array('kind'=>'text', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('consignee_olshop_orderid',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            ),
 
 
 

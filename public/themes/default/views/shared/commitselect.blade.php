@@ -10,6 +10,10 @@
     table{
         font-size: 12px;
     }
+
+    td{
+        text-align: center;
+    }
 </style>
 
 <script type="text/javascript">
@@ -75,7 +79,7 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-
+        {{-- print_r( $import_validate_list ) --}}
 
         <table class="table table-condensed">
             <thead>
@@ -108,22 +112,45 @@
                     $counter = 1;
                 ?>
                 @foreach($imports->toArray() as $row)
-                <tr>
+                    <?php
+                        $valid = true;
+                        if(is_null($import_validate_list)){
+                            foreach($row as $key=>$cell){
+                                if(trim($cell) == ''){
+                                    $valid = false;
+                                }
+                            }
+                        }else{
+                            foreach($row as $key=>$cell){
+                                //print $key;
+                                if(in_array($key, $import_validate_list)){
+                                    if(trim($cell) == ''){
+                                        $valid = false;
+                                    }
+                                }
+                            }
+                        }
+                    ?>
+                <tr class="{{ ($valid)?'':'lightgrey' }}">
                     <td>
                         {{ $counter }}
                     </td>
                     <td>
-                        <input class="selector" name="selector[]" value="{{ $row['_id'] }}" type="checkbox">
+                        @if($valid)
+                            <input class="selector" name="selector[]" value="{{ $row['_id'] }}" type="checkbox">
+                        @endif
                     </td>
                     <td>
-                        <input class="edit_selector" name="edit_selector[]" value="{{ $row['_id'] }}" type="checkbox">
+                        @if($valid)
+                            <input class="edit_selector" name="edit_selector[]" value="{{ $row['_id'] }}" type="checkbox">
+                        @endif
                     </td>
-                    @foreach($row as $d)
-                        <td>
+                    @foreach($row as $k=>$d)
+                        <td class="{{ (trim($d) == '' && in_array($k, $import_validate_list) )?'red':'' }}" >
                             @if( $d instanceof Carbon || $d instanceof MongoDate )
                                 {{ $d->toRfc822String() }}
                             @else
-                                {{ $d }}
+                                {{ (trim($d) == '' && in_array($k, $import_validate_list) )?'&nbsp;':$d }}
                             @endif
                         </td>
                     @endforeach

@@ -316,50 +316,27 @@ Array
 )
 */
 
-        //SAP use individual AWB request
-                $status = $log['data'];
+            $status = $log['data'];
+            $st = Threeplstatuses::where('consignee_olshop_cust','=',$logistic_cust_code)
+                    ->where('awb','=',$status['order_no'])
+                    ->where('datetime',$status['last_update'])
+                    ->first();
 
-        //if(is_array($statuses)){
-            //foreach ($statuses as $stat) {
-                $st = Threeplstatuses::where('consignee_olshop_cust','=',$logistic_cust_code)
-                        ->where('awb','=',$status['order_no'])
-                        ->where('datetime',$status['last_update'])
-                        ->first();
+            if($st){
 
-                if($st){
+            }else{
 
+                if(isset($status['last_update'])){
+                    $status['ts'] = new MongoDate( strtotime( $status['last_update'] ) );
                 }else{
-
-                    if(isset($status['last_update'])){
-                        $status['ts'] = new MongoDate( strtotime( $status['last_update'] ) );
-                    }else{
-                        $status['ts'] = new MongoDate();
-                    }
-                    $status['raw'] = 0;
-                    $status['awb'] = $status['order_no'];
-                    $status['consignee_logistic_id'] = $logistic_name;
-                    $status['consignee_olshop_cust'] = $logistic_cust_code;
-                    Threeplstatuses::insert($status);
+                    $status['ts'] = new MongoDate();
                 }
-            //}
-        //}
-
-        $stat = $log['shipment'];
-
-        if(isset($stat['datetime'])){
-            $stat['ts'] = new MongoDate( strtotime($stat['datetime']) );
-        }else{
-            $stat['ts'] = new MongoDate();
-        }
-
-        //$stat['raw'] = 1;
-        //$stat['awb'] = $log['shipment']['code'];
-        //$stat['consignee_logistic_id'] = $logistic_name;
-        //$stat['consignee_olshop_cust'] = $logistic_cust_code;
-        //Threeplstatuses::insert($stat);
-
-        //$stat['timestamp'] = new \MongoDate();
-        //Threeplstatuslog::insert($stat);
+                $status['raw'] = 0;
+                $status['awb'] = $status['order_no'];
+                $status['consignee_logistic_id'] = $logistic_name;
+                $status['consignee_olshop_cust'] = $logistic_cust_code;
+                Threeplstatuses::insert($status);
+            }
 
     }
 

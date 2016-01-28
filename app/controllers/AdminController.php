@@ -157,6 +157,14 @@ class AdminController extends Controller {
 
     public $export_output_fields = null;
 
+    public $import_validate_list = null;
+
+    public $import_commit_submit = null;
+
+    public $import_update_exclusion = array();
+
+    public $import_commit_url = null;
+
 	public function __construct(){
 
 		date_default_timezone_set('Asia/Jakarta');
@@ -2224,16 +2232,28 @@ class AdminController extends Controller {
 
         $q = array();
 
-        //print_r($infilter);
+        //rprint_r($infilter);
+
+        //array_shift($infilters);
+        //array_shift($infilters);
+
+        array_shift($infilter);
+        if($this->place_action == 'both' || $this->place_action == 'first'){
+            array_shift($infilter);
+        }
+
+
+        //print count($fields);
+
+        //print count($infilter);
 
         for($i = 1;$i < count($fields);$i++){
             $idx = $i;
 
-            //print_r($fields[$i]);
-
             $field = $fields[$i][0];
             $type = $fields[$i][1]['kind'];
 
+            //print $field."\r\n";
 
             $qval = '';
 
@@ -2246,6 +2266,8 @@ class AdminController extends Controller {
 
             if($infilter[$i])
             {
+
+                //print $field.':'.$infilter[$i]."\r\n";
                 //print $infilter[$i];
 
                 $multi = (isset($fields[$i][1]['multi']))?$fields[$i][1]['multi']:false;
@@ -2875,255 +2897,6 @@ class AdminController extends Controller {
 			->with('obj',$obj);
 	}
 
-    public function ___postDlxl()
-    {
-
-        $fields = $this->fields; // fields set must align with search column index
-
-        if(is_null($this->heads)){
-            $titles = array();
-            foreach ($this->fields as $fh) {
-                $alias = (isset($fh[1]['alias']))?$fh[1]['alias']:false;
-                $titles[] = array(ucwords($fh[0]),array('search'=>true,'sort'=>true, 'alias'=>$alias));
-            }
-        }else{
-            $titles = $this->heads;
-        }
-
-        //print_r($titles);
-
-        array_unshift($fields, array('seq',array('kind'=>false)));
-        array_unshift($fields, array('action',array('kind'=>false)));
-
-        array_unshift($titles, array('seq',array('kind'=>false)));
-        array_unshift($titles, array('action',array('kind'=>false)));
-
-        $infilters = Input::get('filter');
-        $insorting = Input::get('sort');
-
-        //print_r($infilters);
-        //print_r($fields);
-
-        $defsort = 1;
-        $defdir = -1;
-
-        $idx = 0;
-        $q = array();
-
-        $hilite = array();
-        $hilite_replace = array();
-
-        $colheads = array();
-        $coltitles = array();
-
-
-        $model = $this->model;
-
-        $model = $this->SQL_additional_query($model);
-
-        //$model = $this->SQL_make_join($model);
-
-        $comres = $this->SQLcompileSearch($fields, $model);
-
-        $model = $comres['model'];
-        $q = $comres['q'];
-
-
-        //exit();
-
-        //print_r($q);
-
-        /*
-        if(count($q) > 0){
-            $results = $model->skip( $pagestart )->take( $pagelength )->orderBy($sort_col, $sort_dir )->get();
-            $count_display_all = $model->count();
-        }else{
-            $results = $model->find(array(),array(),array($sort_col=>$sort_dir),$limit);
-            $count_display_all = $model->count();
-        }
-        */
-
-        //$model->where('docFormat','picture');
-
-        array_unshift($fields, array('sel',array('kind'=>false)));
-
-        if($insorting[0] == 0){
-            $sort_col = $this->def_order_by;
-
-            $sort_dir = $this->def_order_dir;
-        }else{
-            $sort_col = $fields[$insorting[0]][0];
-
-            $sort_dir = $insorting[1];
-
-        }
-
-        //print $sort_col.' -> '.$sort_dir;
-
-
-        $count_all = $this->model->count();
-        $count_display_all = $this->model->count();
-
-        $this->aux_data = $this->SQL_before_paging($model);
-
-        $results = $model->orderBy($sort_col, $sort_dir )->get();
-
-        /*
-        if(is_array($q) && count($q) > 0){
-            $results = $this->model->whereRaw($q)->orderBy($sort_col, $sort_dir )->get();
-
-            $count_display_all = $this->model->whereRaw($q)->count();
-
-        }else{
-            $results = $this->model->orderBy($sort_col, $sort_dir )->get();
-
-            $count_display_all = $this->model->count();
-
-        }
-        */
-
-        $lastQuery = $q;
-
-        //print_r($results->toArray());
-
-        $aadata = array();
-
-        $counter = 1;
-
-        foreach ($results as $doc) {
-
-            $row = array();
-
-            //$row[] = $counter;
-
-            foreach($fields as $field){
-                if($field[1]['kind'] != false && ( isset($field[1]['show']) && $field[1]['show'] == true ) ){
-
-                    $fieldarray = explode('.',$field[0]);
-                    if(is_array($fieldarray) && count($fieldarray) > 1){
-                        $fieldarray = implode('\'][\'',$fieldarray);
-                        $cstring = '$label = (isset($doc[\''.$fieldarray.'\']))?true:false;';
-                        eval($cstring);
-                    }else{
-                        $label = (isset($doc[$field[0]]))?true:false;
-                    }
-
-
-                    if($label){
-
-                        if( isset($field[1]['callback']) && $field[1]['callback'] != ''){
-                            $callback = $field[1]['callback'];
-                            $row[] = $this->$callback($doc, $field[0]);
-                        }else{
-                            if($field[1]['kind'] == 'datetime'){
-                                if($doc[$field[0]] instanceof MongoDate){
-                                    $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]->sec);
-                                }elseif ($doc[$field[0]] instanceof Date) {
-                                    $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]);
-                                }else{
-                                    //$rowitem = $doc[$field[0]];
-                                    if(is_array($doc[$field[0]])){
-                                        $rowitem = date('d-m-Y H:i:s', time() );
-                                    }else{
-                                        $rowitem = date('d-m-Y H:i:s',strtotime($doc[$field[0]]) );
-                                    }
-                                }
-                            }elseif($field[1]['kind'] == 'date'){
-                                if($doc[$field[0]] instanceof MongoDate){
-                                    $rowitem = date('d-m-Y',$doc[$field[0]]->sec);
-                                }elseif ($doc[$field[0]] instanceof Date) {
-                                    $rowitem = date('d-m-Y',$doc[$field[0]]);
-                                }else{
-                                    //$rowitem = $doc[$field[0]];
-                                    $rowitem = date('d-m-Y',strtotime($doc[$field[0]]) );
-                                }
-                            }elseif($field[1]['kind'] == 'currency'){
-                                $num = (double) $doc[$field[0]];
-                                $rowitem = number_format($num,2,',','.');
-                            }else{
-                                $rowitem = $doc[$field[0]];
-                            }
-
-                            if(isset($field[1]['attr'])){
-                                $attr = '';
-                                foreach ($field[1]['attr'] as $key => $value) {
-                                    $attr .= $key.'="'.$value.'" ';
-                                }
-                                $row[] = '<span '.$attr.' >'.$rowitem.'</span>';
-                            }else{
-                                $row[] = $rowitem;
-                            }
-
-                        }
-
-
-                    }else{
-                        $row[] = '';
-                    }
-                }
-            }
-
-            $aadata[] = $row;
-
-            $counter++;
-        }
-
-        $sdata = $aadata;
-
-        array_shift($colheads);
-        array_shift($colheads);
-        array_shift($coltitles);
-        array_shift($coltitles);
-
-        array_unshift($sdata,$colheads);
-        array_unshift($sdata,$coltitles);
-
-        //print_r($sdata);
-        //print public_path();
-
-        $fname =  $this->controller_name.'_'.date('d-m-Y-H-m-s',time());
-
-        /*
-        Excel::create( $fname )
-            ->sheet('sheet1')
-            ->with($sdata)
-            ->save('xls',public_path().'/storage/dled');
-
-        Excel::create( $fname )
-            ->sheet('sheet1')
-            ->with($sdata)
-            ->save('xls',public_path().'/storage/dled');
-        */
-
-        $path = Excel::create( $fname, function($excel) use ($sdata){
-                $excel->sheet('sheet1', function($sheet) use ($sdata){
-                    $sheet->fromArray($sdata);
-                });
-                    //->with($sdata);
-            })->store('xls',public_path().'/storage/dled',true);
-
-        //print_r($path);
-
-        $fp = fopen(public_path().'/storage/dled/'.$fname.'.csv', 'w');
-
-        foreach ($sdata as $fields) {
-            fputcsv($fp, $fields, ',' , '"');
-        }
-
-        fclose($fp);
-
-
-        $result = array(
-            'status'=>'OK',
-            'filename'=>$fname,
-            'urlxls'=>URL::to(strtolower($this->controller_name).'/dl/'.$path['file']),
-            'urlcsv'=>URL::to(strtolower($this->controller_name).'/csv/'.$fname.'.csv'),
-            'q'=>$lastQuery
-        );
-
-        print json_encode($result);
-
-    }
 
     public function postReportdlxl()
     {
@@ -3181,7 +2954,13 @@ class AdminController extends Controller {
     {
         set_time_limit(0);
 
+        //print_r($this->fields);
+        //print_r($this->search_fields);
+
+
         $fields = $this->fields; // fields set must align with search column index
+
+        $search_fields = (is_null($this->search_fields))?$this->fields:$this->search_fields;
 
         if(is_null($this->heads)){
             $titles = array();
@@ -3196,11 +2975,11 @@ class AdminController extends Controller {
 
         //print_r($titles);
 
-        array_unshift($fields, array('seq',array('kind'=>false)));
-        array_unshift($fields, array('action',array('kind'=>false)));
+        //array_unshift($fields, array('seq',array('kind'=>false)));
+        //array_unshift($fields, array('action',array('kind'=>false)));
 
-        array_unshift($titles, array('seq',array('kind'=>false)));
-        array_unshift($titles, array('action',array('kind'=>false)));
+        //array_unshift($titles, array('seq',array('kind'=>false)));
+        //array_unshift($titles, array('action',array('kind'=>false)));
 
         $infilters = Input::get('filter');
         $insorting = Input::get('sort');
@@ -3227,7 +3006,8 @@ class AdminController extends Controller {
 
         //$model = $this->SQL_make_join($model);
 
-        $comres = $this->DLcompileSearch($fields, $model,$infilters);
+
+        $comres = $this->DLcompileSearch($search_fields, $model,$infilters);
 
         $model = $comres['model'];
         $q = $comres['q'];
@@ -3394,15 +3174,24 @@ class AdminController extends Controller {
 
         $sdata = $aadata;
 
-        array_shift($colheads);
-        array_shift($colheads);
-        array_shift($coltitles);
-        array_shift($coltitles);
+        //print_r($colheads);
+
+        //print_r($sdata);
+
+
+        //array_shift($colheads);
+        //array_shift($coltitles);
+        if($this->place_action == 'both' || $this->place_action == 'first'){
+            //array_shift($colheads);
+            //array_shift($coltitles);
+        }
+
 
         array_unshift($sdata,$colheads);
         array_unshift($sdata,$coltitles);
 
-        //print_r($sdata);
+
+
         //print public_path();
 
         $fname =  $this->controller_name.'_'.date('d-m-Y-H-m-s',time());
@@ -3770,13 +3559,15 @@ class AdminController extends Controller {
 
         Breadcrumbs::addCrumb('Import '.$this->title,URL::to('/'));
 
+        $submit = (is_null($this->import_commit_submit))?strtolower($this->controller_name).'/uploadimport':$this->import_commit_submit;
+
         return View::make($this->import_main_form)
             ->with('title',$this->title)
             ->with('aux_form',$this->import_aux_form)
             //->with('input_name',$this->input_name)
             ->with('importkey', $this->importkey)
             ->with('back',strtolower($this->controller_name))
-            ->with('submit',strtolower($this->controller_name).'/uploadimport');
+            ->with('submit',$submit);
     }
 
     public function postUploadimport()
@@ -3887,9 +3678,16 @@ class AdminController extends Controller {
 
         }
 
-        $this->backlink = strtolower($this->controller_name);
+        if(is_null($this->import_commit_url)){
 
-        $commit_url = $this->backlink.'/commit/'.$rstring;
+            $this->backlink = strtolower($this->controller_name);
+
+            $commit_url = $this->backlink.'/commit/'.$rstring;
+
+        }else{
+            $commit_url = $this->import_commit_url.'/'.$rstring;
+        }
+
 
         return Redirect::to($commit_url);
 
@@ -3925,9 +3723,11 @@ class AdminController extends Controller {
 
         $title = $this->controller_name;
 
-        $submit = strtolower($this->controller_name).'/commit/'.$sessid;
+        $submit = (is_null($this->import_commit_submit))?strtolower($this->controller_name).'/commit/'.$sessid:$this->import_commit_submit.'/'.$sessid;
 
         $controller_name = strtolower($this->controller_name);
+
+        $import_validate_list = $this->import_validate_list;
 
         $this->title = ($this->title == '')?Str::plural($this->controller_name):Str::plural($this->title);
 
@@ -3941,6 +3741,7 @@ class AdminController extends Controller {
             ->with('title',$title)
             ->with('submit',$submit)
             ->with('headselect',$headselect)
+            ->with('import_validate_list',$import_validate_list)
             ->with('heads',$heads)
             ->with('back',$controller_name.'/import')
             ->with('imports',$imports);
@@ -3970,6 +3771,8 @@ class AdminController extends Controller {
             $selector = $in['selector'];
         }
 
+        $exclude = $this->import_update_exclusion;
+
         foreach($selector as $selected){
             $rowitem = Importsession::find($selected)->toArray();
 
@@ -3979,14 +3782,21 @@ class AdminController extends Controller {
                 $obj = $this->model
                     ->where($importkey, 'exists', true)
                     ->where($importkey, '=', $rowitem[$importkey])->first();
-
+                    $updated_field = array();
                 if($obj){
 
                     foreach($rowitem as $k=>$v){
                         if($v != '' && $k != '_id'){
-                            $obj->{$k} = $v;
+                            if(in_array($k, $exclude)){
+
+                            }else{
+                                $obj->{$k} = $v;
+                                $updated_field[$k] = $v;
+                            }
                         }
                     }
+
+                    //print_r($updated_field);
 
                     unset($obj->isHead);
 
@@ -3994,7 +3804,7 @@ class AdminController extends Controller {
 
                     //print_r($obj);
 
-                    $obj->save();
+                    //$obj->save();
                 }else{
 
                     unset($rowitem['_id']);
@@ -4029,9 +3839,14 @@ class AdminController extends Controller {
 
         }
 
-        $this->backlink = strtolower($this->controller_name);
+        if(is_null($this->import_commit_url)){
+            $backlink = strtolower($this->controller_name);
+        }else{
+            $backlink = $this->import_commit_url;
+        }
 
-        return Redirect::to($this->backlink);
+        //print $backlink;
+        return Redirect::to($backlink);
 
     }
 
