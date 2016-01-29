@@ -602,6 +602,7 @@ class DispatchedController extends AdminController {
 
     public function postDlxl()
     {
+        $this->search_fields = Config::get('jex.default_dispatched_fields');
 
         $this->heads = Config::get('jex.default_dispatched_export_heads');
 
