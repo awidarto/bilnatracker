@@ -3120,6 +3120,9 @@ class AdminController extends Controller {
                             $callback = $field[1]['callback'];
                             $row[] = $this->$callback($doc, $field[0]);
                         }else{
+
+                            $rowitem = '';
+
                             if($field[1]['kind'] == 'datetime' || $field[1]['kind'] == 'datetimerange'){
                                 if($doc[$field[0]] instanceof MongoDate){
                                     $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]->sec);
