@@ -3148,7 +3148,14 @@ class AdminController extends Controller {
                                         $rowitem = date('d-m-Y',strtotime($doc[$field[0]]) );
                                     }
                                 }elseif($field[1]['kind'] == 'currency'){
-                                    $num = (double) $doc[$field[0]];
+                                    $num = $doc[$field[0]];
+
+                                    if(is_null($num) || trim($num) == ''){
+                                        $num = 0;
+                                    }else{
+                                        $num = doubleval($num);
+                                    }
+
                                     $rowitem = number_format($num,2,',','.');
                                 }else{
                                     $rowitem = $doc[$field[0]];
