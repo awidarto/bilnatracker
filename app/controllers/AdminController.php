@@ -3116,57 +3116,64 @@ class AdminController extends Controller {
 
                     if($label){
 
-                        if( isset($field[1]['callback']) && $field[1]['callback'] != ''){
-                            $callback = $field[1]['callback'];
-                            $row[] = $this->$callback($doc, $field[0]);
-                        }else{
+                        try{
 
-                            $rowitem = '';
+                            if( isset($field[1]['callback']) && $field[1]['callback'] != ''){
+                                $callback = $field[1]['callback'];
+                                $row[] = $this->$callback($doc, $field[0]);
+                            }else{
 
-                            if($field[1]['kind'] == 'datetime' || $field[1]['kind'] == 'datetimerange'){
-                                if($doc[$field[0]] instanceof MongoDate){
-                                    $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]->sec);
-                                }elseif ($doc[$field[0]] instanceof Date) {
-                                    $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]);
-                                }else{
-                                    //$rowitem = $doc[$field[0]];
-                                    if(is_array($doc[$field[0]])){
-                                        $rowitem = date('d-m-Y H:i:s', time() );
+                                $rowitem = '';
+
+                                if($field[1]['kind'] == 'datetime' || $field[1]['kind'] == 'datetimerange'){
+                                    if($doc[$field[0]] instanceof MongoDate){
+                                        $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]->sec);
+                                    }elseif ($doc[$field[0]] instanceof Date) {
+                                        $rowitem = date('d-m-Y H:i:s',$doc[$field[0]]);
                                     }else{
-                                        $rowitem = date('d-m-Y H:i:s',strtotime($doc[$field[0]]) );
+                                        //$rowitem = $doc[$field[0]];
+                                        if(is_array($doc[$field[0]])){
+                                            $rowitem = date('d-m-Y H:i:s', time() );
+                                        }else{
+                                            $rowitem = date('d-m-Y H:i:s',strtotime($doc[$field[0]]) );
+                                        }
                                     }
-                                }
-                            }elseif($field[1]['kind'] == 'date' || $field[1]['kind'] == 'daterange'){
-                                if($doc[$field[0]] instanceof MongoDate){
-                                    $rowitem = date('d-m-Y',$doc[$field[0]]->sec);
-                                }elseif ($doc[$field[0]] instanceof Date) {
-                                    $rowitem = date('d-m-Y',$doc[$field[0]]);
+                                }elseif($field[1]['kind'] == 'date' || $field[1]['kind'] == 'daterange'){
+                                    if($doc[$field[0]] instanceof MongoDate){
+                                        $rowitem = date('d-m-Y',$doc[$field[0]]->sec);
+                                    }elseif ($doc[$field[0]] instanceof Date) {
+                                        $rowitem = date('d-m-Y',$doc[$field[0]]);
+                                    }else{
+                                        //$rowitem = $doc[$field[0]];
+                                        $rowitem = date('d-m-Y',strtotime($doc[$field[0]]) );
+                                    }
+                                }elseif($field[1]['kind'] == 'currency'){
+                                    $num = (double) $doc[$field[0]];
+                                    $rowitem = number_format($num,2,',','.');
                                 }else{
-                                    //$rowitem = $doc[$field[0]];
-                                    $rowitem = date('d-m-Y',strtotime($doc[$field[0]]) );
+                                    $rowitem = $doc[$field[0]];
                                 }
-                            }elseif($field[1]['kind'] == 'currency'){
-                                $num = (double) $doc[$field[0]];
-                                $rowitem = number_format($num,2,',','.');
-                            }else{
-                                $rowitem = $doc[$field[0]];
-                            }
-                            /*
-                            if(isset($field[1]['attr'])){
-                                $attr = '';
-                                foreach ($field[1]['attr'] as $key => $value) {
-                                    $attr .= $key.'="'.$value.'" ';
+                                /*
+                                if(isset($field[1]['attr'])){
+                                    $attr = '';
+                                    foreach ($field[1]['attr'] as $key => $value) {
+                                        $attr .= $key.'="'.$value.'" ';
+                                    }
+                                    $row[] = '<span '.$attr.' >'.$rowitem.'</span>';
+                                }else{
+                                    $row[] = $rowitem;
                                 }
-                                $row[] = '<span '.$attr.' >'.$rowitem.'</span>';
-                            }else{
-                                $row[] = $rowitem;
-                            }
-                            */
+                                */
 
-                            $row[] = $rowitem;
+                                $row[] = $rowitem;
+
+                            }
+
+                        }catch(Exception $e){
+
+                            $row[] = '';
 
                         }
-
 
                     }else{
                         $row[] = '';
@@ -3204,7 +3211,7 @@ class AdminController extends Controller {
         $fname =  $this->controller_name.'_'.date('d-m-Y-H-m-s',time());
 
 
-
+        /*
         if(!is_null($this->export_output_fields) && count($this->export_output_fields) > 0){
             $tempdata = array();
             $sfields = $sdata[1];
@@ -3220,6 +3227,7 @@ class AdminController extends Controller {
 
             $sdata = $tempdata;
         }
+        */
 
         /*
         Excel::create( $fname )
