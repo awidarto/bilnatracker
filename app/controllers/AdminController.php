@@ -3148,7 +3148,7 @@ class AdminController extends Controller {
                             }else{
                                 $rowitem = $doc[$field[0]];
                             }
-
+                            /*
                             if(isset($field[1]['attr'])){
                                 $attr = '';
                                 foreach ($field[1]['attr'] as $key => $value) {
@@ -3158,6 +3158,7 @@ class AdminController extends Controller {
                             }else{
                                 $row[] = $rowitem;
                             }
+                            */
 
                         }
 
