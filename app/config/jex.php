@@ -423,7 +423,7 @@ return array(
             array('consignee_olshop_orderid',array('kind'=>'text' ,'query'=>'like', 'pos'=>'both','show'=>true)),
             array('delivery_id',array('kind'=>'text' ,'query'=>'like', 'pos'=>'both','show'=>true)),
             array('number_of_package',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
-            array('cod',array('kind'=>'currency', 'query'=>'like','pos'=>'both','show'=>true)),
+            array('cod',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('email',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_addr',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
@@ -435,7 +435,7 @@ return array(
             array('contact',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('consignee_olshop_desc',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('w_v',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('consignee_olshop_inst_amt',array('kind'=>'currency' , 'query'=>'like', 'pos'=>'both','show'=>true)),
+            array('consignee_olshop_inst_amt',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('uploaded',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),
 
         ),
