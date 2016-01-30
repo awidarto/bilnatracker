@@ -604,9 +604,6 @@ class DispatchedController extends AdminController {
     {
         $this->search_fields = Config::get('jex.default_dispatched_fields');
 
-        //$this->heads = Config::get('jex.default_export_heads');
-
-        //$this->fields = Config::get('jex.default_export_fields');
 
         $this->heads = Config::get('jex.default_dispatched_export_heads');
 
@@ -1078,11 +1075,12 @@ class DispatchedController extends AdminController {
 
         }
 
-        $slist = array(
-            $data['status'].' BOX:'.$bcount.' D:'.$dcount.' R:'.$rcount.' P:'.$pcount
-        );
+        //$slist = array(
+        //    $data['status'].' BOX:'.$bcount.' D:'.$dcount.' R:'.$rcount.' P:'.$pcount
+        //);
 
-        return implode(' | ', $slist);
+        return $data['status'].' BOX:'.$bcount.' D:'.$dcount.' R:'.$rcount.' P:'.$pcount;
+        //return implode(' | ', $slist);
         //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
