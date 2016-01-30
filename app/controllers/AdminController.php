@@ -2231,27 +2231,26 @@ class AdminController extends Controller {
     public function DLcompileSearch($fields,$model,$infilter){
 
         $q = array();
+        $inputarray = array();
 
         //rprint_r($infilter);
 
         //array_shift($infilters);
         //array_shift($infilters);
 
-        array_shift($infilter);
-        if($this->place_action == 'both' || $this->place_action == 'first'){
-            array_shift($infilter);
-        }
-
-
         //print count($fields);
 
         //print count($infilter);
 
-        for($i = 1;$i < count($fields);$i++){
+        //print_r($infilter);
+
+        for($i = 0;$i < count($fields);$i++){
             $idx = $i;
 
             $field = $fields[$i][0];
             $type = $fields[$i][1]['kind'];
+
+            $inputarray[$fields[$i][0]] = $infilter[$i];
 
             //print $field."\r\n";
 
@@ -2539,7 +2538,9 @@ class AdminController extends Controller {
 
         }
 
-        return array('model'=>$model, 'q'=>$q);
+        //print_r($inputarray);
+
+        return array('model'=>$model, 'q'=>$q, 'in'=>$inputarray );
     }
 
 	public function getAdd(){
@@ -3006,15 +3007,21 @@ class AdminController extends Controller {
 
         //$model = $this->SQL_make_join($model);
 
+        array_shift($infilters);
+        if($this->place_action == 'both' || $this->place_action == 'first'){
+            array_shift($infilters);
+        }
+
+        //print_r($infilters);
+        //print_r($search_fields);
 
         $comres = $this->DLcompileSearch($search_fields, $model,$infilters);
 
         $model = $comres['model'];
         $q = $comres['q'];
+        $searchpar = $comres['in'];
 
 
-
-        //print_r($q);
 
         /*
         if(count($q) > 0){
@@ -3271,7 +3278,8 @@ class AdminController extends Controller {
             'filename'=>$fname,
             'urlxls'=>URL::to(strtolower($this->controller_name).'/dl/'.$path['file']),
             'urlcsv'=>URL::to(strtolower($this->controller_name).'/csv/'.$fname.'.csv'),
-            'q'=>$lastQuery
+            'q'=>$lastQuery,
+            'search'=>$searchpar
         );
 
         print json_encode($result);
