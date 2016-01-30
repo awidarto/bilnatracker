@@ -604,9 +604,13 @@ class DispatchedController extends AdminController {
     {
         $this->search_fields = Config::get('jex.default_dispatched_fields');
 
-        $this->heads = Config::get('jex.default_dispatched_export_heads');
+        $this->heads = Config::get('jex.default_export_heads');
 
-        $this->fields = Config::get('jex.default_dispatched_export_fields');
+        $this->fields = Config::get('jex.default_export_fields');
+
+        //$this->heads = Config::get('jex.default_dispatched_export_heads');
+
+        //$this->fields = Config::get('jex.default_dispatched_export_fields');
 
         $db = Config::get('jayon.main_db');
 
