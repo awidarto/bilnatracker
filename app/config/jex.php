@@ -401,14 +401,14 @@ return array(
             array('UPLOADED',array('search'=>true,'sort'=>true))
 
         ),
-                //'callback'=>'dlstatusList',
+//'callback'=>'dlstatusList',
         'default_dispatched_export_fields'=>array(
             array('createdDate',array('kind'=>'datetimerange' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pick_up_date',array('kind'=>'daterange', 'query'=>'like','pos'=>'both','show'=>true)),
             array('trip',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('courier_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('status',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('logistic_status',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pending_count',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),

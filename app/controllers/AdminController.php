@@ -3103,15 +3103,16 @@ class AdminController extends Controller {
 
             foreach($fields as $field){
                 if($field[1]['kind'] != false && ( isset($field[1]['show']) && $field[1]['show'] == true ) ){
-
+                    /*
                     $fieldarray = explode('.',$field[0]);
                     if(is_array($fieldarray) && count($fieldarray) > 1){
                         $fieldarray = implode('\'][\'',$fieldarray);
                         $cstring = '$label = (isset($doc[\''.$fieldarray.'\']))?true:false;';
                         eval($cstring);
                     }else{
+                    */
                         $label = (isset($doc[$field[0]]))?true:false;
-                    }
+                    //}
 
                     if($label){
 
