@@ -408,7 +408,7 @@ return array(
             array('trip',array('kind'=>'numeric', 'query'=>'like','pos'=>'both','show'=>true)),
             array('device_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('courier_name',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
-            array('status',array('kind'=>'text','callback'=>'statusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
+            array('status',array('kind'=>'text','callback'=>'dlstatusList','query'=>'like','pos'=>'both','show'=>true, 'multi'=>array('status','warehouse_status','pickup_status'), 'multirel'=>'OR'  )),
             array('logistic_status',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('position',array('kind'=>'text' , 'query'=>'like', 'pos'=>'both','show'=>true)),
             array('pending_count',array('kind'=>'numeric' , 'query'=>'like', 'pos'=>'both','show'=>true)),

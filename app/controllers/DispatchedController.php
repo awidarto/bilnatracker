@@ -1038,6 +1038,50 @@ class DispatchedController extends AdminController {
         //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
     }
 
+    public function dlstatusList($data)
+    {
+        $boxes = Box::where('delivery_id', $data['delivery_id'])->get();
+
+        $bcount = 0;
+        $dcount = 0;
+        $rcount = 0;
+        $pcount = 0;
+
+        if($data['status'] == Config::get('jayon.trans_status_mobile_delivered_partial') ||
+            $data['status'] == Config::get('jayon.trans_status_mobile_delivered') ||
+            $data['status'] == Config::get('jayon.trans_status_mobile_return') ||
+            $data['status'] == Config::get('jayon.trans_status_mobile_pending')
+            ){
+            foreach($boxes as $box){
+                if($box->deliveryStatus == Config::get('jayon.trans_status_mobile_delivered')){
+                    $dcount++;
+                }
+
+                if($box->deliveryStatus == Config::get('jayon.trans_status_mobile_return')){
+                    $rcount++;
+                }
+
+                if($box->deliveryStatus == Config::get('jayon.trans_status_mobile_pending')){
+                    $pcount++;
+                }
+            }
+
+            $bcount = count($boxes);
+
+            if(count($boxes) > ($dcount + $rcount) && $data['logistic_type'] == 'internal'){
+                $data['status'] = Config::get('jayon.trans_status_mobile_delivered_partial');
+            }
+
+        }
+
+        $slist = array(
+            $data['status'].' BOX:'.$bcount.' D:'.$dcount.' R:'.$rcount.' P:'.$pcount
+        );
+
+        return implode(' | ', $slist);
+        //return '<span class="orange white-text">'.$data['status'].'</span><br /><span class="brown">'.$data['pickup_status'].'</span><br /><span class="green">'.$data['courier_status'].'</span><br /><span class="maroon">'.$data['warehouse_status'].'</span>';
+    }
+
     public function transStatus($data)
     {
             return Prefs::transstatus($data['status'],'delivery');
