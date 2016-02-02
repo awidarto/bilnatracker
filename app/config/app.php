@@ -13,7 +13,7 @@ return array(
 	|
 	*/
 
-	'debug' => ($_SERVER['HTTP_HOST'] == 'localhost')? true:false,
+	'debug' => false,
 
 	/*
 	|--------------------------------------------------------------------------

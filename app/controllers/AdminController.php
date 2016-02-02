@@ -155,6 +155,8 @@ class AdminController extends Controller {
 
     public $import_aux_form = '';
 
+    public $report_filter_input = null;
+
     public $export_output_fields = null;
 
     public $import_validate_list = null;

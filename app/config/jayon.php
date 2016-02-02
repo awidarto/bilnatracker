@@ -7,14 +7,14 @@ $config['site_title']   = 'Jayon Express Admin';
 $config['infinite_scroll'] = false;
 
 $config['deliverytype_selector'] = array(
-    'noid'=>'All',
+    ''=>'All',
     'COD'=>'COD/CCOD',
     'DO'=>'DO',
     'PS'=>'PS'
     );
 
 $config['deliverytype_selector_legacy'] = array(
-    'noid'=>'All',
+    ''=>'All',
     'COD'=>'COD/CCOD',
     'Delivery Only'=>'DO',
     'PS'=>'PS'
