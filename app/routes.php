@@ -87,6 +87,9 @@ Route::controller('activity', 'ActivityController');
 Route::controller('access', 'AccessController');
 Route::controller('apiaccess', 'ApiaccessController');
 
+// logs
+Route::controller('tplstatuslog', 'TplstatuslogController');
+
 //report routes
 Route::controller('approvalreport', 'ApprovalreportController');
 

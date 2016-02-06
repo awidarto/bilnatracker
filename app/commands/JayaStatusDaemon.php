@@ -242,7 +242,7 @@ class JayaStatusDaemon extends Command {
             }else{
                 $l = array();
                 $l['ts'] = new MongoDate();
-                $l['consignee_logistic_id'] = $logistic_name;
+                $l['consignee_logistic_id'] = $logistic->logistic_code;
                 $l['consignee_olshop_cust'] = $logistic_cust_code;
                 Threeplstatuserror::insert($l);
             }
