@@ -20,6 +20,25 @@ class RPXStatusDaemon extends Command {
 	 */
 	protected $description = 'Command description.';
 
+
+    private $rpx_status = array(
+                'DELIVERED'=>'POD',
+                'RETURNED'=>'STAT14',
+                'UNDELIVERED'=>array(
+                        'DEX 03' =>'Consignee address is incorrect',
+                        'DEX 07' =>'Failed Delivery - refused by consignee',
+                        'DEX 08' =>'Failed Delivery - Closed Resident',
+                        'DEX 17' =>'Hold - Requested for future delivery',
+                        'DEX 29' =>'Requested to reroute to another address',
+                        'DEX 37' =>'Package damage',
+                        'DEX 42' =>'Delayed - Holiday',
+                        'DEX 59' =>'Hold - Pickup at RPX by consignee',
+                        'DEX 84' =>'Delayed - condition beyond control',
+                        'DEX 93' =>'Delayed - customers payment is not ready'
+                    )
+                );
+
+
 	/**
 	 * Create a new command instance.
 	 *
@@ -58,47 +77,12 @@ class RPXStatusDaemon extends Command {
                 //->options(['user' => $username, 'password' => $password, 'format'=>'JSON' ]);   // Optional: Set some extra options
         });
 
-        $data = array(
-            'user' => $username,
-            'password' => $password,
-            'format'=>'JSON',
-            'awb'=>'8979867812376'
-            );
-
-        $data = [$username, $password, '8979867812376','JSON'];
-        //string $user, string $password, string $awb, string $format
-
-        SoapWrapper::service('trackAWB', function ($service) use ($data) {
-            var_dump($service->getFunctions());
-            print($service->call('getTrackingAWB', $data));
-            //print_r($service->call('getTrackingAWB', [$data]));
-        });
-
-
-        die();
-
-        $base_url = 'http://119.110.72.234/api/v1/shipment/';
-
         $logistic_id = 'B234-JKT';
 
         $delivery_trigger = 'DELIVERED';
         $returned_trigger = 'UNDELIVERED';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
-
-
-        $token = '';
-
-        $token_file = public_path().'/storage/21oauth.key';
-
-        if(file_exists($token_file)){
-            $token = file_get_contents(public_path().'/storage/21oauth.key');
-        }
-
-        if($token == ''){
-            $token = $this->getToken($logistic);
-        }
-
 
         $orders = Shipment::where('awb','!=','')
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))
@@ -114,33 +98,14 @@ class RPXStatusDaemon extends Command {
                 $username = $logistic->api_user;
                 $password = $logistic->api_pass;
 
+                $data = [$username, $password, '8979867812376','JSON'];
+                //string $user, string $password, string $awb, string $format
 
-
-                $url = $base_url.$ord->awb.'?access_token='.$token;
-
-                print $url;
-
-                $ch = curl_init();
-
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
-                curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-
-                //$result = curl_exec($ch);
-
-                if(!$result = curl_exec($ch)){
-                    die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
-                }
-
-                $status_code = curl_getinfo($ch);   //get status code
-
-                //$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);   //get status code
-
-                curl_close ($ch);
-
-                //print $result;
+                SoapWrapper::service('trackAWB', function ($service) use ($data) {
+                    var_dump($service->getFunctions());
+                    print($service->call('getTrackingAWB', $data));
+                    //print_r($service->call('getTrackingAWB', [$data]));
+                });
 
                 $res = json_decode($result, true);
 

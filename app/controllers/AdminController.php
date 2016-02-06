@@ -2957,10 +2957,6 @@ class AdminController extends Controller {
     {
         set_time_limit(0);
 
-        //print_r($this->fields);
-        //print_r($this->search_fields);
-
-
         $fields = $this->fields; // fields set must align with search column index
 
         $search_fields = (is_null($this->search_fields))?$this->fields:$this->search_fields;
@@ -2976,19 +2972,8 @@ class AdminController extends Controller {
             $titles = $this->heads;
         }
 
-        //print_r($titles);
-
-        //array_unshift($fields, array('seq',array('kind'=>false)));
-        //array_unshift($fields, array('action',array('kind'=>false)));
-
-        //array_unshift($titles, array('seq',array('kind'=>false)));
-        //array_unshift($titles, array('action',array('kind'=>false)));
-
         $infilters = Input::get('filter');
         $insorting = Input::get('sort');
-
-        //print_r($infilters);
-        //print_r($fields);
 
         $defsort = 1;
         $defdir = -1;
@@ -3002,12 +2987,9 @@ class AdminController extends Controller {
         $colheads = array();
         $coltitles = array();
 
-        //exit();
         $model = $this->model;
 
         $model = $this->SQL_additional_query($model);
-
-        //$model = $this->SQL_make_join($model);
 
         array_shift($infilters);
         if($this->place_action == 'both' || $this->place_action == 'first'){

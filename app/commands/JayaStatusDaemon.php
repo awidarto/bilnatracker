@@ -87,6 +87,7 @@ class JayaStatusDaemon extends Command {
 
             $reqchunks = array_chunk($req, 300);
 
+
             foreach($reqchunks as $rq){
                 $this->sendData($rq,$client,$logistic, $logistic_id );
             }
@@ -164,6 +165,9 @@ class JayaStatusDaemon extends Command {
 
                 $awbs = array();
                 $ffs = array();
+
+                print_r($awblist);
+
                 foreach ($awblist as $awb) {
                     if( !is_null($awb->cn_no) && $awb->status != 'AWB TIDAK DITEMUKAN'){
                         $awbarray[] = trim($awb->cn_no);
@@ -177,6 +181,7 @@ class JayaStatusDaemon extends Command {
                     //print_r($awbs);
 
                     $orderlist = Shipment::whereIn('awb', $awbarray)->get();
+
 
                     foreach($orderlist as $order){
 
