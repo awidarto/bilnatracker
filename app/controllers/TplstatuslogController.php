@@ -13,7 +13,7 @@ class TplstatuslogController extends AdminController {
             array('ts',array('kind'=>'datetime','query'=>'like','pos'=>'both','show'=>true)),
             array('consignee_olshop_cust',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('consignee_logistic_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
-            array('consignee_logistic_id',array('kind'=>'text','callback'=>'dispRaw','query'=>'like','pos'=>'both','show'=>true))
+            array('consignee_logistic_id',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true))
         );
 
 
