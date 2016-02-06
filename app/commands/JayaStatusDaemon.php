@@ -176,67 +176,76 @@ class JayaStatusDaemon extends Command {
 
         try{
 
-            foreach ($awblist as $awb) {
-                if( !is_null($awb->cn_no) && $awb->status != 'AWB TIDAK DITEMUKAN'){
-                    $awbarray[] = trim($awb->cn_no);
-                    $awbs[$awb->cn_no] = $awb;
-                }
-            }
+            if( is_array($awblist) ){
 
-            if(count($awbs) > 0){
-
-                //print_r($awbs);
-
-                $orderlist = Shipment::whereIn('awb', $awbarray)->get();
-
-
-                foreach($orderlist as $order){
-
-                    $pre = clone $order;
-
-                    if( $awbs[$order->awb]->status == $delivery_trigger){
-                        $order->status = Config::get('jayon.trans_status_mobile_delivered');
-                        $order->position = 'CUSTOMER';
+                foreach ($awblist as $awb) {
+                    if( !is_null($awb->cn_no) && $awb->status != 'AWB TIDAK DITEMUKAN'){
+                        $awbarray[] = trim($awb->cn_no);
+                        $awbs[$awb->cn_no] = $awb;
                     }
-
-                    if($awbs[$order->awb]->status == $returned_trigger){
-                        $order->status = Config::get('jayon.trans_status_mobile_return');
-                    }
-
-                    //$order->district = $awbs[$order->awb]->district;
-                    $order->logistic_status = $awbs[$order->awb]->status;
-                    $order->logistic_status_ts = $awbs[$order->awb]->time;
-                    $order->logistic_raw_status = $awbs[$order->awb];
-                    $order->save();
-
-                    $ts = new MongoDate();
-
-                    $hdata = array();
-                    $hdata['historyTimestamp'] = $ts;
-                    $hdata['historyAction'] = 'api_shipment_change_status';
-                    $hdata['historySequence'] = 1;
-                    $hdata['historyObjectType'] = 'shipment';
-                    $hdata['historyObject'] = $order->toArray();
-                    $hdata['actor'] = $this->name;
-                    $hdata['actor_id'] = '';
-
-                    //History::insert($hdata);
-
-                    $sdata = array();
-                    $sdata['timestamp'] = $ts;
-                    $sdata['action'] = 'api_shipment_change_status';
-                    $sdata['reason'] = 'api_update';
-                    $sdata['objectType'] = 'shipment';
-                    $sdata['object'] = $order->toArray();
-                    $sdata['preObject'] = $pre->toArray();
-                    $sdata['actor'] = $this->name;
-                    $sdata['actor_id'] = '';
-                    Shipmentlog::insert($sdata);
-
                 }
 
-            }
+                if(count($awbs) > 0){
 
+                    //print_r($awbs);
+
+                    $orderlist = Shipment::whereIn('awb', $awbarray)->get();
+
+
+                    foreach($orderlist as $order){
+
+                        $pre = clone $order;
+
+                        if( $awbs[$order->awb]->status == $delivery_trigger){
+                            $order->status = Config::get('jayon.trans_status_mobile_delivered');
+                            $order->position = 'CUSTOMER';
+                        }
+
+                        if($awbs[$order->awb]->status == $returned_trigger){
+                            $order->status = Config::get('jayon.trans_status_mobile_return');
+                        }
+
+                        //$order->district = $awbs[$order->awb]->district;
+                        $order->logistic_status = $awbs[$order->awb]->status;
+                        $order->logistic_status_ts = $awbs[$order->awb]->time;
+                        $order->logistic_raw_status = $awbs[$order->awb];
+                        $order->save();
+
+                        $ts = new MongoDate();
+
+                        $hdata = array();
+                        $hdata['historyTimestamp'] = $ts;
+                        $hdata['historyAction'] = 'api_shipment_change_status';
+                        $hdata['historySequence'] = 1;
+                        $hdata['historyObjectType'] = 'shipment';
+                        $hdata['historyObject'] = $order->toArray();
+                        $hdata['actor'] = $this->name;
+                        $hdata['actor_id'] = '';
+
+                        //History::insert($hdata);
+
+                        $sdata = array();
+                        $sdata['timestamp'] = $ts;
+                        $sdata['action'] = 'api_shipment_change_status';
+                        $sdata['reason'] = 'api_update';
+                        $sdata['objectType'] = 'shipment';
+                        $sdata['object'] = $order->toArray();
+                        $sdata['preObject'] = $pre->toArray();
+                        $sdata['actor'] = $this->name;
+                        $sdata['actor_id'] = '';
+                        Shipmentlog::insert($sdata);
+
+                    }
+
+                }
+
+            }else{
+                $l = array();
+                $l['ts'] = new MongoDate();
+                $l['consignee_logistic_id'] = $logistic_name;
+                $l['consignee_olshop_cust'] = $logistic_cust_code;
+                Threeplstatuserror::insert($l);
+            }
         }catch(Exception $e){
             echo $e->getMessage();
         }
