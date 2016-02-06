@@ -54,7 +54,7 @@ class TplstatuslogController extends AdminController {
 
         //$this->fields = $this->def_fields;
 
-        $this->def_order_by = 'created_at';
+        $this->def_order_by = 'ts';
         $this->def_order_dir = 'desc';
         $this->show_select = false;
 
