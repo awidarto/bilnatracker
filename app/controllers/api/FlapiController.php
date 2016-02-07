@@ -417,7 +417,7 @@ class FlapiController extends \BaseController {
                 $this->saveStatusSingle($awbs[$order->awb],$logistic->consignee_olshop_cust,$logistic->logistic_code);
 
                 //if($saved){
-                    $inawbstatus[$order->awb] = 'STATUS UPDATED';
+                $inawbstatus[$order->awb] = 'STATUS UPDATED';
                 //}
 
                 $ts = new \MongoDate();

@@ -37,6 +37,10 @@ class SapStatusDaemon extends Command {
 	 */
 	public function fire()
 	{
+        if(Prefs::isRunning($this->name)){
+            die('process already running');
+        }
+
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $base_url = 'http://api.sap-express.com/api/tracking/list/ref/';
         //$base_url = 'http://182.23.64.151/serverapi.sap/api/tracking/list/id/';
