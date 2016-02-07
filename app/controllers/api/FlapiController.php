@@ -128,6 +128,9 @@ class FlapiController extends \BaseController {
 
     public $name = "FL Daemon";
 
+    public $daemonname = "FL Daemon";
+
+
     public function  __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
@@ -426,7 +429,7 @@ class FlapiController extends \BaseController {
                 $sdata['objectType'] = 'shipment';
                 $sdata['object'] = $order->toArray();
                 $sdata['preObject'] = $pre->toArray();
-                $sdata['actor'] = $this->name;
+                $sdata['actor'] = $this->daemonname;
                 $sdata['actor_id'] = '';
                 \Shipmentlog::insert($sdata);
 
@@ -441,7 +444,7 @@ class FlapiController extends \BaseController {
             //print_r($json);
             //print_r($statusarray);
 
-            \Logger::api($methodname ,$json, $statusarray);
+            \Logger::api($this->daemonname ,$json, $statusarray);
 
             if(count($statusarray) > 0){
                 \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
