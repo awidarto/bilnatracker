@@ -68,8 +68,12 @@ class JayaStatusDaemon extends Command {
 
         $orders = Shipment::where('awb','!=','')
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))
-                        ->where('status','!=','delivered')
-                        ->where('status','!=','canceled')
+                        ->where(function($sq){
+                            $sq->where('status','!=','delivered')
+                                ->where('status','!=','undelivered')
+                                ->where('status','!=','canceled')
+                                ->where('status','!=','returned');
+                        })
                         ->where('logistic_type','=','external')
                         ->where('consignee_olshop_cust','=',$logistic_id)
                         ->get();

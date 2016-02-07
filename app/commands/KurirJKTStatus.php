@@ -94,6 +94,7 @@ class KurirJKTStatus extends Command {
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))
                         ->where(function($sq){
                             $sq->where('status','!=','delivered')
+                                ->where('status','!=','canceled')
                                 ->where('status','!=','undelivered')
                                 ->where('status','!=','returned');
                         })

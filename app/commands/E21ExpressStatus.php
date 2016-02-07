@@ -91,6 +91,7 @@ class E21ExpressStatus extends Command {
                         ->where(function($sq){
                             $sq->where('status','!=','delivered')
                                 ->where('status','!=','undelivered')
+                                ->where('status','!=','canceled')
                                 ->where('status','!=','returned');
                         })
                         ->where('logistic_type','=','external')
