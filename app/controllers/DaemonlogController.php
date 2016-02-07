@@ -101,7 +101,7 @@ class DaemonController extends AdminController {
         }
     }
 
-    public function arrTextIn($data)
+    public function arrTextOut($data)
     {
         if(is_array($data['out'])){
             return '...';
