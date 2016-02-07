@@ -190,6 +190,7 @@ class E21ExpressStatus extends Command {
 
                 }
 
+                Logger::api($this->name ,$ord->awb,$res);
 
             }
 

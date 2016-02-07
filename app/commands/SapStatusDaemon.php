@@ -168,6 +168,8 @@ class SapStatusDaemon extends Command {
 
                 }
 
+                Logger::api($this->name ,$ord->consignee_olshop_orderid,$res);
+
 
             }
 
