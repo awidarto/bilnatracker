@@ -163,7 +163,8 @@ $config['delivery_status'] = array(
     $config['trans_status_admin_dated'] => 'Diberi Tanggal Kirim',
     $config['trans_status_admin_devassigned'] => 'Ditempatkan di Perangkat',
     $config['trans_status_admin_courierassigned'] => 'Ditugaskan ke Kurir',
-    $config['trans_status_admin_dispatched'] => 'Dalam Proses Pengiriman'
+    $config['trans_status_admin_dispatched'] => 'Dalam Proses Pengiriman',
+    $config['trans_status_undelivered'] => 'Undelivered'
 );
 
 $config['pickup_status'] = array(
@@ -325,6 +326,7 @@ $config['status_colors'] = array(
     $config['trans_status_admin_devassigned'] => 'black',
     $config['trans_status_admin_courierassigned'] => 'black',
     $config['trans_status_admin_dispatched'] => 'green',
+    $config['trans_status_undelivered'] => 'red',
 
     $config['trans_status_tobepickup'] => 'maroon',
     $config['trans_status_pickup'] => 'green',
