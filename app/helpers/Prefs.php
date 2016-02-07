@@ -658,9 +658,11 @@ class Prefs {
     {
         exec('ps aux|grep '.$proc,$out);
 
+        $cnt = count($out);
+
         $out = implode('', $out);
 
-        if(preg_match( '/artisan.'.$proc.'/', $out )){
+        if(preg_match( '/artisan.'.$proc.'/', $out ) && $cnt > 1 ){
             return true;
         }else{
             return false;
