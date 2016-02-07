@@ -87,7 +87,7 @@ class JayaStatusDaemon extends Command {
 
             //TO DO : Send data in chunk
 
-            $reqchunks = array_chunk($req, 300);
+            $reqchunks = array_chunk($req, 100);
 
 
             foreach($reqchunks as $rq){
