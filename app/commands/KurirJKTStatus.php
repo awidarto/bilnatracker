@@ -66,6 +66,10 @@ class KurirJKTStatus extends Command {
 	public function fire()
 	{
 
+        if(Prefs::isRunning($this->name)){
+            die('process already running');
+        }
+
         //$result = $this->sendRequest('8680',null);
 
         //print_r(json_decode($result,true));

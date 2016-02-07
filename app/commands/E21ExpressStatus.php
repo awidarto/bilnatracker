@@ -46,6 +46,10 @@ class E21ExpressStatus extends Command {
 	public function fire()
 	{
 
+        if(Prefs::isRunning($this->name)){
+            die('process already running');
+        }
+
         $logistic_id = 'B234-JKT';
 
         $delivery_trigger = $this->e21status['DELIVERED'];
