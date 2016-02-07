@@ -266,6 +266,7 @@ class DispatchedController extends AdminController {
                                                     $qz->where('status','!=', Config::get('jayon.trans_status_mobile_delivered') )
                                                         ->where('status','!=', Config::get('jayon.trans_status_mobile_return') )
                                                         ->where('status','!=', Config::get('jayon.trans_status_canceled') )
+                                                        ->where('status','!=', Config::get('jayon.trans_status_undelivered') )
                                                         /*
                                                         ->orWhere(function($qx){
                                                             $qx->where('status', Config::get('jayon.trans_status_new'))
