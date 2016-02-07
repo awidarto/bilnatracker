@@ -70,6 +70,7 @@ class FlapiController extends \BaseController {
         );
 
 
+
 /*
 {
     "hawb":"Your Hawb number",
@@ -298,6 +299,8 @@ class FlapiController extends \BaseController {
     public function postStatus()
     {
 
+        $methodname = 'fl:status';
+
         $delivery_trigger = 'DELIVERED';
         $returned_trigger = $this->fl_status['RETURN'];
         $undelivered_trigger = $this->fl_status['NOT DELIVERED'];
@@ -320,6 +323,12 @@ class FlapiController extends \BaseController {
 
         $json = \Input::json();
 
+        try{
+            $json = $json->all();
+        }catch(Exception $e){
+            //print $e->getMessage();
+        }
+
 
         $reslog = \Input::get();
 
@@ -331,8 +340,7 @@ class FlapiController extends \BaseController {
         $rlog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
         \Threeplstatuslog::insert($rlog);
 
-
-        $this->saveStatus($slog,$logistic->consignee_olshop_cust,$logistic->logistic_code);
+        //$this->saveStatus($slog,$logistic->consignee_olshop_cust,$logistic->logistic_code);
 
         $batch = \Input::get('batch');
 
@@ -350,6 +358,8 @@ class FlapiController extends \BaseController {
             $awbs[$tawb] = $j;
             $inawbstatus[$tawb] = 'NOT FOUND';
         }
+
+        //print_r($awbarray);
         /*
         $reslog = $json;
         $reslog['consignee_logistic_id'] = $logistic->logistic_code;
@@ -427,6 +437,11 @@ class FlapiController extends \BaseController {
             foreach($inawbstatus as $k=>$v){
                 $statusarray[] = array('AWB'=> $k, 'status'=> $v);
             }
+
+            //print_r($json);
+            //print_r($statusarray);
+
+            \Logger::api($methodname ,$json, $statusarray);
 
             if(count($statusarray) > 0){
                 \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
@@ -624,23 +639,31 @@ class FlapiController extends \BaseController {
 
     private function saveStatus($log, $logistic_name, $logistic_cust_code)
     {
-        $log = $log->all();
+        /*
+        try{
+            $log = $log->all();
+        }catch(Exception $e){
+            print $e->getMessage();
+        }finally{
+        */
+            if(is_array($log) && count($log) > 0){
+                foreach($log as $l){
 
-        if(is_array($log) && count($log) > 0){
-            foreach($log as $l){
+                    if(isset($l['timestamp'])){
+                        $l['ts'] = new \MongoDate( strtotime($l['timestamp']) );
+                    }else{
+                        $l['ts'] = new \MongoDate();
+                    }
 
-                if(isset($l['timestamp'])){
-                    $l['ts'] = new \MongoDate( strtotime($l['timestamp']) );
-                }else{
-                    $l['ts'] = new \MongoDate();
+                    $l['consignee_logistic_id'] = $logistic_name;
+                    $l['consignee_olshop_cust'] = $logistic_cust_code;
+
+                    \Threeplstatuses::insert($l);
                 }
-
-                $l['consignee_logistic_id'] = $logistic_name;
-                $l['consignee_olshop_cust'] = $logistic_cust_code;
-
-                \Threeplstatuses::insert($l);
             }
-        }
+
+        //}
+
     }
 
     private function saveStatusSingle($l, $logistic_name, $logistic_cust_code)

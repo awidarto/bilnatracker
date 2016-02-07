@@ -112,7 +112,7 @@ class JayaStatusDaemon extends Command {
 
         $data_string = json_encode($req);
 
-        print $data_string;
+        //print $data_string;
 
         //$request->setHeader("Accept" , "application/json");
         /*
