@@ -99,8 +99,9 @@
               <a href=""><i class="fa fa-table"></i><span>Sys Logs</span><span class="fa arrow"></span></a>
               <ul class="children collapse">
                 <li class="{{ sa('apiaccess') }}" ><a href="{{ URL::to('apiaccess') }}"> API Access Log</a></li>
-                <li class="{{ sa('tplstatuslog') }}" ><a href="{{ URL::to('tplstatuslog') }}"> 3PL Status Log</a></li>
+                <li class="{{ sa('daemonlog') }}" ><a href="{{ URL::to('daemonlog') }}"> API Process Log</a></li>
                 {{--
+                <li class="{{ sa('tplstatuslog') }}" ><a href="{{ URL::to('tplstatuslog') }}"> 3PL Status Log</a></li>
                 <li class="{{ sa('devmanifest') }}" ><a href="{{ URL::to('devmanifest') }}"> Manifest To Device</a></li>
                 <li class="{{ sa('retmanifest') }}" ><a href="{{ URL::to('retmanifest') }}"> Manifest Retur</a></li>
                 <li class="{{ sa('coa') }}" ><a href="{{ URL::to('coa') }}"> Chart Of Accounts</a></li>
