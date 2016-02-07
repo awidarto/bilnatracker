@@ -53,8 +53,9 @@ class JayaStatusDaemon extends Command {
     public function fire()
     {
 
-
-
+        if(Prefs::isRunning($this->name)){
+            die();
+        }
 
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $logistic_id = 'CGKN00027';

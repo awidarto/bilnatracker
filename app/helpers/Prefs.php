@@ -654,5 +654,18 @@ class Prefs {
         return sprintf('<span class="%s" style="text-align:center;">%s</span>',$class,$type);
     }
 
+    public static function isRunning($proc)
+    {
+        exec('ps aux|grep '.$proc,$out);
+
+        $out = implode('', $out);
+
+        if(preg_match( '/artisan.'.$proc.'/', $out )){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
 
 }
