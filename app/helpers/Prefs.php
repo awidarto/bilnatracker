@@ -656,9 +656,13 @@ class Prefs {
 
     public static function isRunning($proc)
     {
-        exec('ps aux|grep '.$proc,$out);
+        $cmd = 'ps aux|grep '.$proc;
+
+        exec($cmd,$out);
 
         $cnt = count($out);
+
+        print $cnt."\r\n";
 
         $out = implode('', $out);
 
