@@ -1,6 +1,6 @@
 <?php
 
-class DaemonController extends AdminController {
+class DaemonlogController extends AdminController {
 
     public function __construct()
     {
