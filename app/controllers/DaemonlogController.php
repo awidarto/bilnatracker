@@ -95,19 +95,20 @@ class DaemonlogController extends AdminController {
     public function arrTextIn($data)
     {
         if(is_array($data['in'])){
-            return '...';
-        }else{
-            return substr($data['in'], 0, 25).'...';
+            $data['in'] = json_encode($data['in']);
         }
+
+        return substr($data['in'], 0, 25).'...';
+
     }
 
     public function arrTextOut($data)
     {
         if(is_array($data['out'])){
-            return '...';
-        }else{
-            return substr($data['out'], 0, 25).'...';
+            $data['out'] = json_encode($data['out']);
         }
+
+        return substr($data['out'], 0, 25).'...';
     }
 
     public function postAdd($data = null)
