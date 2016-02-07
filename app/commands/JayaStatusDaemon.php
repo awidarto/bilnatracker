@@ -54,7 +54,7 @@ class JayaStatusDaemon extends Command {
     {
 
         if(Prefs::isRunning($this->name)){
-            die();
+            die('process already running');
         }
 
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
