@@ -329,7 +329,7 @@ class FlapiController extends \BaseController {
         $rlog['data'] = $reslog;
         $rlog['consignee_logistic_id'] = $logistic->logistic_code;
         $rlog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
-        \Threeplstatuslog::insert($reslog);
+        \Threeplstatuslog::insert($rlog);
 
 
         $this->saveStatus($slog,$logistic->consignee_olshop_cust,$logistic->logistic_code);
