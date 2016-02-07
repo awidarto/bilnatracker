@@ -321,7 +321,7 @@ class FlapiController extends \BaseController {
         $json = \Input::json();
 
 
-        $reslog = \Input::all();
+        $reslog = \Input::get();
 
         $slog = $json;
 
