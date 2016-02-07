@@ -97,7 +97,7 @@ class DaemonlogController extends AdminController {
         if(is_array($data['in'])){
             return '...';
         }else{
-            return $data['in'];
+            return substr($data['in'], 0, 25).'...';
         }
     }
 
@@ -106,7 +106,7 @@ class DaemonlogController extends AdminController {
         if(is_array($data['out'])){
             return '...';
         }else{
-            return $data['out'];
+            return substr($data['out'], 0, 25).'...';
         }
     }
 
