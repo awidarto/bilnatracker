@@ -37,9 +37,6 @@ class SapStatusDaemon extends Command {
 	 */
 	public function fire()
 	{
-        if(Prefs::isRunning($this->name)){
-            die('process already running');
-        }
 
         //$base_url = 'http://localhost/jexadmin/public/api/v1/service/status';
         $base_url = 'http://api.sap-express.com/api/tracking/list/ref/';
@@ -53,6 +50,15 @@ class SapStatusDaemon extends Command {
         $returned_trigger = 'UNDELIVERED';
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
+
+        if(Prefs::isRunning($this->name)){
+            $l = array();
+            $l['ts'] = new MongoDate();
+            $l['consignee_logistic_id'] = $logistic->logistic_code;
+            $l['consignee_olshop_cust'] = $logistic_id;
+            Threeplstatuserror::insert($l);
+            die('process already running');
+        }
 
         $orders = Shipment::where('awb','!=','')
                         ->where('bucket','=',Config::get('jayon.bucket_tracker'))

@@ -66,14 +66,6 @@ class KurirJKTStatus extends Command {
 	public function fire()
 	{
 
-        if(Prefs::isRunning($this->name)){
-            die('process already running');
-        }
-
-        //$result = $this->sendRequest('8680',null);
-
-        //print_r(json_decode($result,true));
-
 
         $logistic_id = '3758';
 
@@ -82,6 +74,15 @@ class KurirJKTStatus extends Command {
         $undelivered_trigger = $this->kjktstatus['UNDELIVERED'];
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
+
+        if(Prefs::isRunning($this->name)){
+            $l = array();
+            $l['ts'] = new MongoDate();
+            $l['consignee_logistic_id'] = $logistic->logistic_code;
+            $l['consignee_olshop_cust'] = $logistic_id;
+            Threeplstatuserror::insert($l);
+            die('process already running');
+        }
 
         if($logistic){
 

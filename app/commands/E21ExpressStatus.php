@@ -46,10 +46,6 @@ class E21ExpressStatus extends Command {
 	public function fire()
 	{
 
-        if(Prefs::isRunning($this->name)){
-            die('process already running');
-        }
-
         $logistic_id = 'B234-JKT';
 
         $delivery_trigger = $this->e21status['DELIVERED'];
@@ -57,6 +53,15 @@ class E21ExpressStatus extends Command {
         $undelivered_trigger = $this->e21status['UNDELIVERED'];
 
         $logistic = Logistic::where('consignee_olshop_cust','=',$logistic_id)->first();
+
+        if(Prefs::isRunning($this->name)){
+            $l = array();
+            $l['ts'] = new MongoDate();
+            $l['consignee_logistic_id'] = $logistic->logistic_code;
+            $l['consignee_olshop_cust'] = $logistic_id;
+            Threeplstatuserror::insert($l);
+            die('process already running');
+        }
 
         if($logistic){
 
