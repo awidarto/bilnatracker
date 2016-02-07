@@ -357,6 +357,7 @@ $config['delivery_status_changes'] = array(
     $config['trans_status_archived'] => 'brown',
     $config['trans_status_confirmed'] => 'green',
     $config['trans_status_canceled'] => 'red',
+    $config['trans_status_undelivered'] => 'red',
 
     $config['trans_status_mobile_return'] => 'red',
     $config['trans_status_mobile_rescheduled'] => 'brown',
