@@ -325,10 +325,10 @@ class FlapiController extends \BaseController {
 
         $slog = $json;
 
-        $reslog['timestamp'] = new \MongoDate();
-        $reslog['incoming_request'] = $reslog;
-        $reslog['consignee_logistic_id'] = $logistic->logistic_code;
-        $reslog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
+        $rlog['timestamp'] = new \MongoDate();
+        $rlog['data'] = $reslog;
+        $rlog['consignee_logistic_id'] = $logistic->logistic_code;
+        $rlog['consignee_olshop_cust'] = $logistic->consignee_olshop_cust;
         \Threeplstatuslog::insert($reslog);
 
 
