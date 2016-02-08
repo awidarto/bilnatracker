@@ -62,7 +62,7 @@ class DaemonlogController extends AdminController {
 
         //print $this->model->where('docFormat','picture')->get()->toJSON();
 
-        $this->place_action = 'first';
+        $this->place_action = 'none';
 
         $this->show_select = false;
 
@@ -82,7 +82,7 @@ class DaemonlogController extends AdminController {
             array('out',array('kind'=>'text','query'=>'like','callback'=>'arrTextOut','pos'=>'both','show'=>true,'attr'=>array('class'=>'expander')))
         );
 
-        $this->place_action = 'first';
+        $this->place_action = 'none';
 
         $this->show_select = false;
 
