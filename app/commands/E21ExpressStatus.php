@@ -57,6 +57,7 @@ class E21ExpressStatus extends Command {
         if(Prefs::isRunning($this->name)){
             $l = array();
             $l['ts'] = new MongoDate();
+            $l['error'] = 'process already running';
             $l['consignee_logistic_id'] = $logistic->logistic_code;
             $l['consignee_olshop_cust'] = $logistic_id;
             Threeplstatuserror::insert($l);

@@ -666,7 +666,7 @@ class Prefs {
 
         $out = implode('', $out);
 
-        if(preg_match( '/artisan.'.$proc.'/', $out ) && $cnt > 3 ){
+        if(preg_match( '/artisan.'.$proc.'/', $out ) && $cnt > 4 ){
             return true;
         }else{
             return false;
