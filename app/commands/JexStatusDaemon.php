@@ -149,6 +149,9 @@ class JexStatusDaemon extends Command {
 
             }
 
+            Logger::api($this->name ,$req,$awblist);
+
+
         }else{
             print 'Empty order list'."\r\n";
         }

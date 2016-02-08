@@ -119,33 +119,6 @@ class KurirJKTStatus extends Command {
                 Threeplstatuslog::insert($reslog);
 
                 print_r($res);
-/*
-Array
-(
-    [result_code] => 1
-    [result_description] => success
-    [data] => Array
-        (
-            [order_no] => 2240
-            [order_date] => 2015-02-27 09:19:37
-            [service_name] => SAME DAY SERVICE
-            [status_code] => 3
-            [status_description] => Terkirim
-            [pickup_date] => 2015-02-27 00:00:00
-            [delivered_date] => 2015-02-27 12:45:00
-            [pickup_name] => Ibu Mei
-            [pickup_addess] => RS Siloam Hospital Kebon Jeruk, Lt. 1 Medical Checkup, Jl. Raya Perjuangan Kav. 8 Kebon Jeruk  Jakarta Barat DKI Jakarta  No. Ponsel: 085713331787 No. Kantor/Rumah: 02153695676
-            [destionation_name] => Ibu Stiyati
-            [destionation_addess] => AIA Financial Menara Falma Lt. 18, Jl. HR Rasuna Said Blok X-2 Kav. 6   Jakarta Selatan DKI Jakarta  No. Ponsel:  No. Kantor/Rumah:
-            [recipient_name] => bayu
-            [kurir_name] => Fachrul
-            [kurir_longitude] =>
-            [kurir_latitude] =>
-            [last_update] => 2015-02-27 12:45:00
-        )
-
-)
-*/
 
                 if(isset($res['result_code']) && $res['result_code'] == 1){
 
@@ -213,6 +186,7 @@ Array
 
                 }
 
+                Logger::api($this->name ,$ord->awb,$res);
 
             }
 
@@ -222,6 +196,34 @@ Array
 
         $actor = $this->name;
         Event::fire('log.api',array('KurirJKTStatusDaemon', 'get' ,$actor,'KurirJKT STATUS PULL'));
+
+/*
+Array
+(
+    [result_code] => 1
+    [result_description] => success
+    [data] => Array
+        (
+            [order_no] => 2240
+            [order_date] => 2015-02-27 09:19:37
+            [service_name] => SAME DAY SERVICE
+            [status_code] => 3
+            [status_description] => Terkirim
+            [pickup_date] => 2015-02-27 00:00:00
+            [delivered_date] => 2015-02-27 12:45:00
+            [pickup_name] => Ibu Mei
+            [pickup_addess] => RS Siloam Hospital Kebon Jeruk, Lt. 1 Medical Checkup, Jl. Raya Perjuangan Kav. 8 Kebon Jeruk  Jakarta Barat DKI Jakarta  No. Ponsel: 085713331787 No. Kantor/Rumah: 02153695676
+            [destionation_name] => Ibu Stiyati
+            [destionation_addess] => AIA Financial Menara Falma Lt. 18, Jl. HR Rasuna Said Blok X-2 Kav. 6   Jakarta Selatan DKI Jakarta  No. Ponsel:  No. Kantor/Rumah:
+            [recipient_name] => bayu
+            [kurir_name] => Fachrul
+            [kurir_longitude] =>
+            [kurir_latitude] =>
+            [last_update] => 2015-02-27 12:45:00
+        )
+
+)
+*/
 
 
 	}
