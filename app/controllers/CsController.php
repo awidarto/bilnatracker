@@ -170,7 +170,7 @@ class CsController extends AdminController {
 
                 $statuses = $mdl->take(10)
                                 ->skip(0)
-                                ->get();
+                                ->get($conf['get']);
 
                 $statuses = $statuses->toArray();
 
