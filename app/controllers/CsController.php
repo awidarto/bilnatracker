@@ -708,6 +708,48 @@ class CsController extends AdminController {
     {
         $data = $data->toArray();
 
+        if($data['logistic_type'] == 'internal'){
+            $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
+        }else{
+            $maxdate = Threeplpictures::where('awb','=', $data['awb'] )->max('ts');
+            $pics = Threeplpictures::where('awb','=', $data['awb'] )
+                        ->where('ts','=',$maxdate)
+                        ->get();
+        }
+
+        $glinks = '';
+
+        $thumbnail_url = '';
+
+        if($pics){
+            if(count($pics) > 0){
+                foreach($pics as $g){
+                    if($data['logistic_type'] == 'internal'){
+                        $thumbnail_url = $g->thumbnail_url;
+                        $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                    }else{
+                        $thumbnail_url = $g->thumbnail;
+                        $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->consignee_olshop_cust.'" value="'.$g->pictures.'" />';
+                    }
+
+                }
+
+                $display = HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+
+                return $display;
+            }else{
+                return 'No Picture';
+            }
+        }else{
+            return 'No Picture';
+        }
+    }
+
+
+    public function picListInternal($data)
+    {
+        $data = $data->toArray();
+
         $pics = Uploaded::where('parent_id','=', $data['delivery_id'] )->get();
 
         $glinks = '';
