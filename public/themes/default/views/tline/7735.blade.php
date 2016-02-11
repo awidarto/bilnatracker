@@ -17,7 +17,15 @@ foreach ($status as $s) {
 
 }
 
-print_r($st);
+$bt = array();
+
+foreach($st as $s=>$v){
+    $bt[ strtotime( $v['timestamp'] ) ] = $v;
+}
+
+ksort($bt);
+
+print_r($bt);
 ?>
 
 {{--
