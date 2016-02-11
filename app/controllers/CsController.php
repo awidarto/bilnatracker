@@ -158,8 +158,10 @@ class CsController extends AdminController {
                                     $q = where('consignee_olshop_cust','=', $order->consignee_olshop_cust)
                                     ->orWhere('consignee_logistic_id','=', $order->consignee_olshop_cust);
                                 })
-                                ->where('awb','=', $order->awb)
-                                ->orWhere('cn_no','=',$order->awb)
+                                ->where(function($qr) use($order){
+                                    $qr->where('awb','=', $order->awb)
+                                    ->orWhere('cn_no','=',$order->awb);
+                                })
                                 ->orderBy('ts','desc')
                                 ->orderBy('timestamp','desc')
                                 ->orderBy('datetime','desc')
