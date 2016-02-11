@@ -26,7 +26,7 @@
             <th>Delivered</th>
         </tr>
     </thead>
-@foreach($statusarray as $stat)
+@foreach($statarray as $stat)
     <tr>
         <td>{{ $stat['ts'] }}</td>
         <td>
