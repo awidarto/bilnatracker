@@ -160,17 +160,15 @@ class CsController extends AdminController {
                     $conf = Config::get('cs.default');
                 }
 
-                $statuses = Threeplstatuses::where($conf['awb'],'=', $order->awb)
-                                /*
-                                ->where(function($q) use($order){
-                                    $q->where('consignee_olshop_cust','=', strval($order->consignee_olshop_cust))
-                                    ->orWhere('consignee_logistic_id','=', strval($order->consignee_olshop_cust) );
-                                })
-                                */
-                                ->orderBy($conf['order'],'desc')
-                                //->orderBy('timestamp','desc')
-                                //->orderBy('datetime','desc')
-                                ->take(10)
+                $mdl = Threeplstatuses::where($conf['awb'],'=', $order->awb)
+                            ->orderBy($conf['order'],'desc');
+
+
+                foreach($conf['group'] as $g){
+                    $mdl = $mdl->groupBy($g);
+                }
+
+                $statuses = $mdl->take(10)
                                 ->skip(0)
                                 ->get();
 
