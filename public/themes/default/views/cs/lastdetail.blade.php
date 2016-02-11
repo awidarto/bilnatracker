@@ -96,6 +96,7 @@
 </table>
 <h5>Timeline</h5>
 <div id="timeline-container">
+    {{ print_r($status) }}
     @if(View::exists('tline.'.$order->consignee_olshop_cust))
         @include('tline.'.$order->consignee_olshop_cust, array('status'=>$status) )
     @else
