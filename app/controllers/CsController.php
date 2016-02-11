@@ -165,8 +165,8 @@ class CsController extends AdminController {
                                 })
                                 */
                                 ->orderBy('ts','desc')
-                                ->orderBy('timestamp','desc')
-                                ->orderBy('datetime','desc')
+                                //->orderBy('timestamp','desc')
+                                //->orderBy('datetime','desc')
                                 ->take(10)
                                 ->skip(0)
                                 ->get();
