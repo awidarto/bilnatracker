@@ -27,9 +27,6 @@ krsort($bt);
 
 print_r($bt);
 ?>
-
-{{--
-
 <table style="width:100%;">
     <thead>
         <tr>
@@ -37,18 +34,21 @@ print_r($bt);
             <th>Status</th>
         </tr>
     </thead>
-@foreach($statarray as $stat)
+@foreach($bt as $s=>$v)
     <tr>
-        <td>{{ $stat['timestamp'] }}</td>
+        <td>{{ $v['timestamp'] }}</td>
         <td>
-            <h3>{{ $stat['status'] }}</h3>
+            <h3>{{ $v['status'] }}</h3>
             <p>
-              {{ $stat['note'] }}
+              {{ $v['note'] }}
             </p>
         </td>
     </tr>
 @endforeach
 </table>
+
+{{--
+
 
 '_id' => new MongoId("56bc3a673ed3b1062c8b4b42"),
   'awb' => '007735-31-102015-00142150',
