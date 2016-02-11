@@ -97,7 +97,7 @@
 <h5>Timeline</h5>
 <div id="timeline-container">
     @if(View::exists('tline.'.$order->consignee_olshop_cust))
-
+        @include('tline.'.$order->consignee_olshop_cust, array('status'=>$status) )
     @else
         @include('tline.default', array('status'=>$status) )
     @endif
