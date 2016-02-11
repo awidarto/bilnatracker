@@ -74,7 +74,7 @@ class CsController extends AdminController {
 
         $this->title = 'CS Dashboard';
 
-        $this->table_view = 'tables.timeline';
+        $this->table_view = 'tables.cs';
 
         return parent::getIndex();
 
@@ -149,11 +149,34 @@ class CsController extends AdminController {
                             ->first();
         }
 
+        $statuses = array();
+
         if($order){
+
+            if($order->delivery_type == 'external'){
+                $statuses = Threeplstatus::where('consignee_olshop_cust','=', $order->consignee_olshop_cust)
+                                ->where('awb','=', $order->awb)
+                                ->orWhere('cn_no','=',$order->awb)
+                                ->orderBy('ts','desc')
+                                ->orderBy('timestamp','desc')
+                                ->orderBy('datetime','desc')
+                                ->get();
+
+                $statuses = $statuses->toArray();
+
+            }
+
             $order->picList = $this->picList($order);
         }
 
-        return View::make('cs.lastdetail')->with('order',$order)->render();
+
+
+
+
+        return View::make('cs.lastdetail')
+                    ->with('order',$order)
+                    ->with('status',$statuses)
+                    ->render();
     }
 
     public function SQL_additional_query($model)

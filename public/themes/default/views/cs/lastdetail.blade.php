@@ -94,3 +94,11 @@
         </td>
     </tr>
 </table>
+<h5>Timeline</h5>
+<div id="timeline-container">
+    @if(View::exists('tline.'.$order->consignee_olshop_cust))
+
+    @else
+        @include('tline.default', array('status'=>$status) )
+    @endif
+</div>
