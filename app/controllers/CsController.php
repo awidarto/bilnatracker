@@ -729,17 +729,17 @@ class CsController extends AdminController {
 
                     if($data['logistic_type'] == 'internal'){
                         $thumbnail_url = $g->thumbnail_url;
-                        $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
+                        $glinks = '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->name.'" value="'.$g->full_url.'" />';
                     }else{
                         $thumbnail_url = $g->thumbnail;
-                        $glinks .= '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->consignee_olshop_cust.'" value="'.$g->pictures.'" />';
+                        $glinks = '<input type="hidden" class="g_'.$data['_id'].'" data-caption="'.$g->consignee_olshop_cust.'" value="'.$g->pictures.'" />';
                     }
 
-                    $display .= HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
 
                     $display .= $glinks;
-                    $display .= '</li>';
 
+                    $display .= HTML::image($thumbnail_url.'?'.time(), $thumbnail_url, array('class'=>'thumbnail img-polaroid','style'=>'cursor:pointer;','id' => $data['_id'])).$glinks;
+                    $display .= '</li>';
 
                 }
 
