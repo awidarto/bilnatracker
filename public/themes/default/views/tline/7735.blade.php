@@ -25,9 +25,9 @@ foreach($st as $s=>$v){
 
 krsort($bt);
 
-print_r($bt);
+//print_r($bt);
 ?>
-<table style="width:100%;">
+<table style="width:100%;vertical-align:top;">
     <thead>
         <tr>
             <th>Date</th>
