@@ -1,21 +1,6 @@
-<?php
 
-  $st = array();
+    {{ print_r($status) }}
 
-  foreach ($status as $s) {
-
-    $st[ strtotime($s['timestamp']) ] => array('status'=>$s['status'],
-                                                'note'=>$s['note'],
-                                                'timestamp'=>$s['timestamp']
-                                                );
-
-  }
-
-  ksort($st);
-
-  print_r($st);
-
-?>
 {{--
 
 <table style="width:100%;">
