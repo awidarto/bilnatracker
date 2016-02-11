@@ -3,10 +3,16 @@
 $st = array();
 
 foreach ($status as $s) {
-  $st[$s['status']] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
+  if($s['status'] == 'pending'){
+    $st[$s['status'].'_'.$s['pending'] ] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
+
+  }else{
+    $st[$s['status']] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
+
+  }
 
   if($s['pickup_time'] != '0000-00-00 00:00:00'){
-    $st['picked_up'] = array('status'=>'picked_up','timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
+    $st['picked_up'] = array('status'=>'picked_up','timestamp'=>$s['pickup_time'],'pending'=>$s['pending'],'note'=>$s['note']);
   }
 
 }
