@@ -153,7 +153,7 @@ class CsController extends AdminController {
 
         if($order){
 
-            if($order->delivery_type == 'external'){
+            if($order->logistic_type == 'external'){
                 $statuses = Threeplstatus::where(function($q) use($order){
                                     $q = where('consignee_olshop_cust','=', strval($order->consignee_olshop_cust))
                                     ->orWhere('consignee_logistic_id','=', strval($order->consignee_olshop_cust) );
