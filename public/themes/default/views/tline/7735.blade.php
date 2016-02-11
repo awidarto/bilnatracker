@@ -3,7 +3,7 @@
 $st = array();
 
 foreach ($status as $s) {
-  $st[$s['timestamp']] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'note'=>$s['note']);
+  $st[$s['status']] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'note'=>$s['note']);
 }
 
 print_r($st);
