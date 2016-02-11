@@ -4,7 +4,7 @@ return array(
         '7735'=>array('status'=>'multi',
                         'order'=>'ts',
                         'awb'=>'awb',
-                        'group'=>array('timestamp','status'),
+                        'group'=>array('timestamp'),
                         'get'=>array('timestamp','status','pickup_time','delivery_time','pod','note')
                     ),
         'default'=>array('status'=>'multi',

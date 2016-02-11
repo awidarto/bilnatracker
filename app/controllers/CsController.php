@@ -160,13 +160,13 @@ class CsController extends AdminController {
                     $conf = Config::get('cs.default');
                 }
 
-                $mdl = Threeplstatuses::where($conf['awb'],'=', $order->awb)
-                            ->orderBy($conf['order'],'desc');
-
+                $mdl = Threeplstatuses::where($conf['awb'],'=', $order->awb);
 
                 foreach($conf['group'] as $g){
                     $mdl = $mdl->groupBy($g);
                 }
+
+                $mdl = $mdl->orderBy($conf['order'],'desc');
 
                 $statuses = $mdl->take(10)
                                 ->skip(0)
