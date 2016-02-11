@@ -36,12 +36,14 @@ krsort($bt);
     </thead>
 @foreach($bt as $s=>$v)
     <tr>
-        <td>{{ $v['timestamp'] }}</td>
-        <td>
+        <td style="vertical-align:top;" >{{ $v['timestamp'] }}</td>
+        <td style="vertical-align:top;" >
             <h3>{{ $v['status'] }}</h3>
+            @if($v['note'] !='')
             <p>
               {{ $v['note'] }}
             </p>
+            @endif
         </td>
     </tr>
 @endforeach
