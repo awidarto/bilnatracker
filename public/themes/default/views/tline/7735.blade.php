@@ -15,7 +15,7 @@
 
   ksort($statarray);
 
-  print_r($ksort);
+  print_r($statarray);
 
 ?>
 {{--
