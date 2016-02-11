@@ -1,3 +1,22 @@
+<?php
+
+  $statarray = array();
+
+  foreach ($status as $s) {
+
+    if($s['pickup_time'] != '0000-00-00 00:00:00'){
+      $statarray[ new MongoDate( strtotime($s['pickup_time']) ) ] = array('status'=>'Picked Up','note'=>'');
+    }
+    if($s['delivery_time'] != '0000-00-00 00:00:00'){
+      $statarray[ new MongoDate( strtotime($s['delivery_time']) ) ] = array('status'=>$s['status'],'note'=>$s['note']);
+    }
+    $statarray[ $s['ts'] ] = array('status'=>$s['status'],'note'=>$s['note']);
+
+  }
+
+  ksort($statarray);
+
+?>
 <table style="width:100%;">
     <thead>
         <tr>
@@ -7,10 +26,15 @@
             <th>Delivered</th>
         </tr>
     </thead>
-@foreach($status as $stat)
+@foreach($statusarray as $stat)
     <tr>
-        <td>{{ $stat['timestamp'] }}</td>
-        <td>{{ $stat['status'] }}</td>
+        <td>{{ $stat['ts'] }}</td>
+        <td>
+            <h3>{{ $stat['status'] }}</h3>
+            <p>
+              {{ $stat['note'] }}
+            </p>
+        </td>
         <td>{{ $stat['pickup_time'] }}</td>
         <td>{{ $stat['delivery_time'] }}</td>
     </tr>
