@@ -5,7 +5,9 @@
   foreach ($status as $s) {
 
     if($s['pickup_time'] != '0000-00-00 00:00:00'){
-      $statarray[ strtotime($s['pickup_time'] ] = array('timestamp'=>$s['pickup_time'],'status'=>'Picked Up','note'=>'');
+      $statarray[ strtotime($s['pickup_time'] ] = array('timestamp'=>$s['pickup_time'],
+                                                        'status'=>'Picked Up',
+                                                        'note'=>'');
     }
     $statarray[ $s['ts']->sec ] = $s;
 
@@ -16,6 +18,8 @@
   print_r($ksort);
 
 ?>
+{{--
+
 <table style="width:100%;">
     <thead>
         <tr>
@@ -35,7 +39,6 @@
     </tr>
 @endforeach
 </table>
-{{--
 
 '_id' => new MongoId("56bc3a673ed3b1062c8b4b42"),
   'awb' => '007735-31-102015-00142150',
