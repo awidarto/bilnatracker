@@ -154,14 +154,16 @@ class CsController extends AdminController {
         if($order){
 
             if($order->logistic_type == 'external'){
-                $statuses = Threeplstatuses::where(function($q) use($order){
-                                    $q->where('consignee_olshop_cust','=', strval($order->consignee_olshop_cust))
-                                    ->orWhere('consignee_logistic_id','=', strval($order->consignee_olshop_cust) );
-                                })
-                                ->where(function($qr) use($order){
+                $statuses = Threeplstatuses::where(function($qr) use($order){
                                     $qr->where('awb','=', $order->awb)
                                     ->orWhere('cn_no','=',$order->awb);
                                 })
+                                /*
+                                ->where(function($q) use($order){
+                                    $q->where('consignee_olshop_cust','=', strval($order->consignee_olshop_cust))
+                                    ->orWhere('consignee_logistic_id','=', strval($order->consignee_olshop_cust) );
+                                })
+                                */
                                 ->orderBy('ts','desc')
                                 ->orderBy('timestamp','desc')
                                 ->orderBy('datetime','desc')
