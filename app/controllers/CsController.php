@@ -169,6 +169,8 @@ class CsController extends AdminController {
 
                 $statuses = $statuses->toArray();
 
+                print_r($statuses);
+
             }
 
             $order->picList = $this->picList($order);
