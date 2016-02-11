@@ -1,21 +1,19 @@
 <?php
 
-  $statarray = array();
+  $st = array();
 
   foreach ($status as $s) {
 
-    if($s['pickup_time'] != '0000-00-00 00:00:00'){
-      $statarray[ strtotime($s['pickup_time'] ] = array('timestamp'=>$s['pickup_time'],
-                                                        'status'=>'Picked Up',
-                                                        'note'=>'');
-    }
-    $statarray[ $s['ts']->sec ] = $s;
+    $st[ strtotime($s['timestamp']) ] => array('status'=>$s['status'],
+                                                'note'=>$s['note'],
+                                                'timestamp'=>$s['timestamp']
+                                                );
 
   }
 
-  ksort($statarray);
+  ksort($st);
 
-  print_r($statarray);
+  print_r($st);
 
 ?>
 {{--
