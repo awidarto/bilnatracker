@@ -4,7 +4,7 @@ $st = array();
 
 foreach ($status as $s) {
   if($s['status'] == 'pending'){
-    $st[$s['status'].'_'.$s['pending'] ] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
+    $st[$s['status'].'_'.$s['pending'] ] = array('status'=>$s['status'].'_'.$s['pending'],'timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
 
   }else{
     $st[$s['status']] = array('status'=>$s['status'],'timestamp'=>$s['timestamp'],'pending'=>$s['pending'],'note'=>$s['note']);
@@ -23,6 +23,7 @@ foreach($st as $s=>$v){
     $bt[ strtotime( $v['timestamp'] ) ] = $v;
 }
 
+ksort($bt);
 ksort($bt);
 
 print_r($bt);
