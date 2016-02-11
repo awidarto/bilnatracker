@@ -23,8 +23,7 @@ foreach($st as $s=>$v){
     $bt[ strtotime( $v['timestamp'] ) ] = $v;
 }
 
-ksort($bt);
-ksort($bt);
+krsort($bt);
 
 print_r($bt);
 ?>
