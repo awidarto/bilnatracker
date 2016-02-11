@@ -80,7 +80,7 @@ class JexStatusDaemon extends Command {
             $reslog['consignee_olshop_cust'] = $logistic_id;
             Threeplstatuslog::insert($reslog);
 
-            $this->saveStatus($awblist,$logistic_id,$logistic->logistic_code);
+            $this->saveStatus($awblist,$logistic->logistic_code,$logistic_id);
 
 
             $awbs = array();
