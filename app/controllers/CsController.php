@@ -168,7 +168,7 @@ class CsController extends AdminController {
 
                 $mdl = $mdl->orderBy($conf['order'],'desc');
 
-                $statuses = $mdl->get($conf['get']);
+                $statuses = $mdl->get();
 
                 $statuses = $statuses->toArray();
 
