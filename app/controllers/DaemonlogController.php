@@ -76,7 +76,7 @@ class DaemonlogController extends AdminController {
     {
 
         $this->fields = array(
-            array('created_at',array('kind'=>'daterange','query'=>'like','pos'=>'both','show'=>true)),
+            array('created_at',array('kind'=>'datetimerange','query'=>'like','pos'=>'both','show'=>true)),
             array('func',array('kind'=>'text','query'=>'like','pos'=>'both','show'=>true)),
             array('in',array('kind'=>'text','query'=>'like','callback'=>'arrTextIn','pos'=>'both','show'=>true)),
             array('out',array('kind'=>'text','query'=>'like','callback'=>'arrTextOut','pos'=>'both','show'=>true,'attr'=>array('class'=>'expander')))
