@@ -444,7 +444,7 @@ class FlapiController extends \BaseController {
             //print_r($json);
             //print_r($statusarray);
 
-            \Logger::api($this->daemonname ,$json, $statusarray);
+            \Logger::api($methodname ,$json, $statusarray);
 
             if(count($statusarray) > 0){
                 \Event::fire('log.api',array($this->controller_name, 'post' ,$actor,'FL status update'));
