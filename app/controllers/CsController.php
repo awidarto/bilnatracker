@@ -160,7 +160,7 @@ class CsController extends AdminController {
                     $conf = Config::get('cs.default');
                 }
 
-                $mdl = Threeplstatuses::where($conf['awb'],'=', strval($order->$conf['order_awb']))
+                $mdl = Threeplstatuses::where($conf['awb'],'=', strval($order->{$conf['order_awb']} ))
                                         ->where(function($q) use($order){
                                             $q->where('consignee_olshop_cust','=',strval($order->consignee_olshop_cust))
                                                 ->orWhere('consignee_logistic_id','=',strval($order->consignee_olshop_cust));
@@ -182,7 +182,7 @@ class CsController extends AdminController {
 
                 $statuses = $statuses->toArray();
 
-                print_r($statuses);
+                //print_r($statuses);
 
             }
 
