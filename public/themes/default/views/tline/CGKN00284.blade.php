@@ -1,4 +1,7 @@
+{{ print_r($status) }}
 
+
+{{--
 <table style="width:100%;vertical-align:top;">
     <thead>
         <tr>
@@ -20,9 +23,6 @@
     </tr>
 @endforeach
 </table>
-
-{{--
-{{ print_r($status) }}
 
 array (
   '_id' => new MongoId("56bc3e393ed3b1df2a8b6917"),
