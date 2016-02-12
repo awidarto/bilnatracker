@@ -15,6 +15,13 @@ return array(
                         'group'=>array(),
                         'get'=>array('timestamp','status','pickup_time','delivery_time','pod','note')
                     ),
+        'B234-JKT'=>array('status'=>'multi',
+                        'order'=>'ts',
+                        'awb'=>'awb',
+                        'order_awb'=>'awb',
+                        'group'=>array(),
+                        'get'=>array()
+                    ),
         'default'=>array('status'=>'multi',
                         'order'=>'ts',
                         'awb'=>'awb',
