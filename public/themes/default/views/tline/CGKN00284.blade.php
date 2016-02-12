@@ -25,7 +25,7 @@ krsort($bt);
             <h3>{{ $v['cn_status'] }}</h3>
             @if($v['cn_desc'] !='')
             <p>
-              {{ $v['cn_desc'] }}
+              {{ str_replace('][', '<br />',$v['cn_desc'])  }}
             </p>
             @endif
         </td>
