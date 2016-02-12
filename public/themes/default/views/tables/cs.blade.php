@@ -86,6 +86,7 @@ td .dropdown-menu .action{
 td h3{
     margin-top: 4px !important;
     margin-bottom: 4px !important;
+    font-weight: bold !important;
 }
 
 select.input-sm {
