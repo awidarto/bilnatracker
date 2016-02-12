@@ -1,4 +1,4 @@
-{{ print_r(array_shift($status)) }}
+{{ print_r($status) }}
 
 
 {{--
