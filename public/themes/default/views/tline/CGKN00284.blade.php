@@ -25,7 +25,7 @@ krsort($bt);
             <h3>{{ $v['cn_status'] }}</h3>
             @if($v['cn_desc'] !='')
             <p>
-              {{ str_replace('][', '<br />',$v['cn_desc'])  }}
+              {{ preg_replace('/\].\[/', '<br />', $v['cn_desc'])  }}
             </p>
             @endif
         </td>
@@ -34,6 +34,8 @@ krsort($bt);
 </table>
 {{--
 {{ print_r($status) }}
+
+[KURIR :DIMAS AREA :SOLO] [PENERIMA :NOVIA HUB :PENERIMA LANGSUNG] [TANGGAL :16-12-2015 19:53] [STATUS :[DL] DITERIMA OLEH] [KETERANGAN :OK
 
 array (
   '_id' => new MongoId("56bc3e393ed3b1df2a8b6917"),
