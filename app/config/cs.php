@@ -1,6 +1,7 @@
 <?php
 
 return array(
+
         'CGKN00284'=>array('status'=>'single',
                         'order'=>'ts',
                         'awb'=>'cn_ref',
@@ -19,6 +20,13 @@ return array(
                         'order'=>'ts',
                         'awb'=>'awb',
                         'order_awb'=>'awb',
+                        'group'=>array(),
+                        'get'=>array()
+                    ),
+        'CGKN00027'=>array('status'=>'multi',
+                        'order'=>'ts',
+                        'awb'=>'reference_no',
+                        'order_awb'=>'fulfillment_code',
                         'group'=>array(),
                         'get'=>array()
                     ),
