@@ -175,7 +175,8 @@ class CsController extends AdminController {
                 $mdl = $mdl->orderBy($conf['order'],'desc');
 
                 if($conf['status'] == 'single'){
-                    $statuses = $mdl->take(1)->timeout(-1)->get();
+                    //$statuses = $mdl->take(1)->timeout(-1)->get();
+                    $statuses = $mdl->timeout(-1)->first();
                 }else{
                     $statuses = $mdl->timeout(-1)->get();
                 }
