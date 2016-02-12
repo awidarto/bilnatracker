@@ -185,7 +185,11 @@ class CsController extends AdminController {
                     }
                 }
 
-                $statuses = $statuses->toArray();
+                if($statuses){
+                    $statuses = $statuses->toArray();
+                }else{
+                    $statuses = array();
+                }
 
                 //print_r($statuses);
 
