@@ -1,7 +1,7 @@
 <?php
 
 return array(
-        'CGKN00284'=>array('status'=>'single',
+        'CGKN00284'=>array('status'=>'multi',
                         'order'=>'ts',
                         'awb'=>'cn_no',
                         'group'=>array(),
