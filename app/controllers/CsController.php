@@ -178,7 +178,11 @@ class CsController extends AdminController {
                     //$statuses = $mdl->take(1)->timeout(-1)->get();
                     $statuses = $mdl->timeout(-1)->first();
                 }else{
-                    $statuses = $mdl->timeout(-1)->get();
+                    if(count($conf['get']) > 0 ){
+                        $statuses = $mdl->timeout(-1)->get($conf['get']);
+                    }else{
+                        $statuses = $mdl->timeout(-1)->get();
+                    }
                 }
 
                 $statuses = $statuses->toArray();
