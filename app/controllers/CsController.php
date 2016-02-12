@@ -163,7 +163,7 @@ class CsController extends AdminController {
                 $mdl = Threeplstatuses::where($conf['awb'],'=', $order->awb)
                                         ->where(function($q) use($order){
                                             $q->where('consignee_olshop_cust','=',strval($order->consignee_olshop_cust))
-                                                ->orWhere('consignee_logistic_id','=',strval($order->consignee_olshop_cust))
+                                                ->orWhere('consignee_logistic_id','=',strval($order->consignee_olshop_cust));
                                         });
 
                 if(count($conf['group']) > 0 ){
