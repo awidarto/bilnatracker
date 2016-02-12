@@ -21,12 +21,11 @@ krsort($bt);
     <tr>
         <td style="vertical-align:top;" >{{ $v['time'] }}</td>
         <td style="vertical-align:top;" >
-            <h3>{{ $v['status'] }}</h3>
+            <h3>{{ $v['status'] }}&nbsp;
             @if($v['receiver'] !='' && !is_null($v['receiver']))
-            <h4>
-              Receiver : {{ $v['receiver'] }}
-            </h4>
+              {{ $v['receiver'] }}
             @endif
+            </h3>
 
             @if($v['description'] !='' && !is_null($v['description']))
             <p>
