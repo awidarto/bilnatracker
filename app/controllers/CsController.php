@@ -162,7 +162,7 @@ class CsController extends AdminController {
 
                 $mdl = Threeplstatuses::where($conf['awb'],'=', $order->awb);
 
-                if(!empty($conf['group'])){
+                if(count($conf['group']) > 0 ){
                     foreach($conf['group'] as $g){
                         $mdl = $mdl->groupBy($g);
                     }
