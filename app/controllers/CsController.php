@@ -287,7 +287,7 @@ class CsController extends AdminController {
 
     public function shipmentOrder($data)
     {
-        return '<h3>'.$data['no_sales_order'].'</h3><b>'.$data['consignee_olshop_name'].'</b><br />'.$data['consignee_olshop_addr'];
+        return '<h3>'.$data['no_sales_order'].'</h3><b>'.$data['consignee_olshop_name'].'</b><br />'.$data['consignee_olshop_addr'].'<br />Shipper : '.$data['logistic'];
     }
 
     public function statusList($data)
