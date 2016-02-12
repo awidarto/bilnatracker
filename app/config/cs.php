@@ -1,6 +1,12 @@
 <?php
 
 return array(
+        'CGKN00284'=>array('status'=>'single',
+                        'order'=>'ts',
+                        'awb'=>'cn_no',
+                        'group'=>array(),
+                        'get'=>array()
+                    ),
         '7735'=>array('status'=>'multi',
                         'order'=>'ts',
                         'awb'=>'awb',

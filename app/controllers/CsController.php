@@ -162,13 +162,19 @@ class CsController extends AdminController {
 
                 $mdl = Threeplstatuses::where($conf['awb'],'=', $order->awb);
 
-                foreach($conf['group'] as $g){
-                    $mdl = $mdl->groupBy($g);
+                if(!empty($conf['group'])){
+                    foreach($conf['group'] as $g){
+                        $mdl = $mdl->groupBy($g);
+                    }
                 }
 
                 $mdl = $mdl->orderBy($conf['order'],'desc');
 
-                $statuses = $mdl->get();
+                if($conf['status'] == 'single'){
+                    $statuses = $mdl->first();
+                }else{
+                    $statuses = $mdl->get();
+                }
 
                 $statuses = $statuses->toArray();
 
