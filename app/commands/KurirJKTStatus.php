@@ -326,26 +326,30 @@ Array
 */
 
             $status = $log['data'];
+            /*
             $st = Threeplstatuses::where('consignee_olshop_cust','=',$logistic_cust_code)
                     ->where('awb','=',$status['order_no'])
                     ->where('datetime',$status['last_update'])
                     ->first();
+            */
 
-            if($st){
+            //if($st){
 
-            }else{
+            //}else{
 
                 if(isset($status['last_update'])){
                     $status['ts'] = new MongoDate( strtotime( $status['last_update'] ) );
                 }else{
                     $status['ts'] = new MongoDate();
                 }
-                $status['raw'] = 0;
+                $status['result_code'] = $log['result_code'];
+                $status['result_description'] = $log['result_description'];
+
                 $status['awb'] = $status['order_no'];
                 $status['consignee_logistic_id'] = $logistic_name;
                 $status['consignee_olshop_cust'] = $logistic_cust_code;
                 Threeplstatuses::insert($status);
-            }
+            //}
 
     }
 
