@@ -25,8 +25,8 @@ return array(
                     ),
         'CGKN00027'=>array('status'=>'multi',
                         'order'=>'ts',
-                        'awb'=>'cn_no',
-                        'order_awb'=>'awb',
+                        'awb'=>'reference_no',
+                        'order_awb'=>'fulfillment_code',
                         'group'=>array(),
                         'get'=>array()
                     ),
