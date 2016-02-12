@@ -1,4 +1,15 @@
+<?php
 
+$bt = array();
+
+foreach($status['connotes'] as $v){
+    $bt[ strtotime( $v['cn_date'] ) ] = $v;
+}
+
+krsort($bt);
+
+
+?>
 
 <table style="width:100%;vertical-align:top;">
     <thead>
@@ -7,7 +18,7 @@
             <th>Status</th>
         </tr>
     </thead>
-@foreach($status['connotes'] as $s=>$v)
+@foreach($bt as $s=>$v)
     <tr>
         <td style="vertical-align:top;" >{{ $v['cn_date'] }}</td>
         <td style="vertical-align:top;" >
