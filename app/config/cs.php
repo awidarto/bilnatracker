@@ -27,8 +27,8 @@ return array(
                         'order'=>'ts',
                         'awb'=>'reference_no',
                         'order_awb'=>'fulfillment_code',
-                        'group'=>array(),
-                        'get'=>array()
+                        'group'=>array('time'),
+                        'get'=>array('time','status','description','receiver')
                     ),
         'default'=>array('status'=>'multi',
                         'order'=>'ts',
