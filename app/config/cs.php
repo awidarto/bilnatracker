@@ -14,7 +14,7 @@ return array(
                         'awb'=>'awb',
                         'order_awb'=>'awb',
                         'group'=>array(),
-                        'get'=>array('timestamp','status','pickup_time','delivery_time','pod','note')
+                        'get'=>array('timestamp','status','pickup_time','delivery_time','pending','pod','note')
                     ),
         'B234-JKT'=>array('status'=>'multi',
                         'order'=>'ts',
