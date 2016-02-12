@@ -1,12 +1,13 @@
 <?php
 
 $bt = array();
+if(isset($status['connotes'])){
+    foreach($status['connotes'] as $v){
+        $bt[ strtotime( $v['cn_date'] ) ] = $v;
+    }
 
-foreach($status['connotes'] as $v){
-    $bt[ strtotime( $v['cn_date'] ) ] = $v;
+    krsort($bt);
 }
-
-krsort($bt);
 
 
 ?>
