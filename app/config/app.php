@@ -118,7 +118,7 @@ return array(
         'Dinesh\Barcode\BarcodeServiceProvider',
         'SimpleSoftwareIO\QrCode\QrCodeServiceProvider',
         'Creitive\Breadcrumbs\BreadcrumbsServiceProvider',
-        'Barryvdh\Debugbar\ServiceProvider',
+        //'Barryvdh\Debugbar\ServiceProvider',
         'Pingpong\Auth2\Auth2ServiceProvider',
         'Nathanmac\Utilities\Parser\ParserServiceProvider',
         'Artisaninweb\SoapWrapper\ServiceProvider'
